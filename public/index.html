@@ -1,0 +1,30 @@
+<!DOCTYPE html>
+<html>
+<head>
+<meta charset="UTF-8">
+<title>Uport test</title>
+<script src="https://unpkg.com/uport-connect/dist/uport-connect.js"></script>
+
+</head>
+
+<body>
+log in......
+<button  onclick="uportConnect()">Connect uPort</button>
+
+
+
+<form name="myform" action="javascript:handleIt(Campaign.value,amount.value)">
+  Campaign:
+  <br><input type="text" name="Campaign" id="Campaign" ><br>
+  amount:
+  <br><input type="number" name="amount" id="amount"><br>
+  <br>
+  <input name="Submit"  type="submit" value="submit"/>
+</form>
+
+
+<script src="uport.js"></script>
+
+</body>
+
+</html>
