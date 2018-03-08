@@ -4,83 +4,97 @@ import './Ownable.sol';
 
 
 contract CampaignRegistry is Ownable {
-  /* address[] private payees;
-  address [] private contributors;
-  address [] private campaignID; */
+  CampaignInfo[] CampaignList;
+  struct CandidateInfo{
+    string name;
+    address walletAddress;
+    bytes32 ipfsLocation;
+  }
+
   struct CampaignInfo{
     string name;
     address contractAddress;
     bytes32 ipfsLocation;
   }
 
-  mapping (address => bool) payeeMap;
-  mapping (address => bool) contributorMap;
-  mapping (address => bool) campaignMap;
-  mapping (address => bool) candidateMap;
+  struct PayeeInfo{
+    string name;
+    address walletAddress;
+    bytes32 ipfsLocation;
+
+  }
+
+  struct ContributorInfo{
+    string name;
+    address walletAddress;
+    bytes32 ipfsLocation;
+  }
+
+  mapping (address => PayeeInfo) payeeMap;
+  mapping (address => ContributorInfo) contributorMap;
+  mapping (address => CampaignInfo) campaignMap;
+  mapping (address => CandidateInfo) candidateMap;
 
   event PayeeAdded(address payee);
   event contributorAdded(address contributor);
   event CampaignAdded(address campaign,address creater);
   event CandidateAdded(address candidate);
 
-  mapping (address => bytes32) payeeData;
-  mapping (address => bytes32) contributorData;
-  mapping (address => bytes32) campaignData;
-  mapping (address => bytes32) candidateData;
 
-
-  function addPayee(address _payee, bytes32 _dataLocation) onlyOwner public {
-    payeeMap[_payee]=true;
-    payeeData[_payee]=_dataLocation;
+  function addPayee(address _payee, string _name, bytes32 _dataLocation) onlyOwner public {
+    PayeeInfo memory newPayee = PayeeInfo(_name, _payee, _dataLocation);
+    payeeMap[_payee]=newPayee;
     PayeeAdded(_payee);
   }
 
-  function addContributor(address _contributor, bytes32 _dataLocation) onlyOwner public {
-    contributorMap[_contributor] =true;
-    payeeData[_contributor]=_dataLocation;
+  function addContributor(address _contributor,string _name, bytes32 _dataLocation) onlyOwner public {
+    ContributorInfo memory newContributor = ContributorInfo(_name, _contributor, _dataLocation);
+    contributorMap[_contributor]=newContributor;
     contributorAdded(_contributor);
   }
 
-  function addCampaignID(address _campaignID, address _creater, bytes32 _dataLocation)  public{
-    require(candidateMap[_creater]==true);
-    campaignMap[_campaignID]=true;
-    campaignData[_campaignID]=_dataLocation;
+  function addCampaignID(address _campaignID, string _name, address _creater, bytes32 _dataLocation)  public{
+    require(candidateMap[_creater].walletAddress!=address(0));
+    CampaignInfo memory newCampaign = CampaignInfo(_name, _campaignID, _dataLocation);
+
+    campaignMap[_campaignID]=newCampaign;
+    CampaignList.push(newCampaign);
     CampaignAdded(_campaignID,_creater);
   }
 
 
 
-  function addCandidate(address _candidate,bytes32 _dataLocation) onlyOwner public {
-      candidateMap[_candidate]=true;
-      candidateData[_candidate]=_dataLocation;
+  function addCandidate(address _candidate,string _name, bytes32 _dataLocation) onlyOwner public {
+      CandidateInfo memory newCandidate = CandidateInfo(_name, _candidate, _dataLocation);
+      candidateMap[_candidate] = newCandidate;
       CandidateAdded(_candidate);
     }
 
 
   function isPayee(address _payee) public view returns (bool){
-    return (payeeMap[_payee]);
+    return (payeeMap[_payee].walletAddress!=address(0));
   }
 
   function isContributor(address _contributor) public view returns (bool){
-    return(contributorMap[_contributor]);
+    return(contributorMap[_contributor].walletAddress!=address(0));
   }
 
 
 
   function getPayeeData(address _payee) public view returns (bytes32){
-    return (payeeData[_payee]);
+    return (payeeMap[_payee].ipfsLocation);
   }
 
   function getContributorData(address _contributor) public view returns (bytes32){
-    return(contributorData[_contributor]);
+    return(contributorMap[_contributor].ipfsLocation);
   }
 
   function getCandidateData(address _candidate) public view returns (bytes32){
-    return candidateData[_candidate];
+    return candidateMap[_candidate].ipfsLocation;
   }
 
   function getCampaignData(address _campaignID)  public view returns (bytes32){
-    return campaignData[_campaignID];
+    return campaignMap[_campaignID].ipfsLocation;
   }
 
 

@@ -1,7 +1,7 @@
 var React = require("react");
 var ReactDom = require("react-dom");
-const contractABI = [{"constant":false,"inputs":[],"name":"getlist","outputs":[{"name":"","type":"uint256[5]"}],"payable":false,"stateMutability":"nonpayable","type":"function"},{"constant":false,"inputs":[],"name":"add","outputs":[{"name":"","type":"uint256"}],"payable":false,"stateMutability":"nonpayable","type":"function"},{"constant":false,"inputs":[],"name":"get","outputs":[{"name":"","type":"uint256"}],"payable":false,"stateMutability":"nonpayable","type":"function"},{"inputs":[],"payable":false,"stateMutability":"nonpayable","type":"constructor"}];
-const contractAddress ="0x5e0b8e912c4ccb92abfa7a63998e43a8bd9b1729";
+const contractABI= [{"constant":false,"inputs":[],"name":"add","outputs":[{"name":"","type":"uint256"}],"payable":false,"stateMutability":"nonpayable","type":"function"},{"constant":false,"inputs":[],"name":"get","outputs":[{"name":"","type":"uint256"}],"payable":false,"stateMutability":"nonpayable","type":"function"},{"inputs":[],"payable":false,"stateMutability":"nonpayable","type":"constructor"}]
+const contractAddress ="0xfdb0966e809e851baf6083f9c20bac53dad7727f"
 
 const Web3 = require('web3');
 
@@ -17,21 +17,20 @@ var metaMaskInstance =metaMaskWeb3.eth.contract(contractABI).at(contractAddress)
 
 
 
+
 var UportComponent = React.createClass({
-  getInitialState: function(){
+  getInitialStatate: function(){
     return{
-      name:"who are you",
-      address:"what's your address",
       web3:{},
-      contractInstance:{}
+      contractInstance:{},
+      listOfCampaigns: {},
+      name:"",
+      address:"",
     }
   },
   render: function(){
     return(
       <div id = "uport-metamask">
-        <h2>name: {this.state.name}</h2>
-        <h2>address: {this.state.address}</h2>
-
         <button onClick={this.handleLogin}>Connect to uPort</button>
         <form id = "contribution" onSubmit={this.handleContribution}>
           <label>enter the candidate address</label>
@@ -63,19 +62,21 @@ var UportComponent = React.createClass({
       return credential;
     }).then((credential)=>{
       this.setState({web3:credentials.getWeb3()},function(){
-        let ContractObj = this.state.web3.eth.contract(contractABI).at(contractAddress)
-        this.setState({contractInstance: ContractObj })
+        let MyContractABI = this.state.web3.eth.contract(contractABI)
+        let MyContractObj = MyContractABI.at(contractAddress)
+        this.setState({contractInstance: MyContractObj })
       })
-      return;
-    }).then(()=>{
-      var ethAddress;
+      return credential;
+    }).then((credential)=>{
+      var EthAddress
       this.state.web3.eth.getCoinbase(function(err,res){
-         ethAddress= res;
+          EthAddress= res;
       })
-      return ethAddress
-    }).then((ethAddress)=>{
-      this.setState({address: ethAddress});
+      return EthAddress;
+    }).then((EthAddress)=>{
+      this.setState({address: EthAddress});
     })
+
   },
 
   handleContribution: function(e){
@@ -89,6 +90,8 @@ var UportComponent = React.createClass({
 
   },
   handleCampaign: function(){
+    console.log(this.state.name)
+    console.log(this.state.address)
 
     metaMaskInstance.get.call(function(err,res){
       console.log(err)
@@ -106,15 +109,11 @@ var UportComponent = React.createClass({
       console.log(res)
     })
 
-  },
-  getList : function(){
-    metaMaskInstance
   }
 
-
 });
-
 ReactDom.render(<UportComponent/>,document.getElementById("uport-login"));
+
 
 // this.state.web3.eth.sendTransaction(
 //   {

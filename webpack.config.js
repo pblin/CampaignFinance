@@ -9,7 +9,10 @@ module.exports = {
         publicPath: '/app/'
     },
     module: {
+
+
         loaders: [
+          {test: /\.json$/, loader: "json"},
             {
                 test: /\.js$/,
                 include: path.resolve(__dirname, 'src'),
