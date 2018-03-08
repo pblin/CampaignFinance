@@ -1,7 +1,7 @@
 # CampaignFinance
-##Contract-
+## Contract-
 solididty contracts
-##routes-
+## routes-
 backend for administrative use
-##src- 
+## src- 
 front end app
