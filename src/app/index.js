@@ -6,7 +6,7 @@ const ipfsApi = new ipfsAPI({ host: 'ipfs.infura.io', port: 5001, protocol: 'htt
 import {BrowserRouter,HashRouter,Route,Link} from 'react-router-dom';
 
 const RegistryABI = [{"constant":true,"inputs":[{"name":"_payee","type":"address"}],"name":"getPayeeData","outputs":[{"name":"","type":"bytes32"}],"payable":false,"stateMutability":"view","type":"function"},{"constant":true,"inputs":[{"name":"_contributor","type":"address"}],"name":"isContributor","outputs":[{"name":"","type":"bool"}],"payable":false,"stateMutability":"view","type":"function"},{"constant":true,"inputs":[{"name":"_candidate","type":"address"}],"name":"getCandidateData","outputs":[{"name":"","type":"bytes32"}],"payable":false,"stateMutability":"view","type":"function"},{"constant":true,"inputs":[{"name":"_payee","type":"address"}],"name":"isPayee","outputs":[{"name":"","type":"bool"}],"payable":false,"stateMutability":"view","type":"function"},{"constant":false,"inputs":[{"name":"_candidate","type":"address"},{"name":"_name","type":"bytes32"},{"name":"_dataLocation","type":"bytes32"}],"name":"addCandidate","outputs":[],"payable":false,"stateMutability":"nonpayable","type":"function"},{"constant":true,"inputs":[{"name":"_campaignName","type":"bytes32"}],"name":"getCampaignLogo","outputs":[{"name":"","type":"bytes32"}],"payable":false,"stateMutability":"view","type":"function"},{"constant":false,"inputs":[{"name":"_campaignID","type":"address"},{"name":"_creater","type":"address"},{"name":"_name","type":"bytes32"},{"name":"_dataLocation","type":"bytes32"},{"name":"_logo","type":"bytes32"}],"name":"addCampaignID","outputs":[],"payable":false,"stateMutability":"nonpayable","type":"function"},{"constant":true,"inputs":[],"name":"getListOfCampaign","outputs":[{"name":"","type":"bytes32[]"}],"payable":false,"stateMutability":"view","type":"function"},{"constant":true,"inputs":[],"name":"owner","outputs":[{"name":"","type":"address"}],"payable":false,"stateMutability":"view","type":"function"},{"constant":false,"inputs":[{"name":"_payee","type":"address"},{"name":"_name","type":"bytes32"},{"name":"_dataLocation","type":"bytes32"}],"name":"addPayee","outputs":[],"payable":false,"stateMutability":"nonpayable","type":"function"},{"constant":false,"inputs":[{"name":"_contributor","type":"address"},{"name":"_name","type":"bytes32"},{"name":"_dataLocation","type":"bytes32"}],"name":"addContributor","outputs":[],"payable":false,"stateMutability":"nonpayable","type":"function"},{"constant":true,"inputs":[{"name":"_contributor","type":"address"}],"name":"getContributorData","outputs":[{"name":"","type":"bytes32"}],"payable":false,"stateMutability":"view","type":"function"},{"constant":true,"inputs":[{"name":"_campaignName","type":"bytes32"}],"name":"getCampaignData","outputs":[{"name":"","type":"bytes32"}],"payable":false,"stateMutability":"view","type":"function"},{"constant":false,"inputs":[{"name":"newOwner","type":"address"}],"name":"transferOwnership","outputs":[],"payable":false,"stateMutability":"nonpayable","type":"function"},{"anonymous":false,"inputs":[{"indexed":false,"name":"payee","type":"address"},{"indexed":false,"name":"name","type":"bytes32"},{"indexed":false,"name":"ipfs","type":"bytes32"}],"name":"PayeeAdded","type":"event"},{"anonymous":false,"inputs":[{"indexed":false,"name":"contributor","type":"address"},{"indexed":false,"name":"name","type":"bytes32"},{"indexed":false,"name":"ipfs","type":"bytes32"}],"name":"contributorAdded","type":"event"},{"anonymous":false,"inputs":[{"indexed":false,"name":"campaign","type":"address"},{"indexed":false,"name":"creater","type":"address"},{"indexed":false,"name":"name","type":"bytes32"},{"indexed":false,"name":"ipfs","type":"bytes32"}],"name":"CampaignAdded","type":"event"},{"anonymous":false,"inputs":[{"indexed":false,"name":"candidate","type":"address"},{"indexed":false,"name":"name","type":"bytes32"},{"indexed":false,"name":"ipfs","type":"bytes32"}],"name":"CandidateAdded","type":"event"},{"anonymous":false,"inputs":[{"indexed":true,"name":"previousOwner","type":"address"},{"indexed":true,"name":"newOwner","type":"address"}],"name":"OwnershipTransferred","type":"event"}]
-const RegistryAddress ="0x37c2852dd695cd4b85d777e70a871f7b095b70ee";
+const RegistryAddress ="0xd8c87b36c560a1166209494b40750ee7feadf217";
 
 const Web3 = require('web3');
 
@@ -55,14 +55,14 @@ var MainComponent = React.createClass({
       address:"what's your address",
       web3:{},
       uportRegistryInst:{},
-      candidateList : [],
+      CampaignList : [],
       avartar:"Yex52a4QnfdeadM4vsSWy5vsNZFYCGTuWr7e4CiwrQPW"
     }
   },
   componentDidMount: async function(){
-    var list = promisify(cb => metaMaskRegistryInst.getthirdlist.call(cb))
+    var list = promisify(cb => metaMaskRegistryInst.getListOfCampaign.call(cb))
     list.then((campaignList)=>{
-      this.setState({candidateList:campaignList})
+      this.setState({CampaignList:campaignList})
     })
   },
   render: function(){
@@ -73,7 +73,7 @@ var MainComponent = React.createClass({
         <img src={this.state.avatar} alt="avatar" width="24" height="39"/>
         <h3>list of candidates</h3>
         <ul>
-          {this.state.candidateList.map(function(campaign,index){
+          {this.state.CampaignList.map(function(campaign,index){
             return <CampaignComponent campaign={campaign} index={index}/>
           })}
         </ul>
@@ -165,7 +165,7 @@ var Info = React.createClass({
       newPromise.then(()=>{
         return promisify(cb =>  metaMaskRegistryInst.getCampaignData.call(this.state.bytes32,cb))
       }).then((ipfsHash)=>{
-        let fullHash= "Qm"+ipfsHash;
+        let fullHash= "";
         return promisify(cb =>  ipfsApi.files.cat(fullHash,cb))
       }).then((file)=>{
         console.log(file.toString('utf8'))
