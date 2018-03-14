@@ -4,28 +4,28 @@ import './Ownable.sol';
 
 
 contract CampaignRegistry is Ownable {
-  CampaignInfo[] CampaignList;
+  bytes32[] CampaignNameList;
+
   struct CandidateInfo{
-    string name;
+    bytes32 name;
     address walletAddress;
     bytes32 ipfsLocation;
   }
 
   struct CampaignInfo{
-    string name;
-    address contractAddress;
+    bytes32 name;
     bytes32 ipfsLocation;
   }
 
   struct PayeeInfo{
-    string name;
+    bytes32 name;
     address walletAddress;
     bytes32 ipfsLocation;
 
   }
 
   struct ContributorInfo{
-    string name;
+    bytes32 name;
     address walletAddress;
     bytes32 ipfsLocation;
   }
@@ -35,39 +35,43 @@ contract CampaignRegistry is Ownable {
   mapping (address => CampaignInfo) campaignMap;
   mapping (address => CandidateInfo) candidateMap;
 
-  event PayeeAdded(address payee);
-  event contributorAdded(address contributor);
-  event CampaignAdded(address campaign,address creater);
-  event CandidateAdded(address candidate);
+  mapping (bytes32 => address) nameToCampaign;
+  mapping (bytes32 => bytes32) nameToLogo;
+
+  event PayeeAdded(address payee, bytes32 name, bytes32 ipfs);
+  event contributorAdded(address contributor, bytes32 name, bytes32 ipfs);
+  event CampaignAdded(address campaign,address creater, bytes32 name, bytes32 ipfs);
+  event CandidateAdded(address candidate, bytes32 name, bytes32 ipfs);
 
 
-  function addPayee(address _payee, string _name, bytes32 _dataLocation) onlyOwner public {
+  function addPayee(address _payee, bytes32 _name, bytes32 _dataLocation) onlyOwner public {
     PayeeInfo memory newPayee = PayeeInfo(_name, _payee, _dataLocation);
     payeeMap[_payee]=newPayee;
-    PayeeAdded(_payee);
+    PayeeAdded(_payee,_name,_dataLocation);
   }
 
-  function addContributor(address _contributor,string _name, bytes32 _dataLocation) onlyOwner public {
+  function addContributor(address _contributor,bytes32 _name, bytes32 _dataLocation) onlyOwner public {
     ContributorInfo memory newContributor = ContributorInfo(_name, _contributor, _dataLocation);
     contributorMap[_contributor]=newContributor;
-    contributorAdded(_contributor);
+    contributorAdded(_contributor,_name,_dataLocation);
   }
 
-  function addCampaignID(address _campaignID, string _name, address _creater, bytes32 _dataLocation)  public{
-    require(candidateMap[_creater].walletAddress!=address(0));
-    CampaignInfo memory newCampaign = CampaignInfo(_name, _campaignID, _dataLocation);
-
+  function addCampaignID(address _campaignID, address _creater, bytes32 _name, bytes32 _dataLocation, bytes32 _logo)  public{
+    require(candidateMap[_creater].name.length != 0);
+    CampaignInfo memory newCampaign = CampaignInfo(_name, _dataLocation);
+    CampaignNameList.push(_name);
+    nameToCampaign[_name]=_campaignID;
+    nameToLogo[_name]=_logo;
     campaignMap[_campaignID]=newCampaign;
-    CampaignList.push(newCampaign);
-    CampaignAdded(_campaignID,_creater);
+    CampaignAdded(_campaignID,_creater,_name,_dataLocation);
   }
 
 
 
-  function addCandidate(address _candidate,string _name, bytes32 _dataLocation) onlyOwner public {
+  function addCandidate(address _candidate,bytes32 _name, bytes32 _dataLocation) onlyOwner public {
       CandidateInfo memory newCandidate = CandidateInfo(_name, _candidate, _dataLocation);
       candidateMap[_candidate] = newCandidate;
-      CandidateAdded(_candidate);
+      CandidateAdded(_candidate,_name,_dataLocation);
     }
 
 
@@ -93,10 +97,17 @@ contract CampaignRegistry is Ownable {
     return candidateMap[_candidate].ipfsLocation;
   }
 
-  function getCampaignData(address _campaignID)  public view returns (bytes32){
-    return campaignMap[_campaignID].ipfsLocation;
+  function getCampaignData(bytes32 _campaignName)  public view returns (bytes32){
+    return campaignMap[nameToCampaign[_campaignName]].ipfsLocation;
   }
 
+
+  function getCampaignLogo(bytes32 _campaignName)  public view returns (bytes32){
+    return nameToLogo[_campaignName];
+  }
+  function getListOfCampaign() public view returns(bytes32[]){
+      return CampaignNameList;
+  }
 
 
 
