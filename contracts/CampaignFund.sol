@@ -133,7 +133,6 @@ contract CampaignFund is Ownable, ERC223ReceivingContract {
         TransactionCompleted(transaction.from, transaction.to, transaction.amount, transactionId,now);
       }
     }
-
-
+f
 
 }
