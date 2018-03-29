@@ -43,7 +43,6 @@ contract Ownable {
 
 
 
-
 contract CampaignRegistry is Ownable {
   bytes32[] CampaignNameList;
 
@@ -98,7 +97,7 @@ contract CampaignRegistry is Ownable {
   }
 
   function addCampaignID(address _campaignID, address _creater, bytes32 _name, bytes32 _dataLocation, bytes32 _logo)  public{
-    require(candidateMap[_creater].name.length != 0);
+    require(candidateMap[_creater].walletAddress != address(0));
     CampaignInfo memory newCampaign = CampaignInfo(_name, _dataLocation);
     CampaignNameList.push(_name);
     nameToCampaign[_name]=_campaignID;
@@ -146,8 +145,13 @@ contract CampaignRegistry is Ownable {
   function getCampaignLogo(bytes32 _campaignName)  public view returns (bytes32){
     return nameToLogo[_campaignName];
   }
+
   function getListOfCampaign() public view returns(bytes32[]){
       return CampaignNameList;
+  }
+
+  function getCampaignAddress(bytes32 _campaignName) public view returns(address){
+    return nameToCampaign[_campaignName];
   }
 
 

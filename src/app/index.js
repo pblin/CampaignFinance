@@ -2,34 +2,54 @@ var React = require("react");
 var ReactDom = require("react-dom");
 const ipfsAPI = require('ipfs-api');
 const ipfsApi = new ipfsAPI({ host: 'ipfs.infura.io', port: 5001, protocol: 'https'});
-
 import {BrowserRouter,HashRouter,Route,Link} from 'react-router-dom';
 
-const RegistryABI = [{"constant":true,"inputs":[{"name":"_payee","type":"address"}],"name":"getPayeeData","outputs":[{"name":"","type":"bytes32"}],"payable":false,"stateMutability":"view","type":"function"},{"constant":true,"inputs":[{"name":"_contributor","type":"address"}],"name":"isContributor","outputs":[{"name":"","type":"bool"}],"payable":false,"stateMutability":"view","type":"function"},{"constant":true,"inputs":[{"name":"_candidate","type":"address"}],"name":"getCandidateData","outputs":[{"name":"","type":"bytes32"}],"payable":false,"stateMutability":"view","type":"function"},{"constant":true,"inputs":[{"name":"_payee","type":"address"}],"name":"isPayee","outputs":[{"name":"","type":"bool"}],"payable":false,"stateMutability":"view","type":"function"},{"constant":false,"inputs":[{"name":"_candidate","type":"address"},{"name":"_name","type":"bytes32"},{"name":"_dataLocation","type":"bytes32"}],"name":"addCandidate","outputs":[],"payable":false,"stateMutability":"nonpayable","type":"function"},{"constant":true,"inputs":[{"name":"_campaignName","type":"bytes32"}],"name":"getCampaignLogo","outputs":[{"name":"","type":"bytes32"}],"payable":false,"stateMutability":"view","type":"function"},{"constant":false,"inputs":[{"name":"_campaignID","type":"address"},{"name":"_creater","type":"address"},{"name":"_name","type":"bytes32"},{"name":"_dataLocation","type":"bytes32"},{"name":"_logo","type":"bytes32"}],"name":"addCampaignID","outputs":[],"payable":false,"stateMutability":"nonpayable","type":"function"},{"constant":true,"inputs":[],"name":"getListOfCampaign","outputs":[{"name":"","type":"bytes32[]"}],"payable":false,"stateMutability":"view","type":"function"},{"constant":true,"inputs":[],"name":"owner","outputs":[{"name":"","type":"address"}],"payable":false,"stateMutability":"view","type":"function"},{"constant":false,"inputs":[{"name":"_payee","type":"address"},{"name":"_name","type":"bytes32"},{"name":"_dataLocation","type":"bytes32"}],"name":"addPayee","outputs":[],"payable":false,"stateMutability":"nonpayable","type":"function"},{"constant":false,"inputs":[{"name":"_contributor","type":"address"},{"name":"_name","type":"bytes32"},{"name":"_dataLocation","type":"bytes32"}],"name":"addContributor","outputs":[],"payable":false,"stateMutability":"nonpayable","type":"function"},{"constant":true,"inputs":[{"name":"_contributor","type":"address"}],"name":"getContributorData","outputs":[{"name":"","type":"bytes32"}],"payable":false,"stateMutability":"view","type":"function"},{"constant":true,"inputs":[{"name":"_campaignName","type":"bytes32"}],"name":"getCampaignData","outputs":[{"name":"","type":"bytes32"}],"payable":false,"stateMutability":"view","type":"function"},{"constant":false,"inputs":[{"name":"newOwner","type":"address"}],"name":"transferOwnership","outputs":[],"payable":false,"stateMutability":"nonpayable","type":"function"},{"anonymous":false,"inputs":[{"indexed":false,"name":"payee","type":"address"},{"indexed":false,"name":"name","type":"bytes32"},{"indexed":false,"name":"ipfs","type":"bytes32"}],"name":"PayeeAdded","type":"event"},{"anonymous":false,"inputs":[{"indexed":false,"name":"contributor","type":"address"},{"indexed":false,"name":"name","type":"bytes32"},{"indexed":false,"name":"ipfs","type":"bytes32"}],"name":"contributorAdded","type":"event"},{"anonymous":false,"inputs":[{"indexed":false,"name":"campaign","type":"address"},{"indexed":false,"name":"creater","type":"address"},{"indexed":false,"name":"name","type":"bytes32"},{"indexed":false,"name":"ipfs","type":"bytes32"}],"name":"CampaignAdded","type":"event"},{"anonymous":false,"inputs":[{"indexed":false,"name":"candidate","type":"address"},{"indexed":false,"name":"name","type":"bytes32"},{"indexed":false,"name":"ipfs","type":"bytes32"}],"name":"CandidateAdded","type":"event"},{"anonymous":false,"inputs":[{"indexed":true,"name":"previousOwner","type":"address"},{"indexed":true,"name":"newOwner","type":"address"}],"name":"OwnershipTransferred","type":"event"}]
-const RegistryAddress ="0xd8c87b36c560a1166209494b40750ee7feadf217";
+var RegistryABI = require("./util").RegistryABI;
+var RegistryAddress = require("./util").RegistryAddress;
+var CampaignFundABI = require("./util").CampaignFundABI;
+var promisify = require("./util").promisify;
+var getBytes32FromIpfsHash = require("./util").getBytes32FromIpfsHash;
+var getIpfsHashFromBytes32 = require("./util").getIpfsHashFromBytes32;
+var metaMaskWeb3 = require("./util").metaMaskWeb3;
+var metaMaskRegistryInst = require("./util").metaMaskRegistryInst;
+var ERC223ABI = require("./util").ERC223ABI;
+var ERC223Address = require("./util").ERC223Address;
+var infuraWeb3 =require("./util").infuraWeb3
 
-const Web3 = require('web3');
+var CampaignComponent = require("./campaigninfo").CampaignComponent
+var CampaignDetailComponent = require("./campaigninfo").CampaignDetailComponent
 
-const CampaignFundABI = [{"constant":false,"inputs":[{"name":"_owner","type":"address"}],"name":"removeOwner","outputs":[],"payable":false,"stateMutability":"nonpayable","type":"function"},{"constant":false,"inputs":[{"name":"_from","type":"address"},{"name":"_value","type":"uint256"}],"name":"tokenFallback","outputs":[],"payable":false,"stateMutability":"nonpayable","type":"function"},{"constant":false,"inputs":[{"name":"transactionId","type":"uint256"}],"name":"signTransaction","outputs":[],"payable":false,"stateMutability":"nonpayable","type":"function"},{"constant":false,"inputs":[{"name":"_owner","type":"address"}],"name":"addOwner","outputs":[],"payable":false,"stateMutability":"nonpayable","type":"function"},{"constant":true,"inputs":[],"name":"owner","outputs":[{"name":"","type":"address"}],"payable":false,"stateMutability":"view","type":"function"},{"constant":false,"inputs":[{"name":"_amount","type":"uint256"}],"name":"contribute","outputs":[],"payable":false,"stateMutability":"nonpayable","type":"function"},{"constant":false,"inputs":[{"name":"_to","type":"address"},{"name":"_amount","type":"uint256"}],"name":"pay","outputs":[],"payable":false,"stateMutability":"nonpayable","type":"function"},{"constant":true,"inputs":[],"name":"getPendingTransactions","outputs":[{"name":"","type":"uint256[]"}],"payable":false,"stateMutability":"view","type":"function"},{"constant":true,"inputs":[],"name":"getFundBalance","outputs":[{"name":"","type":"uint256"}],"payable":false,"stateMutability":"view","type":"function"},{"constant":false,"inputs":[{"name":"newOwner","type":"address"}],"name":"transferOwnership","outputs":[],"payable":false,"stateMutability":"nonpayable","type":"function"},{"inputs":[{"name":"_maxDonation","type":"uint256"},{"name":"_name","type":"bytes32"},{"name":"_dataLocation","type":"bytes32"},{"name":"_logo","type":"bytes32"}],"payable":false,"stateMutability":"nonpayable","type":"constructor"},{"anonymous":false,"inputs":[{"indexed":false,"name":"newOwner","type":"address"}],"name":"ownerAdded","type":"event"},{"anonymous":false,"inputs":[{"indexed":false,"name":"deletedOwner","type":"address"}],"name":"ownerRemoved","type":"event"},{"anonymous":false,"inputs":[{"indexed":false,"name":"contributor","type":"address"},{"indexed":false,"name":"reciever","type":"address"},{"indexed":false,"name":"amount","type":"uint256"},{"indexed":false,"name":"timestamp","type":"uint256"}],"name":"Contribution","type":"event"},{"anonymous":false,"inputs":[{"indexed":false,"name":"campagin","type":"address"},{"indexed":false,"name":"reciever","type":"address"},{"indexed":false,"name":"amount","type":"uint256"},{"indexed":false,"name":"timestamp","type":"uint256"}],"name":"transactionCreated","type":"event"},{"anonymous":false,"inputs":[{"indexed":false,"name":"from","type":"address"},{"indexed":false,"name":"to","type":"address"},{"indexed":false,"name":"amount","type":"uint256"},{"indexed":false,"name":"transactionId","type":"uint256"},{"indexed":false,"name":"timestamp","type":"uint256"}],"name":"TransactionCompleted","type":"event"},{"anonymous":false,"inputs":[{"indexed":false,"name":"by","type":"address"},{"indexed":false,"name":"transactionId","type":"uint256"}],"name":"TransactionSigned","type":"event"},{"anonymous":false,"inputs":[{"indexed":true,"name":"previousOwner","type":"address"},{"indexed":true,"name":"newOwner","type":"address"}],"name":"OwnershipTransferred","type":"event"}]
 
-if (typeof window.web3 === 'undefined') {
-  var metaMaskWeb3=new Web3(new Web3.providers.HttpProvider("https://ropsten.infura.io/Pd3j9YfH7kWLXAS7Sayq"));
-}else{
-  var metaMaskWeb3 = new Web3(window.web3.currentProvider);
-  metaMaskWeb3.eth.defaultAccount = window.web3.eth.defaultAccount;
-}
-var metaMaskRegistryInst =metaMaskWeb3.eth.contract(RegistryABI).at(RegistryAddress)
-
-const promisify = (inner) =>
-    new Promise((resolve, reject) =>
-        inner((err, res) => {
-            if (err) {
-                reject(err)
+infuraWeb3.eth.getTransactionReceiptMined = function (txnHash, interval) {
+    var transactionReceiptAsync;
+    interval = interval ? interval : 500;
+    transactionReceiptAsync = function(txnHash, resolve, reject) {
+        try {
+            var receipt = infuraWeb3.eth.getTransactionReceipt(txnHash);
+            if (receipt == null) {
+                setTimeout(function () {
+                    transactionReceiptAsync(txnHash, resolve, reject);
+                }, interval);
             } else {
-                resolve(res);
+                resolve(receipt);
             }
-        })
-    );
+        } catch(e) {
+            reject(e);
+        }
+    };
+
+    if (Array.isArray(txnHash)) {
+        var promises = [];
+        txnHash.forEach(function (oneTxHash) {
+            promises.push(infuraWeb3.eth.getTransactionReceiptMined(oneTxHash, interval));
+        });
+        return Promise.all(promises);
+    } else {
+        return new Promise(function (resolve, reject) {
+                transactionReceiptAsync(txnHash, resolve, reject);
+            });
+    }
+};
 
 //SETUP ROUTING
 var App = React.createClass({
@@ -38,7 +58,7 @@ var App = React.createClass({
           <BrowserRouter>
             <div>
               <Route exact path='/' component={MainComponent} />
-              <Route path='/:CampaignName' component={Info} />
+              <Route path='/:CampaignName' component={CampaignDetailComponent} />
             </div>
           </BrowserRouter >
         );
@@ -70,7 +90,7 @@ var MainComponent = React.createClass({
       <div id = "uport-metamask">
         <h2>name: {this.state.name}</h2>
         <h2>address: {this.state.address}</h2>
-        <img src={this.state.avatar} alt="avatar" width="24" height="39"/>
+        <img src={this.state.avatar} alt="avatar" width="30" height="30"/>
         <h3>list of candidates</h3>
         <ul>
           {this.state.CampaignList.map(function(campaign,index){
@@ -79,7 +99,7 @@ var MainComponent = React.createClass({
         </ul>
         <button onClick={this.handleLogin}>Connect to uPort</button>
         <form id = "contribution" onSubmit={this.handleContribution}>
-          <label>enter the candidate address</label>
+          <label>enter the name of the campaign</label>
           <input type= "text" ref="campaign" required/>
           <label>enter the desire contribution amount</label>
           <input type= "number" ref="amount" required/>
@@ -115,98 +135,48 @@ var MainComponent = React.createClass({
     })
   },
 
-  handleContribution: function(e){
+  handleContribution: async function(e){
     e.preventDefault();
-    var campgainAddress = this.refs.campaign.value;
+    var campgainName = this.refs.campaign.value;
     var amount = this.refs.amount.value;
-    if (this.state.web3.keys().length == 0){
-      let metaMaskFundInst  =metaMaskWeb3.eth.contract(CampaignFundABI).at(campgainAddress)
-      let transaction = promisify(cb =>  metaMaskFundInst.contribute(amount,cb))
-      transaction.then((transactionHash)=>{
-        console.log(transactionHash)
+    var campgainAddress;
+    campgainAddress = await promisify(cb => metaMaskRegistryInst.getCampaignAddress.call(campgainName,cb))
+    if (Object.keys(this.state.web3).length == 0){
+      var metaMaskFundInst  =metaMaskWeb3.eth.contract(CampaignFundABI).at(String(campgainAddress));
+      var metaMaskTokenInst = metaMaskWeb3.eth.contract(ERC223ABI).at(ERC223Address);
+      let approve= promisify(cb =>  metaMaskTokenInst.approve(campgainAddress,amount,{from: metaMaskWeb3.eth.accounts[0]},cb))
+      approve.then((txHash)=>{
+        console.log(txHash)
+        infuraWeb3.eth.getTransactionReceiptMined(txHash).then((receipt)=>{
+          console.log(receipt)
+          return promisify(cb =>  metaMaskFundInst.contribute(amount,cb))
+        }).then((transactionHash)=>{
+          console.log(transactionHash)
+        })
       })
     }
     else{
       let uportFundInst= this.state.web3.eth.contract(CampaignFundABI).at(campgainAddress)
-      let transaction = promisify(cb =>  metaMaskFundInst.contribute(amount,cb))
-      transaction.then((transactionHash)=>{
-        console.log(transactionHash)
+      let uportTokenInst = this.state.web3.eth.contract(ERC223ABI).at(ERC223Address);
+      let approve= promisify(cb =>  uportTokenInst.approve(campgainAddress,amount,{from: this.state.address},cb))
+      approve.then((txHash)=>{
+        console.log(txHash)
+        infuraWeb3.eth.getTransactionReceiptMined(txHash).then((receipt)=>{
+          console.log(receipt)
+          return promisify(cb =>  uportFundInst.contribute(amount,cb))
+        }).then((transactionHash)=>{
+          console.log(transactionHash)
+        })
       })
     }
   }
 });
 
 
-var CampaignComponent = React.createClass({
-  render: function(){
-    return(
-      <div id = "Name">
-        <Link to={"/"+this.props.campaign}>moreInfo</Link>
-        <ul > {metaMaskWeb3.toAscii(this.props.campaign)}</ul>
-        <img src={"https://ipfs.infura.io/ipfs/QmW3FgNGeD46kHEryFUw1ftEUqRw254WkKxYeKaouz7DJA"} alt="Lamp" width="24" height="39"/>
-      </div>
-    );
-  }
-});
-
-var Info = React.createClass({
-    getInitialState: function(){
-      return{
-        bytes32:"",
-        name :"",
-        info:"",
-      }
-    },
-        //this.setState({name:metaMaskWeb3.toAscii(this.props.location.pathname.substring(1, ))})
-        //this.setState({bytes32:this.props.location.pathname.substring(1, )})
-    componentDidMount: function(){
-      this.setState({name:metaMaskWeb3.toAscii(this.props.location.pathname.substring(1, ))})
-      newPromise = promisify(cb =>  this.setState({bytes32:this.props.location.pathname.substring(1, )},cb))
-      newPromise.then(()=>{
-        return promisify(cb =>  metaMaskRegistryInst.getCampaignData.call(this.state.bytes32,cb))
-      }).then((ipfsHash)=>{
-        let fullHash= "";
-        return promisify(cb =>  ipfsApi.files.cat(fullHash,cb))
-      }).then((file)=>{
-        console.log(file.toString('utf8'))
-      })
-    },
-
-    render: function(){
-        return(
-            <div>
-                <h2>{this.state.name}</h2>
-                <h2>{this.state.info}</h2>
-            </div>
-        );
-    }
 
 
-});
+ReactDom.render(<App/> ,document.getElementById("landing-page"));
 
-// componentDidMount: function(){
-//   this.setState({name:metaMaskWeb3.toAscii(this.props.location.pathname.substring(1, ))})
-//   this.setState({bytes32:this.props.location.pathname.substring(1, )})
-//   console.log(this.state.name)
-// },
-ReactDom.render(<App/> ,document.getElementById("uport-login"));
-
-
-// this.state.web3.eth.sendTransaction(
-//   {
-//     to: "0x670C7F3FB5c61B68438624E8F00077f782FFf9D8",
-//     value: 10
-//   },
-//   (error, txHash) => {
-//     if (error) { throw error }
-//   }
-// )
-//   function MyContractSetup () {
-//     let MyRegistryABI = web3.eth.contract(PROVIDED_CONTRACT_ABI)
-//     let MyContractObj = MyRegistryABI.at(DEPLOYED_CONTRACT_ADDRESS_LOCATION)
-//     return MyContractObj
-//   }
-//   const MyContract = MyContractSetup()
 
 
 
