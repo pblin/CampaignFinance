@@ -1,0 +1,18 @@
+{
+  "name": "campaignbackend",
+  "version": "1.0.0",
+  "description": "",
+  "main": "index.js",
+  "scripts": {
+    "test": "echo \"Error: no test specified\" && exit 1"
+  },
+  "author": "",
+  "license": "ISC",
+  "dependencies": {
+    "body-parser": "^1.18.2",
+    "ethereumjs-tx": "^1.3.4",
+    "express": "^4.16.3",
+    "ipfs-api": "^19.0.0",
+    "web3": "^0.20.0"
+  }
+}
