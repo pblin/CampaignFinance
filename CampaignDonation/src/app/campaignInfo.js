@@ -39,7 +39,7 @@ var CampaignDetailComponent = React.createClass({
         info:"",
         avatar:"",
         campaignInst:{},
-        datafields:["apple","orange"]
+        datafields:[]
       }
     },
     componentDidMount: async function(){
@@ -84,29 +84,47 @@ var CampaignDetailComponent = React.createClass({
     },
 
     getContributionData:function(){
-      var ContributionEvent = this.state.campaignInst["Contribution"]({},{});
-      ContributionEvent.get(function(err,res){
+      var ContributionEvent = this.state.campaignInst["Contribution"]({},{fromBlock: 0, toBlock: "latest"});
+      promisify(cb =>  ContributionEvent.get(cb)).then((res)=>{
+        res = res.map(function(data){
+          let contributor = String(data.args.contributor);
+          let amount = Number(data.args.amount);
+          let reciever = String(data.args.reciever);
+          let timestamp = Number(data.args.timestamp);
+          let statement =  contributor + " donated to "+ reciever +" an amount of " + String(amount)+ " at " + String(timestamp)
+          return (statement)
+        });
         console.log(res)
-        if(!err){
-          this.setState({datafields: res});
-        }
+        this.setState({datafields: res});
       })
-
     },
+
     getPayData:function(){
-      TransactionEvent = eventHandler(this.state.campaignInst,"TransactionCompleted",false)
-      TransactionEvent.get(function(err,res){
-        if(!err){
-          this.setState({datafields: res});
-        }
+      var TransactionEvent = this.state.campaignInst["transactionCreated"]({},{fromBlock: 0, toBlock: "latest"});
+      // TransactionEvent = eventHandler(this.state.campaignInst,"TransactionCompleted",false)
+      promisify(cb =>  TransactionEvent.get(cb)).then((res)=>{
+        res = res.map(function(data){
+          let campagin = String(data.args.campagin);
+          let amount = Number(data.args.amount);
+          let reciever = String(data.args.reciever);
+          let timestamp = Number(data.args.timestamp);
+          let statement =  campagin + " wants to pay "+ reciever +" an amount of " + String(amount)+ " at " + String(timestamp)
+          return (statement)
+        });
+        console.log(res)
+        this.setState({datafields: res});
       })
-
-
     },
+
     getPendingTransactions:function(){
-
+      var pendingTransactions = promisify(cb =>  this.state.campaignInst.getPendingTransactions.call(cb))
+      pendingTransactions.then((result)=>{
+        result = result.map(function(data){
+          return Number(data)
+        });
+        this.setState({datafields: result});
+      })
     }
-
 });
 
 module.exports={

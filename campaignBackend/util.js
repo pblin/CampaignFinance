@@ -3,13 +3,14 @@ var web3 = new Web3(new Web3.providers.HttpProvider("https://ropsten.infura.io/P
 const Tx = require('ethereumjs-tx');
 
 
-const owner = "0xc2d7cf95645d33006175b78989035c7c9061d3f9";
+const owner = "0x670C7F3FB5c61B68438624E8F00077f782FFf9D8";
 
 
 function signTransaction(_callData,_privateKey,_gasPrice,_gasLimit,_to){
   var privateKey = new Buffer(_privateKey, 'hex')
   var nonce = web3.eth.getTransactionCount(owner, 'pending');
   var nonceHex = web3.toHex(nonce);
+  console.log(nonce)
   var rawTx = {
     nonce: nonceHex,
     gasPrice: _gasPrice,

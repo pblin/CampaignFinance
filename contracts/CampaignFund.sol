@@ -22,8 +22,8 @@ contract CampaignFund is Ownable, ERC223ReceivingContract {
       mapping (address => uint8) signatures;
     }
 
-    mapping (uint => Transaction) private _transactions;
-    uint[] private _pendingTransactions;
+    mapping (uint => Transaction) public _transactions;
+    uint[] public _pendingTransactions;
 
 
     uint private transactionIdx;
@@ -109,6 +109,12 @@ contract CampaignFund is Ownable, ERC223ReceivingContract {
       public
       returns (uint[]) {
       return _pendingTransactions;
+    }
+
+    function getPendingTransactionDetail(uint transactionId) view
+    public
+    returns (Transaction){
+      return _transactions[transactionId];
     }
 
 

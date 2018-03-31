@@ -11,9 +11,10 @@ var metaMaskWeb3 = require("./util").metaMaskWeb3;
 var metaMaskRegistryInst = require("./util").metaMaskRegistryInst;
 var ERC223ABI = require("./util").ERC223ABI;
 var ERC223Address = require("./util").ERC223Address;
-var infuraWeb3 =require("./util").infuraWeb3
-var RegisterForContributor = require("./api").RegisterForContributor
-var RegisterForCandidate = require("./api").RegisterForCandidate
+var infuraWeb3 =require("./util").infuraWeb3;
+var RegisterForContributor = require("./api").RegisterForContributor;
+var RegisterForCandidate = require("./api").RegisterForCandidate;
+var RegisterForPayee = require("./api").RegisterForPayee;
 
 
 
@@ -38,6 +39,7 @@ var MainComponent = React.createClass({
       return{
         showCandidateForm: false,
         showContributorForm: false,
+        showMainPage: true,
         name:"",
         public_key: "",
         email:"",
@@ -51,11 +53,13 @@ var MainComponent = React.createClass({
         <div>
           <button onClick={this.displayContributerSignup}>Register as Contributor</button>
           <button onClick={this.displayCandidateSignup}>Register as Candidate</button>
+          <button onClick={this.displayPayeeSignup}>Register as Payee</button>
         </div>
       );
 
       const ContributorForm = (
         <div>
+        <h2>Contributor registration</h2>
         <form id = "register" onSubmit={this.handleContributorRegistration}>
           <label>Enter your name</label>
           <input type= "text" ref="name" value = {this.state.name}  />
@@ -69,11 +73,13 @@ var MainComponent = React.createClass({
         </form>
         <button onClick={this.uportSignup}>uport</button>
         <button onClick={this.metamaskSignup}>metamask</button>
+        <button onClick = {this.goBack}> go back </button>
         </div>
       );
 
       const CandidateForm = (
         <div>
+        <h2>Candidate registration</h2>
         <form id = "register" onSubmit={this.handleCandidateRegistration}>
           <label>Enter your name</label>
           <input type= "text" ref="name" value = {this.state.name}  />
@@ -87,8 +93,30 @@ var MainComponent = React.createClass({
         </form>
         <button onClick={this.uportSignup}>uport</button>
         <button onClick={this.metamaskSignup}>metamask</button>
+        <button onClick = {this.goBack}> go back </button>
         </div>
       );
+
+      const PayeeForm = (
+        <div>
+        <h2>payee registration</h2>
+        <form id = "register" onSubmit={this.handlePayeeRegistration}>
+          <label>Enter your name</label>
+          <input type= "text" ref="name"  />
+          <label>enter your public address</label>
+          <input type= "text" ref="address" required/>
+          <label>enter your info</label>
+          <input type= "text" ref="info" />
+          <label>enter your age</label>
+          <input type= "number" ref="age" />
+          <input type="submit"  value = "register!"/>
+        </form>
+        <button onClick={this.uportSignup}>uport</button>
+        <button onClick={this.metamaskSignup}>metamask</button>
+        <button onClick = {this.goBack}> go back </button>
+        </div>
+      );
+
 
       if (this.state.showCandidateForm){
         return(
@@ -100,13 +128,23 @@ var MainComponent = React.createClass({
           ContributorForm
         )
       }
-      else{
+      else if (this.state.showPayeeForm) {
+        return(
+          PayeeForm
+        )
+      }
+      else if (this.state.showMainPage){
         return(
           buttonPage
         )
       }
 
     },
+
+  goBack: function(){
+    console.log("hi")
+    this.setState({showMainPage: true, showContributorForm: false,showPayeeForm: false,showCandidateForm: false });
+  },
 
   displayCandidateSignup: function() {
       this.setState({showCandidateForm: true });
@@ -115,6 +153,10 @@ var MainComponent = React.createClass({
 
   displayContributerSignup: function(){
     this.setState({showContributorForm: true });
+  },
+
+  displayPayeeSignup: function(){
+    this.setState({showPayeeForm: true });
   },
 
   handleContributorRegistration: function(e){
@@ -148,6 +190,23 @@ var MainComponent = React.createClass({
       }
     );
   },
+
+  handlePayeeRegistration: function(e){
+    e.preventDefault();
+    var name = this.refs.name.value;
+    var publicAddress = this.refs.address.value;
+    var info = this.refs.info.value;
+    var age = this.refs.age.value;
+    RegisterForPayee(name, publicAddress, info, age).then(
+      response => {
+        console.log(response)
+      },
+      error => {
+        console.log(error)
+      }
+    );
+  },
+
 
   uportSignup: function(){
     var Connect = window.uportconnect.Connect

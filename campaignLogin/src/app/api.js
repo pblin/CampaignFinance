@@ -18,8 +18,19 @@ function RegisterForContributor(_name, _publicAddress, _info, _age){
     });
 }
 
+function RegisterForPayee(_name, _publicAddress, _info, _age){
+  return axios.post('http://localhost:9001/payee',{
+      name: _name,
+      publicAddress: _publicAddress,
+      info: _info,
+      age: _age,
+    });
+}
+
+
 
 module.exports= {
   RegisterForCandidate,
-  RegisterForContributor
+  RegisterForContributor,
+  RegisterForPayee
 }

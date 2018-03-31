@@ -48,7 +48,7 @@
 /***/ (function(module, exports, __webpack_require__) {
 
 	__webpack_require__(/*! babel-polyfill */1);
-	module.exports = __webpack_require__(/*! /Users/terry/Documents/campaignLogin/src/app/index.js */327);
+	module.exports = __webpack_require__(/*! /Users/terry/Documents/campaignFinance/campaignLogin/src/app/index.js */327);
 
 
 /***/ }),
@@ -9932,6 +9932,11 @@
 	        "button",
 	        { onClick: this.displayCandidateSignup },
 	        "Register as Candidate"
+	      ),
+	      React.createElement(
+	        "button",
+	        { onClick: this.displayPayeeSignup },
+	        "Register as Payee"
 	      )
 	    );
 	
@@ -9946,7 +9951,7 @@
 	          null,
 	          "Enter your name"
 	        ),
-	        React.createElement("input", { type: "text", ref: "name", value: this.state.name, required: true }),
+	        React.createElement("input", { type: "text", ref: "name", value: this.state.name }),
 	        React.createElement(
 	          "label",
 	          null,
@@ -9958,13 +9963,13 @@
 	          null,
 	          "enter your info"
 	        ),
-	        React.createElement("input", { type: "text", ref: "info", required: true }),
+	        React.createElement("input", { type: "text", ref: "info" }),
 	        React.createElement(
 	          "label",
 	          null,
 	          "enter your age"
 	        ),
-	        React.createElement("input", { type: "number", ref: "age", required: true }),
+	        React.createElement("input", { type: "number", ref: "age" }),
 	        React.createElement("input", { type: "submit", value: "register!" })
 	      ),
 	      React.createElement(
@@ -9990,7 +9995,7 @@
 	          null,
 	          "Enter your name"
 	        ),
-	        React.createElement("input", { type: "text", ref: "name", value: this.state.name, required: true }),
+	        React.createElement("input", { type: "text", ref: "name", value: this.state.name }),
 	        React.createElement(
 	          "label",
 	          null,
@@ -10002,13 +10007,57 @@
 	          null,
 	          "enter your info"
 	        ),
-	        React.createElement("input", { type: "text", ref: "info", required: true }),
+	        React.createElement("input", { type: "text", ref: "info" }),
 	        React.createElement(
 	          "label",
 	          null,
 	          "enter your age"
 	        ),
-	        React.createElement("input", { type: "number", ref: "age", required: true }),
+	        React.createElement("input", { type: "number", ref: "age" }),
+	        React.createElement("input", { type: "submit", value: "register!" })
+	      ),
+	      React.createElement(
+	        "button",
+	        { onClick: this.uportSignup },
+	        "uport"
+	      ),
+	      React.createElement(
+	        "button",
+	        { onClick: this.metamaskSignup },
+	        "metamask"
+	      )
+	    );
+	
+	    var PayeeForm = React.createElement(
+	      "div",
+	      null,
+	      React.createElement(
+	        "form",
+	        { id: "register", onSubmit: this.handlePayeeRegistration },
+	        React.createElement(
+	          "label",
+	          null,
+	          "Enter your name"
+	        ),
+	        React.createElement("input", { type: "text", ref: "name" }),
+	        React.createElement(
+	          "label",
+	          null,
+	          "enter your public address"
+	        ),
+	        React.createElement("input", { type: "text", ref: "address", required: true }),
+	        React.createElement(
+	          "label",
+	          null,
+	          "enter your info"
+	        ),
+	        React.createElement("input", { type: "text", ref: "info" }),
+	        React.createElement(
+	          "label",
+	          null,
+	          "enter your age"
+	        ),
+	        React.createElement("input", { type: "number", ref: "age" }),
 	        React.createElement("input", { type: "submit", value: "register!" })
 	      ),
 	      React.createElement(
@@ -10027,6 +10076,8 @@
 	      return CandidateForm;
 	    } else if (this.state.showContributorForm) {
 	      return ContributorForm;
+	    } else if (this.state.showPayeeForm) {
+	      return PayeeForm;
 	    } else {
 	      return buttonPage;
 	    }
@@ -10038,6 +10089,10 @@
 	
 	  displayContributerSignup: function displayContributerSignup() {
 	    this.setState({ showContributorForm: true });
+	  },
+	
+	  displayPayeeSignup: function displayPayeeSignup() {
+	    this.setState({ showPayeeForm: true });
 	  },
 	
 	  handleContributorRegistration: function handleContributorRegistration(e) {
@@ -10060,6 +10115,19 @@
 	    var info = this.refs.info.value;
 	    var age = this.refs.age.value;
 	    RegisterForContributor(name, publicAddress, info, age).then(function (response) {
+	      console.log(response);
+	    }, function (error) {
+	      console.log(error);
+	    });
+	  },
+	
+	  handlePayeeRegistration: function handlePayeeRegistration(e) {
+	    e.preventDefault();
+	    var name = this.refs.name.value;
+	    var publicAddress = this.refs.address.value;
+	    var info = this.refs.info.value;
+	    var age = this.refs.age.value;
+	    RegisterForPayee(name, publicAddress, info, age).then(function (response) {
 	      console.log(response);
 	    }, function (error) {
 	      console.log(error);
@@ -91409,6 +91477,15 @@
 	
 	function RegisterForContributor(_name, _publicAddress, _info, _age) {
 	  return axios.post('http://localhost:9001/contributor', {
+	    name: _name,
+	    publicAddress: _publicAddress,
+	    info: _info,
+	    age: _age
+	  });
+	}
+	
+	function RegisterForPayee(_name, _publicAddress, _info, _age) {
+	  return axios.post('http://localhost:9001/payee', {
 	    name: _name,
 	    publicAddress: _publicAddress,
 	    info: _info,
