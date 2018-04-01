@@ -30,7 +30,6 @@ router.post("/candidate",(req, res)=>{
     var callData = registryInstance.addCandidate.getData(publicAddress,candidateName,ipfsHash)
     var serializedTx = signTransaction(callData,privateKey,gasPrice,gasLimit,RegistryAddress)
     web3.eth.sendRawTransaction(serializedTx, (error,transactionHash)=>{
-      console.log("hi")
       console.log(transactionHash)
       res.send(transactionHash)
       web3.eth.getTransactionReceiptMined(transactionHash).then((receipt)=>{
@@ -56,7 +55,6 @@ router.post("/contributor",(req, res)=>{
     var callData = registryInstance.addContributor.getData(publicAddress,contributorName,ipfsHash)
     var serializedTx = signTransaction(callData,privateKey,gasPrice,gasLimit,RegistryAddress)
     web3.eth.sendRawTransaction(serializedTx, (error,transactionHash)=>{
-      console.log("hi")
       console.log(transactionHash)
       res.send(transactionHash)
       web3.eth.getTransactionReceiptMined(transactionHash).then((receipt)=>{
@@ -85,7 +83,6 @@ router.post("/payee",(req, res)=>{
     var callData = registryInstance.addPayee.getData(publicAddress,payeeName,ipfsHash)
     var serializedTx = signTransaction(callData,privateKey,gasPrice,gasLimit,RegistryAddress)
     web3.eth.sendRawTransaction(serializedTx, (error,transactionHash)=>{
-      console.log("hi")
       console.log(transactionHash)
       res.send(transactionHash)
       web3.eth.getTransactionReceiptMined(transactionHash).then((receipt)=>{
