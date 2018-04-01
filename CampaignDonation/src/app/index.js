@@ -140,6 +140,7 @@ var MainComponent = React.createClass({
     var campgainName = this.refs.campaign.value;
     var amount = this.refs.amount.value;
     var campgainAddress;
+    console.log(metaMaskRegistryInst)
     campgainAddress = await promisify(cb => metaMaskRegistryInst.getCampaignAddress.call(campgainName,cb))
     if (Object.keys(this.state.web3).length == 0){
       var metaMaskFundInst  =metaMaskWeb3.eth.contract(CampaignFundABI).at(String(campgainAddress));
