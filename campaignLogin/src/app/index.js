@@ -321,23 +321,22 @@ class MainComponent extends React.Component {
     if (Object.keys(this.state.uportweb3).length == 0){
       //metamask to deploy
       let FundContract = metaMaskWeb3.eth.contract(CampaignFundABI);
-      console.log(2)
       FundContract.new(MAX_DONATION ,name, info, logo,{
          from:this.state.coinBaseAccount,
          data:campaignFundByteCode,
          gas:gasEstimate}, function(err, myContract){
            //Note this gets fire twice, once for tx hash, once for mined.
           if(!err) {
-            console.log(3)
              if(!myContract.address) {
                  console.log(myContract.transactionHash) // The hash of the transaction, which deploys the contract
+                 this.setState({deployTxHash:myContract.transactionHash})
 
              } else {
                  console.log(myContract.address) // the contract address
                  this.setState({campaignAddress:myContract.address})
              }
           }
-        });
+        }.bind(this));
 
 
     }
@@ -358,7 +357,7 @@ class MainComponent extends React.Component {
                  this.setState({campaignAddress:myContract.address})
              }
           }
-        });
+        }.bind(this));
 
 
 

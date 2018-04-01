@@ -54,7 +54,7 @@ contract CampaignRegistry is Ownable {
   }
 
   function addCampaignID(address _campaignID, address _creater, bytes32 _name, bytes32 _dataLocation, bytes32 _logo)  public{
-    require(candidateMap[_creater].walletAddress != address(0));
+    require(candidateMap[_creater].name.length != 0);
     CampaignInfo memory newCampaign = CampaignInfo(_name, _dataLocation);
     CampaignNameList.push(_name);
     nameToCampaign[_name]=_campaignID;
@@ -77,7 +77,7 @@ contract CampaignRegistry is Ownable {
   }
 
   function isContributor(address _contributor) public view returns (bool){
-    return(contributorMap[_contributor].name.length!=0));
+    return(contributorMap[_contributor].name.length!=0);
   }
 
 
