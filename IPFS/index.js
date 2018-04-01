@@ -14,6 +14,8 @@ console.log("bernie:  " +getBytes32FromIpfsHash("QmQArixLLeWnfo8xS59hrL8cbGT5pJx
 
 console.log("al gore:  " + getBytes32FromIpfsHash("QmSR5vhiy3ARyBebuJi7SYuxfW8jL2x1dAjMqiZ5JvNtD9"));
 
+console.log("kanye:  " +getBytes32FromIpfsHash("QmWQEdVYvp2W3HWFWDG4o1SDbSkMvMrHvx3y3cNvHvRqE1"));
+
 function getBytes32FromIpfsHash(ipfsListing) {
   return "0x"+bs58.decode(ipfsListing).slice(2).toString('hex')
 }
@@ -49,6 +51,12 @@ OBJECT_TO_ADD_3={
   slogan : "why did i do this"
 }
 
+OBJECT_TO_ADD_4={
+  name : "Kanye",
+  party : "ind",
+  slogan : "I am God's vessel"
+}
+
 
 
 
@@ -76,3 +84,4 @@ function addToIPFS(obj){
 // addToIPFS(OBJECT_TO_ADD_1)
 // addToIPFS(OBJECT_TO_ADD_2)
 // addToIPFS(OBJECT_TO_ADD_3)
+addToIPFS(OBJECT_TO_ADD_4)

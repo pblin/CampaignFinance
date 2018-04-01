@@ -15,8 +15,10 @@ var infuraWeb3 =require("./util").infuraWeb3;
 var RegisterForContributor = require("./api").RegisterForContributor;
 var RegisterForCandidate = require("./api").RegisterForCandidate;
 var RegisterForPayee = require("./api").RegisterForPayee;
+var campaignFundByteCode = require("./util").campaignFundByteCode;
 
-
+const MAX_DONATION= 1000;
+const gasEstimate = 1945038
 
 var App = React.createClass({
     render: function(){
@@ -45,7 +47,10 @@ class MainComponent extends React.Component {
          email:"",
          age:0,
          uportweb3:{},
-         campaignAddress:""
+         metaMaskWeb3:{},
+         campaignAddress:"",
+         coinBaseAccount:"",
+         deployTxHash : ""
        };
 
    }
@@ -130,12 +135,15 @@ class MainComponent extends React.Component {
         <label>enter the IPFS hash of campaign info</label>
         <input type= "text" ref="info" required/>
         <label>enter the IPFS hash of campaign logo</label>
-        <input type= "text" ref="logl" />
+        <input type= "text" ref="logo" />
         <input type="submit"  value = "register!"/>
       </form>
+      <h3>tx hash deployment is {this.state.deployTxHash}</h3>
       <h3>your campaign fund address is : {this.state.campaignAddress}</h3>
-      <button onClick={this.uportDeploy.bind(this)}>connect to uport</button>
+      <button onClick={this.uportConnect.bind(this)}>connect to uport</button>
+      <button onClick={this.metamaskConnect.bind(this)}>connect to MetaMask</button>
       <button onClick = {this.goBack.bind(this)}> go back </button>
+      <h3>the account you are using to deploy is {this.state.coinBaseAccount}</h3>
       </div>
     )
 
@@ -277,11 +285,84 @@ class MainComponent extends React.Component {
     this.setState({public_key: metaMaskWeb3.eth.accounts[0]})
   }
 
-  uportDeploy(){
+  uportConnect(){
+    var Connect = window.uportconnect.Connect
+    var SimpleSigner = window.uportconnect.SimpleSigner
+    var credentials = new Connect("HuangJyunYu\'s new app", {
+    clientId: "2orZ8SPR2jApEMaX6H5BzYFXx5kyBi6TQXA",
+    signer: SimpleSigner("73fb2900f051fcf38d5369514ad9a904da77d5bb5a3a05e5ffaff2ea7f6c4a31"),
+    network: 'rinkeby'
+    })
+    credentials.requestCredentials({
+      requested: ['name', 'phone','avatar', 'country'],
+      notifications: true // We want this if we want to recieve credentials
+      }).then((credential)=>{
+      this.setState({name:credential.name})
+    }).then((credential)=>{
+      return promisify(cb => this.setState({uportweb3:credentials.getWeb3()},cb))
+    }).then(()=>{
+       return promisify(cb => this.state.uportweb3.eth.getCoinbase(cb))
+    }).then((myAddress)=>{
+      return promisify(cb => this.setState({coinBaseAccount: myAddress},cb))
+    })
+
 
   }
 
-  handleCampaignRegistration(){
+  metamaskConnect(){
+    this.setState({coinBaseAccount: metaMaskWeb3.eth.accounts[0]})
+  }
+
+  handleCampaignRegistration(e){
+    e.preventDefault();
+    var name = this.refs.name.value;
+    var info = this.refs.info.value;
+    var logo = this.refs.logo.value;
+    if (Object.keys(this.state.uportweb3).length == 0){
+      //metamask to deploy
+      let FundContract = metaMaskWeb3.eth.contract(CampaignFundABI);
+      console.log(2)
+      FundContract.new(MAX_DONATION ,name, info, logo,{
+         from:this.state.coinBaseAccount,
+         data:campaignFundByteCode,
+         gas:gasEstimate}, function(err, myContract){
+           //Note this gets fire twice, once for tx hash, once for mined.
+          if(!err) {
+            console.log(3)
+             if(!myContract.address) {
+                 console.log(myContract.transactionHash) // The hash of the transaction, which deploys the contract
+
+             } else {
+                 console.log(myContract.address) // the contract address
+                 this.setState({campaignAddress:myContract.address})
+             }
+          }
+        });
+
+
+    }
+    else{
+      //use uport to deploy
+      let FundContract = uportweb3.eth.contract(JSON.parse(CampaignFundABI));
+      FundContract.new(MAX_DONATION ,name, info, logo,{
+         from:this.state.coinBaseAccount,
+         data:campaignFundByteCode,
+         gas:gasEstimate}, function(err, myContract){
+          if(!err) {
+             if(!myContract.address) {
+                this.setState({deployTxHash:myContract.transactionHash})
+                 console.log(myContract.transactionHash) // The hash of the transaction, which deploys the contract
+
+             } else {
+                 console.log(myContract.address) // the contract address
+                 this.setState({campaignAddress:myContract.address})
+             }
+          }
+        });
+
+
+
+    }
 
   }
 
@@ -289,15 +370,3 @@ class MainComponent extends React.Component {
 }
 
 ReactDom.render(<App/> ,document.getElementById("registration"));
-
-
-// {
-//   "jsonrpc":"2.0",
-//   "method":"eth_sendTransaction",
-//   "params": [{"from":"",
-//   "gas":"",
-//   "value":"",
-//   "to":"",
-//   "data":"",
-//   "gasPrice":""}]
-// }
