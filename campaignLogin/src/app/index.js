@@ -32,134 +32,146 @@ var App = React.createClass({
 
 
 
+class MainComponent extends React.Component {
+  constructor(props) {
+       super(props);
+       this.state = {
+         showCandidateForm: false,
+         showContributorForm: false,
+         showMainPage: true,
+         name:"",
+         public_key: "",
+         email:"",
+         age:0,
+         uportweb3:{}
+       };
 
-var MainComponent = React.createClass({
-
-    getInitialState: function(){
-      return{
-        showCandidateForm: false,
-        showContributorForm: false,
-        showMainPage: true,
-        name:"",
-        public_key: "",
-        email:"",
-        age:0,
-        uportweb3:{}
-      }
-    },
-
-    render: function(){
-      const buttonPage = (
-        <div>
-          <button onClick={this.displayContributerSignup}>Register as Contributor</button>
-          <button onClick={this.displayCandidateSignup}>Register as Candidate</button>
-          <button onClick={this.displayPayeeSignup}>Register as Payee</button>
-        </div>
-      );
-
-      const ContributorForm = (
-        <div>
-        <h2>Contributor registration</h2>
-        <form id = "register" onSubmit={this.handleContributorRegistration}>
-          <label>Enter your name</label>
-          <input type= "text" ref="name" value = {this.state.name}  />
-          <label>enter your public address</label>
-          <input type= "text" ref="address" value = {this.state.public_key} required/>
-          <label>enter your info</label>
-          <input type= "text" ref="info" />
-          <label>enter your age</label>
-          <input type= "number" ref="age" />
-          <input type="submit"  value = "register!"/>
-        </form>
-        <button onClick={this.uportSignup}>uport</button>
-        <button onClick={this.metamaskSignup}>metamask</button>
-        <button onClick = {this.goBack}> go back </button>
-        </div>
-      );
-
-      const CandidateForm = (
-        <div>
-        <h2>Candidate registration</h2>
-        <form id = "register" onSubmit={this.handleCandidateRegistration}>
-          <label>Enter your name</label>
-          <input type= "text" ref="name" value = {this.state.name}  />
-          <label>enter your public address</label>
-          <input type= "text" ref="address" value = {this.state.public_key} required/>
-          <label>enter your info</label>
-          <input type= "text" ref="info" />
-          <label>enter your age</label>
-          <input type= "number" ref="age" />
-          <input type="submit"  value = "register!"/>
-        </form>
-        <button onClick={this.uportSignup}>uport</button>
-        <button onClick={this.metamaskSignup}>metamask</button>
-        <button onClick = {this.goBack}> go back </button>
-        </div>
-      );
-
-      const PayeeForm = (
-        <div>
-        <h2>payee registration</h2>
-        <form id = "register" onSubmit={this.handlePayeeRegistration}>
-          <label>Enter your name</label>
-          <input type= "text" ref="name"  />
-          <label>enter your public address</label>
-          <input type= "text" ref="address" required/>
-          <label>enter your info</label>
-          <input type= "text" ref="info" />
-          <label>enter your age</label>
-          <input type= "number" ref="age" />
-          <input type="submit"  value = "register!"/>
-        </form>
-        <button onClick={this.uportSignup}>uport</button>
-        <button onClick={this.metamaskSignup}>metamask</button>
-        <button onClick = {this.goBack}> go back </button>
-        </div>
-      );
+   }
 
 
-      if (this.state.showCandidateForm){
-        return(
-          CandidateForm
-        )
-      }
-      else if (this.state.showContributorForm) {
-        return(
-          ContributorForm
-        )
-      }
-      else if (this.state.showPayeeForm) {
-        return(
-          PayeeForm
-        )
-      }
-      else if (this.state.showMainPage){
-        return(
-          buttonPage
-        )
-      }
+  render() {
+    const buttonPage = (
+      <div>
+        <button onClick={this.displayContributerSignup.bind(this)}>Register as Contributor</button>
+        <button onClick={this.displayCandidateSignup.bind(this)}>Register as Candidate</button>
+        <button onClick={this.displayPayeeSignup.bind(this)}>Register as Payee</button>
+      </div>
+    );
 
-    },
+    const ContributorForm = (
+      <div>
+      <h2>Contributor registration</h2>
+      <form id = "register" onSubmit={this.handleContributorRegistration.bind(this)}>
+        <label>Enter your name</label>
+        <input type= "text" ref="name" value = {this.state.name}  onChange ={e => this.nameChange(e.target.value)}/>
+        <label>enter your public address</label>
+        <input type= "text" ref="address" value = {this.state.public_key} onChange ={e => this.addressChange(e.target.value)} required/>
+        <label>enter your info</label>
+        <input type= "text" ref="info" />
+        <label>enter your age</label>
+        <input type= "number" ref="age" />
+        <input type="submit"  value = "register!"/>
+      </form>
+      <button onClick={this.uportSignup.bind(this)}>uport</button>
+      <button onClick={this.metamaskSignup.bind(this)}>metamask</button>
+      <button onClick = {this.goBack.bind(this)}> go back </button>
+      </div>
+    );
 
-  goBack: function(){
+    const CandidateForm = (
+      <div>
+      <h2>Candidate registration</h2>
+      <form id = "register" onSubmit={this.handleCandidateRegistration.bind(this)}>
+        <label>Enter your name</label>
+        <input type= "text" ref="name" value = {this.state.name} onChange ={e => this.nameChange(e.target.value)}/>
+        <label>enter your public address</label>
+        <input type= "text" ref="address" value = {this.state.public_key} onChange ={e => this.addressChange(e.target.value)} required/>
+        <label>enter your info</label>
+        <input type= "text" ref="info" />
+        <label>enter your age</label>
+        <input type= "number" ref="age" />
+        <input type="submit"  value = "register!"/>
+      </form>
+      <button onClick={this.uportSignup.bind(this)}>uport</button>
+      <button onClick={this.metamaskSignup.bind(this)}>metamask</button>
+      <button onClick = {this.goBack.bind(this)}> go back </button>
+      </div>
+    );
+
+    const PayeeForm = (
+      <div>
+      <h2>payee registration</h2>
+      <form id = "register" onSubmit={this.handlePayeeRegistration.bind(this)}>
+        <label>Enter your name</label>
+        <input type= "text" ref="name" value = {this.state.name} onChange ={e => this.nameChange(e.target.value)}/>
+        <label>enter your public address</label>
+        <input type= "text" ref="address" value = {this.state.public_key} onChange ={e => this.addressChange(e.target.value)} required/>
+        <label>enter your info</label>
+        <input type= "text" ref="info" />
+        <label>enter your age</label>
+        <input type= "number" ref="age" />
+        <input type="submit"  value = "register!"/>
+      </form>
+      <button onClick={this.uportSignup.bind(this)}>uport</button>
+      <button onClick={this.metamaskSignup.bind(this)}>metamask</button>
+      <button onClick = {this.goBack.bind(this)}> go back </button>
+      </div>
+    );
+
+
+    if (this.state.showCandidateForm){
+      return(
+        CandidateForm
+      )
+    }
+    else if (this.state.showContributorForm) {
+      return(
+        ContributorForm
+      )
+    }
+    else if (this.state.showPayeeForm) {
+      return(
+        PayeeForm
+      )
+    }
+    else if (this.state.showMainPage){
+      return(
+        buttonPage
+      )
+    }
+  }
+  goBack(){
     console.log("hi")
     this.setState({showMainPage: true, showContributorForm: false,showPayeeForm: false,showCandidateForm: false });
-  },
+  }
 
-  displayCandidateSignup: function() {
+  displayCandidateSignup() {
       this.setState({showCandidateForm: true });
 
-  },
+  }
 
-  displayContributerSignup: function(){
+  displayContributerSignup(){
     this.setState({showContributorForm: true });
-  },
+  }
 
-  displayPayeeSignup: function(){
+  displayPayeeSignup(){
     this.setState({showPayeeForm: true });
-  },
+  }
 
-  handleContributorRegistration: function(e){
+  nameChange(value){
+          this.setState({
+               name: value
+          });
+      }
+
+ addressChange(value){
+         this.setState({
+              public_key: value
+         });
+     }
+
+
+  handleContributorRegistration(e){
       e.preventDefault();
       var name = this.refs.name.value;
       var publicAddress = this.refs.address.value;
@@ -173,9 +185,9 @@ var MainComponent = React.createClass({
           console.log(error)
         }
       );
-  },
+  }
 
-  handleCandidateRegistration: function(e){
+  handleCandidateRegistration(e){
     e.preventDefault();
     var name = this.refs.name.value;
     var publicAddress = this.refs.address.value;
@@ -189,9 +201,9 @@ var MainComponent = React.createClass({
         console.log(error)
       }
     );
-  },
+  }
 
-  handlePayeeRegistration: function(e){
+  handlePayeeRegistration(e){
     e.preventDefault();
     var name = this.refs.name.value;
     var publicAddress = this.refs.address.value;
@@ -205,10 +217,10 @@ var MainComponent = React.createClass({
         console.log(error)
       }
     );
-  },
+  }
 
 
-  uportSignup: function(){
+  uportSignup(){
     var Connect = window.uportconnect.Connect
     var SimpleSigner = window.uportconnect.SimpleSigner
     var credentials = new Connect("HuangJyunYu\'s new app", {
@@ -229,13 +241,16 @@ var MainComponent = React.createClass({
       return promisify(cb => this.setState({public_key: myAddress},cb))
     })
 
-  },
+  }
 
-  metamaskSignup: function(){
+  metamaskSignup(){
     this.setState({public_key: metaMaskWeb3.eth.accounts[0]})
   }
 
-})
+
+
+}
+
 ReactDom.render(<App/> ,document.getElementById("registration"));
 
 

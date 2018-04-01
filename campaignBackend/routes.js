@@ -7,7 +7,7 @@ var signTransaction = require("./util").signTransaction;
 var RegistryAddress = require("./util").RegistryAddress;
 var addToIPFS = require("./IPFS").addToIPFS;
 privateKey= "97bad0e89b4f26456b6880c650475954bf6a0a1b01690ce63637507d7caf9165";
-gasPrice=15;
+gasPrice=1500000000;
 gasLimit=1133697;
 
 router.get("/", (req, res) => {

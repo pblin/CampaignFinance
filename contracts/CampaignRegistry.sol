@@ -8,7 +8,6 @@ contract CampaignRegistry is Ownable {
 
   struct CandidateInfo{
     bytes32 name;
-    address walletAddress;
     bytes32 ipfsLocation;
   }
 
@@ -19,14 +18,12 @@ contract CampaignRegistry is Ownable {
 
   struct PayeeInfo{
     bytes32 name;
-    address walletAddress;
     bytes32 ipfsLocation;
 
   }
 
   struct ContributorInfo{
     bytes32 name;
-    address walletAddress;
     bytes32 ipfsLocation;
   }
 
@@ -45,13 +42,13 @@ contract CampaignRegistry is Ownable {
 
 
   function addPayee(address _payee, bytes32 _name, bytes32 _dataLocation) onlyOwner public {
-    PayeeInfo memory newPayee = PayeeInfo(_name, _payee, _dataLocation);
+    PayeeInfo memory newPayee = PayeeInfo(_name, _dataLocation);
     payeeMap[_payee]=newPayee;
     PayeeAdded(_payee,_name,_dataLocation);
   }
 
   function addContributor(address _contributor,bytes32 _name, bytes32 _dataLocation) onlyOwner public {
-    ContributorInfo memory newContributor = ContributorInfo(_name, _contributor, _dataLocation);
+    ContributorInfo memory newContributor = ContributorInfo(_name, _dataLocation);
     contributorMap[_contributor]=newContributor;
     contributorAdded(_contributor,_name,_dataLocation);
   }
@@ -69,18 +66,18 @@ contract CampaignRegistry is Ownable {
 
 
   function addCandidate(address _candidate,bytes32 _name, bytes32 _dataLocation) onlyOwner public {
-      CandidateInfo memory newCandidate = CandidateInfo(_name, _candidate, _dataLocation);
+      CandidateInfo memory newCandidate = CandidateInfo(_name, _dataLocation);
       candidateMap[_candidate] = newCandidate;
       CandidateAdded(_candidate,_name,_dataLocation);
     }
 
 
   function isPayee(address _payee) public view returns (bool){
-    return (payeeMap[_payee].walletAddress!=address(0));
+    return (payeeMap[_payee].name.length!=0);
   }
 
   function isContributor(address _contributor) public view returns (bool){
-    return(contributorMap[_contributor].walletAddress!=address(0));
+    return(contributorMap[_contributor].name.length!=0));
   }
 
 

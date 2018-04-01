@@ -236,7 +236,6 @@ contract ERC223ReceivingContract {
  *
  * @param _from  Token sender address.
  * @param _value Amount of tokens.
- * @param _data  Transaction metadata.
  */
     function tokenFallback(address _from, uint _value);
 }
@@ -356,6 +355,7 @@ contract CampaignRegistry is Ownable {
 
 
 
+
 contract CampaignFund is Ownable, ERC223ReceivingContract {
 
     using SafeMath for uint256;
@@ -371,12 +371,12 @@ contract CampaignFund is Ownable, ERC223ReceivingContract {
       mapping (address => uint8) signatures;
     }
 
-    mapping (uint => Transaction) private _transactions;
-    uint[] private _pendingTransactions;
+    mapping (uint => Transaction) public _transactions;
+    uint[] public _pendingTransactions;
 
 
     uint private transactionIdx;
-    uint constant MIN_SIGNATURES = 3;
+    uint constant MIN_SIGNATURES = 2;
     address tokenAddress;
     uint maxDonation;
     CampaignRegistry Registry;
@@ -402,7 +402,7 @@ contract CampaignFund is Ownable, ERC223ReceivingContract {
         Registry= CampaignRegistry(0xd8c87b36c560a1166209494b40750ee7feadf217);
         tokenAddress = 0x02e45cae489267ac75786be1d74c01768e80a8ef;
         Registry.addCampaignID(this,msg.sender,_name,_dataLocation,_logo);
-        maxDonation= 1000;
+        maxDonation= _maxDonation;
     }
 
     function addOwner(address _owner)
@@ -460,6 +460,13 @@ contract CampaignFund is Ownable, ERC223ReceivingContract {
       return _pendingTransactions;
     }
 
+    function getPendingTransactionDetail(uint transactionId) view
+    public
+    returns (address from, address to, uint amount){
+      return (_transactions[transactionId].from,_transactions[transactionId].to,
+        _transactions[transactionId].amount);
+    }
+
 
     function signTransaction(uint transactionId)
       validOwner
@@ -482,7 +489,6 @@ contract CampaignFund is Ownable, ERC223ReceivingContract {
         TransactionCompleted(transaction.from, transaction.to, transaction.amount, transactionId,now);
       }
     }
-
 
 
 }
