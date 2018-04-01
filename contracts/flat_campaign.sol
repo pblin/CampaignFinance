@@ -399,8 +399,8 @@ contract CampaignFund is Ownable, ERC223ReceivingContract {
 
 
     function CampaignFund( uint _maxDonation, bytes32 _name, bytes32 _dataLocation, bytes32 _logo) public {
-        Registry= CampaignRegistry(0xd8c87b36c560a1166209494b40750ee7feadf217);
-        tokenAddress = 0x02e45cae489267ac75786be1d74c01768e80a8ef;
+        Registry= CampaignRegistry(0x0c0bf41040ce0e6a014527eb3993bad86227fcf1);
+        tokenAddress = 0x1b880a3ce1f44a5ebfb29b9a11fdaff5e0ef3e0d;
         Registry.addCampaignID(this,msg.sender,_name,_dataLocation,_logo);
         maxDonation= _maxDonation;
     }

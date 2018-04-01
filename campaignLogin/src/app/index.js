@@ -38,12 +38,14 @@ class MainComponent extends React.Component {
        this.state = {
          showCandidateForm: false,
          showContributorForm: false,
+         showCampaignForm: false,
          showMainPage: true,
          name:"",
          public_key: "",
          email:"",
          age:0,
-         uportweb3:{}
+         uportweb3:{},
+         campaignAddress:""
        };
 
    }
@@ -55,13 +57,14 @@ class MainComponent extends React.Component {
         <button onClick={this.displayContributerSignup.bind(this)}>Register as Contributor</button>
         <button onClick={this.displayCandidateSignup.bind(this)}>Register as Candidate</button>
         <button onClick={this.displayPayeeSignup.bind(this)}>Register as Payee</button>
+        <button onClick={this.displayCampaignCreation.bind(this)}> Register a New Campaign</button>
       </div>
     );
 
     const ContributorForm = (
       <div>
       <h2>Contributor registration</h2>
-      <form id = "register" onSubmit={this.handleContributorRegistration.bind(this)}>
+      <form id = "register-contributor" onSubmit={this.handleContributorRegistration.bind(this)}>
         <label>Enter your name</label>
         <input type= "text" ref="name" value = {this.state.name}  onChange ={e => this.nameChange(e.target.value)}/>
         <label>enter your public address</label>
@@ -81,7 +84,7 @@ class MainComponent extends React.Component {
     const CandidateForm = (
       <div>
       <h2>Candidate registration</h2>
-      <form id = "register" onSubmit={this.handleCandidateRegistration.bind(this)}>
+      <form id = "register-candidate" onSubmit={this.handleCandidateRegistration.bind(this)}>
         <label>Enter your name</label>
         <input type= "text" ref="name" value = {this.state.name} onChange ={e => this.nameChange(e.target.value)}/>
         <label>enter your public address</label>
@@ -101,7 +104,7 @@ class MainComponent extends React.Component {
     const PayeeForm = (
       <div>
       <h2>payee registration</h2>
-      <form id = "register" onSubmit={this.handlePayeeRegistration.bind(this)}>
+      <form id = "register-payee" onSubmit={this.handlePayeeRegistration.bind(this)}>
         <label>Enter your name</label>
         <input type= "text" ref="name" value = {this.state.name} onChange ={e => this.nameChange(e.target.value)}/>
         <label>enter your public address</label>
@@ -117,6 +120,24 @@ class MainComponent extends React.Component {
       <button onClick = {this.goBack.bind(this)}> go back </button>
       </div>
     );
+
+    const CampaignForm =(
+      <div>
+      <h2>payee registration</h2>
+      <form id = "register-campaign" onSubmit={this.handleCampaignRegistration.bind(this)}>
+        <label>Enter your name</label>
+        <input type= "text" ref="name" value = {this.state.name} onChange ={e => this.nameChange(e.target.value)}/>
+        <label>enter the IPFS hash of campaign info</label>
+        <input type= "text" ref="info" required/>
+        <label>enter the IPFS hash of campaign logo</label>
+        <input type= "text" ref="logl" />
+        <input type="submit"  value = "register!"/>
+      </form>
+      <h3>your campaign fund address is : {this.state.campaignAddress}</h3>
+      <button onClick={this.uportDeploy.bind(this)}>connect to uport</button>
+      <button onClick = {this.goBack.bind(this)}> go back </button>
+      </div>
+    )
 
 
     if (this.state.showCandidateForm){
@@ -134,15 +155,24 @@ class MainComponent extends React.Component {
         PayeeForm
       )
     }
+    else if (this.state.showCampaignForm) {
+      return(
+        CampaignForm
+      )
+    }
     else if (this.state.showMainPage){
       return(
         buttonPage
       )
     }
   }
+
+  displayCampaignCreation(){
+    this.setState({showCampaignForm: true });
+  }
+
   goBack(){
-    console.log("hi")
-    this.setState({showMainPage: true, showContributorForm: false,showPayeeForm: false,showCandidateForm: false });
+    this.setState({showMainPage: true, showContributorForm: false,showPayeeForm: false,showCandidateForm: false,showCampaignForm: false });
   }
 
   displayCandidateSignup() {
@@ -247,6 +277,13 @@ class MainComponent extends React.Component {
     this.setState({public_key: metaMaskWeb3.eth.accounts[0]})
   }
 
+  uportDeploy(){
+
+  }
+
+  handleCampaignRegistration(){
+
+  }
 
 
 }
