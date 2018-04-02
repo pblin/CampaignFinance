@@ -1,26 +1,15 @@
 {
-  "name": "react-playlist",
+  "name": "CampaignDonation",
   "version": "1.0.0",
-  "description": "A simple react to-do list",
+  "description": "sample webApp to experiment with campaign donation",
   "main": "index.js",
   "scripts": {
     "test": "echo \"Error: no test specified\" && exit 1",
     "start": "npm run build",
     "build": "webpack -d && webpack-dev-server --content-base src/ --inline --hot --port 1234"
   },
-  "repository": {
-    "type": "git",
-    "url": "git+https://github.com/iamshaunjp/react-playlist.git"
-  },
-  "keywords": [
-    "react"
-  ],
-  "author": "The Net Ninja",
+  "author": "Terry",
   "license": "MIT",
-  "bugs": {
-    "url": "https://github.com/iamshaunjp/react-playlist/issues"
-  },
-  "homepage": "https://github.com/iamshaunjp/react-playlist#readme",
   "dependencies": {
     "babel-plugin-transform-async-to-generator": "^6.24.1",
     "babel-polyfill": "^6.26.0",

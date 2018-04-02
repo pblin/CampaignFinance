@@ -1,4 +1,4 @@
-##CampaignLogin
+##Registration
 webapp for registering
 
 
@@ -15,7 +15,7 @@ contains solidity contracts
 flat contracts are used for deployment.
 
 ##IPFS
-used for adding objects to ipfs for testing
+allow users to add info to IPfS
 
 
 
@@ -23,10 +23,20 @@ used for adding objects to ipfs for testing
 to start each service on your local machine, go into the each directory and npm install.
 then npm start to start up the services
 
-CampaignLogin: localhost:2345
+Registration: localhost:2345
 CampaignDonation: localhost:1234
 CampaignBackend: localhost:
 
 
-#Example user flow
-First Register as
+#Example user flow for starting a new campaign
+First Register as a candidate on the Registration app. a profile of you will be created on IPFS.
+Then up load your campaign related info to ipfs. start a new campaign by deploying a campaignfund contract on
+the Registration app.
+Provide the IPFS hash of your logo as well (later on we will be providing UI to upload images to ipfs)
+
+now go to your campaignManagement page and start managing your campaign fund!
+
+#Example user flow for contributing to campaign
+First Register as a contributor on the Registration app. a profile of you will be created on IPFS.
+Then go to the campaign donation app to check out existing campaign/candidates.
+Contribute by inputing the name of the campaign and amount to contribute (must either use metamask or uport)

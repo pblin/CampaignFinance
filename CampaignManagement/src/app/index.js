@@ -19,6 +19,10 @@ class MainComponent extends React.Component {
 
    }
    render(){
+
+   }
+   //display balances
+   componentDidMount(){
      
    }
    // add owner
@@ -57,4 +61,4 @@ class MainComponent extends React.Component {
 
 }
 
-ReactDom.render(<MainComponent/> ,document.getElementById("registration"));
+ReactDom.render(<MainComponent/> ,document.getElementById("login"));
