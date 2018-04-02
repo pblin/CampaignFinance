@@ -74,12 +74,13 @@ class MainComponent extends React.Component {
         <input type= "text" ref="name" value = {this.state.name}  onChange ={e => this.nameChange(e.target.value)}/>
         <label>enter your public address</label>
         <input type= "text" ref="address" value = {this.state.public_key} onChange ={e => this.addressChange(e.target.value)} required/>
-        <label>enter your info</label>
-        <input type= "text" ref="info" />
         <label>enter your age</label>
         <input type= "number" ref="age" />
         <input type="submit"  value = "register!"/>
       </form>
+      <div>
+      <textarea rows="4" cols="50" id="contributor_Info" >Enter your information here...</textarea>
+      </div>
       <button onClick={this.uportSignup.bind(this)}>uport</button>
       <button onClick={this.metamaskSignup.bind(this)}>metamask</button>
       <button onClick = {this.goBack.bind(this)}> go back </button>
@@ -94,12 +95,13 @@ class MainComponent extends React.Component {
         <input type= "text" ref="name" value = {this.state.name} onChange ={e => this.nameChange(e.target.value)}/>
         <label>enter your public address</label>
         <input type= "text" ref="address" value = {this.state.public_key} onChange ={e => this.addressChange(e.target.value)} required/>
-        <label>enter your info</label>
-        <input type= "text" ref="info" />
         <label>enter your age</label>
         <input type= "number" ref="age" />
         <input type="submit"  value = "register!"/>
       </form>
+      <div>
+      <textarea rows="4" cols="50" id="candidate_Info" >Enter your information here...</textarea>
+      </div>
       <button onClick={this.uportSignup.bind(this)}>uport</button>
       <button onClick={this.metamaskSignup.bind(this)}>metamask</button>
       <button onClick = {this.goBack.bind(this)}> go back </button>
@@ -114,12 +116,13 @@ class MainComponent extends React.Component {
         <input type= "text" ref="name" value = {this.state.name} onChange ={e => this.nameChange(e.target.value)}/>
         <label>enter your public address</label>
         <input type= "text" ref="address" value = {this.state.public_key} onChange ={e => this.addressChange(e.target.value)} required/>
-        <label>enter your info</label>
-        <input type= "text" ref="info" />
         <label>enter your age</label>
         <input type= "number" ref="age" />
         <input type="submit"  value = "register!"/>
       </form>
+      <div>
+      <textarea rows="4" cols="50" id="payee_Info" >Enter your information here...</textarea>
+      </div>
       <button onClick={this.uportSignup.bind(this)}>uport</button>
       <button onClick={this.metamaskSignup.bind(this)}>metamask</button>
       <button onClick = {this.goBack.bind(this)}> go back </button>
@@ -213,8 +216,8 @@ class MainComponent extends React.Component {
       e.preventDefault();
       var name = this.refs.name.value;
       var publicAddress = this.refs.address.value;
-      var info = this.refs.info.value;
       var age = this.refs.age.value;
+      var info = document.getElementById('contributor_Info').value;
       RegisterForCandidate(name, publicAddress, info, age).then(
         response => {
           console.log(response)
@@ -229,8 +232,8 @@ class MainComponent extends React.Component {
     e.preventDefault();
     var name = this.refs.name.value;
     var publicAddress = this.refs.address.value;
-    var info = this.refs.info.value;
     var age = this.refs.age.value;
+    var info = document.getElementById('candidate_Info').value;
     RegisterForContributor(name, publicAddress, info, age).then(
       response => {
         console.log(response)
@@ -245,8 +248,8 @@ class MainComponent extends React.Component {
     e.preventDefault();
     var name = this.refs.name.value;
     var publicAddress = this.refs.address.value;
-    var info = this.refs.info.value;
     var age = this.refs.age.value;
+    var info = document.getElementById('payee_Info').value;
     RegisterForPayee(name, publicAddress, info, age).then(
       response => {
         console.log(response)
@@ -271,6 +274,7 @@ class MainComponent extends React.Component {
       notifications: true // We want this if we want to recieve credentials
       }).then((credential)=>{
       this.setState({name:credential.name})
+      //mayme return credential
     }).then((credential)=>{
       return promisify(cb => this.setState({uportweb3:credentials.getWeb3()},cb))
     }).then(()=>{

@@ -48,7 +48,7 @@
 /***/ (function(module, exports, __webpack_require__) {
 
 	__webpack_require__(/*! babel-polyfill */1);
-	module.exports = __webpack_require__(/*! /Users/terry/Documents/campaignFinance/Registration/src/app/index.js */327);
+	module.exports = __webpack_require__(/*! /Users/terry/Documents/campaignFinance/CampaignManagement/src/app/index.js */327);
 
 
 /***/ }),
@@ -653,7 +653,7 @@
   \************************************/
 /***/ (function(module, exports) {
 
-	var core = module.exports = { version: '2.5.3' };
+	var core = module.exports = { version: '2.5.4' };
 	if (typeof __e == 'number') __e = core; // eslint-disable-line no-undef
 
 
@@ -3098,7 +3098,6 @@
 	var $export = __webpack_require__(/*! ./_export */ 8);
 	var redefine = __webpack_require__(/*! ./_redefine */ 18);
 	var hide = __webpack_require__(/*! ./_hide */ 10);
-	var has = __webpack_require__(/*! ./_has */ 5);
 	var Iterators = __webpack_require__(/*! ./_iterators */ 129);
 	var $iterCreate = __webpack_require__(/*! ./_iter-create */ 130);
 	var setToStringTag = __webpack_require__(/*! ./_set-to-string-tag */ 24);
@@ -3125,7 +3124,7 @@
 	  var VALUES_BUG = false;
 	  var proto = Base.prototype;
 	  var $native = proto[ITERATOR] || proto[FF_ITERATOR] || DEFAULT && proto[DEFAULT];
-	  var $default = (!BUGGY && $native) || getMethod(DEFAULT);
+	  var $default = $native || getMethod(DEFAULT);
 	  var $entries = DEFAULT ? !DEF_VALUES ? $default : getMethod('entries') : undefined;
 	  var $anyNative = NAME == 'Array' ? proto.entries || $native : $native;
 	  var methods, key, IteratorPrototype;
@@ -3136,7 +3135,7 @@
 	      // Set @@toStringTag to native iterators
 	      setToStringTag(IteratorPrototype, TAG, true);
 	      // fix for some old engines
-	      if (!LIBRARY && !has(IteratorPrototype, ITERATOR)) hide(IteratorPrototype, ITERATOR, returnThis);
+	      if (!LIBRARY && typeof IteratorPrototype[ITERATOR] != 'function') hide(IteratorPrototype, ITERATOR, returnThis);
 	    }
 	  }
 	  // fix Array#{values, @@iterator}.name in V8 / FF
@@ -4955,7 +4954,7 @@
 	      var resolve = reaction.resolve;
 	      var reject = reaction.reject;
 	      var domain = reaction.domain;
-	      var result, then;
+	      var result, then, exited;
 	      try {
 	        if (handler) {
 	          if (!ok) {
@@ -4965,8 +4964,11 @@
 	          if (handler === true) result = value;
 	          else {
 	            if (domain) domain.enter();
-	            result = handler(value);
-	            if (domain) domain.exit();
+	            result = handler(value); // may throw
+	            if (domain) {
+	              domain.exit();
+	              exited = true;
+	            }
 	          }
 	          if (result === reaction.promise) {
 	            reject(TypeError('Promise-chain cycle'));
@@ -4975,6 +4977,7 @@
 	          } else resolve(result);
 	        } else reject(value);
 	      } catch (e) {
+	        if (domain && !exited) domain.exit();
 	        reject(e);
 	      }
 	    };
@@ -9889,32 +9892,7 @@
 	var getIpfsHashFromBytes32 = __webpack_require__(/*! ./util */ 554).getIpfsHashFromBytes32;
 	var metaMaskWeb3 = __webpack_require__(/*! ./util */ 554).metaMaskWeb3;
 	var metaMaskRegistryInst = __webpack_require__(/*! ./util */ 554).metaMaskRegistryInst;
-	var ERC223ABI = __webpack_require__(/*! ./util */ 554).ERC223ABI;
-	var ERC223Address = __webpack_require__(/*! ./util */ 554).ERC223Address;
 	var infuraWeb3 = __webpack_require__(/*! ./util */ 554).infuraWeb3;
-	var RegisterForContributor = __webpack_require__(/*! ./api */ 961).RegisterForContributor;
-	var RegisterForCandidate = __webpack_require__(/*! ./api */ 961).RegisterForCandidate;
-	var RegisterForPayee = __webpack_require__(/*! ./api */ 961).RegisterForPayee;
-	var campaignFundByteCode = __webpack_require__(/*! ./util */ 554).campaignFundByteCode;
-	
-	var MAX_DONATION = 1000;
-	var gasEstimate = 1945038;
-	
-	var App = React.createClass({
-	  displayName: "App",
-	
-	  render: function render() {
-	    return React.createElement(
-	      _reactRouterDom.BrowserRouter,
-	      null,
-	      React.createElement(
-	        "div",
-	        null,
-	        React.createElement(_reactRouterDom.Route, { exact: true, path: "/", component: MainComponent })
-	      )
-	    );
-	  }
-	});
 	
 	var MainComponent = function (_React$Component) {
 	  _inherits(MainComponent, _React$Component);
@@ -9924,21 +9902,7 @@
 	
 	    var _this = _possibleConstructorReturn(this, (MainComponent.__proto__ || Object.getPrototypeOf(MainComponent)).call(this, props));
 	
-	    _this.state = {
-	      showCandidateForm: false,
-	      showContributorForm: false,
-	      showCampaignForm: false,
-	      showMainPage: true,
-	      name: "",
-	      public_key: "",
-	      email: "",
-	      age: 0,
-	      uportweb3: {},
-	      metaMaskWeb3: {},
-	      campaignAddress: "",
-	      coinBaseAccount: "",
-	      deployTxHash: ""
-	    };
+	    _this.state = {};
 	
 	    return _this;
 	  }
@@ -9946,506 +9910,58 @@
 	  _createClass(MainComponent, [{
 	    key: "render",
 	    value: function render() {
-	      var _this2 = this;
-	
-	      var buttonPage = React.createElement(
-	        "div",
+	      var MainPage = React.createElement("div", null);
+	      return React.createElement(
+	        "h1",
 	        null,
-	        React.createElement(
-	          "button",
-	          { onClick: this.displayContributerSignup.bind(this) },
-	          "Register as Contributor"
-	        ),
-	        React.createElement(
-	          "button",
-	          { onClick: this.displayCandidateSignup.bind(this) },
-	          "Register as Candidate"
-	        ),
-	        React.createElement(
-	          "button",
-	          { onClick: this.displayPayeeSignup.bind(this) },
-	          "Register as Payee"
-	        ),
-	        React.createElement(
-	          "button",
-	          { onClick: this.displayCampaignCreation.bind(this) },
-	          " Register a New Campaign"
-	        )
+	        "hi"
 	      );
+	    }
+	    //display balances
 	
-	      var ContributorForm = React.createElement(
-	        "div",
-	        null,
-	        React.createElement(
-	          "h2",
-	          null,
-	          "Contributor registration"
-	        ),
-	        React.createElement(
-	          "form",
-	          { id: "register-contributor", onSubmit: this.handleContributorRegistration.bind(this) },
-	          React.createElement(
-	            "label",
-	            null,
-	            "Enter your name"
-	          ),
-	          React.createElement("input", { type: "text", ref: "name", value: this.state.name, onChange: function onChange(e) {
-	              return _this2.nameChange(e.target.value);
-	            } }),
-	          React.createElement(
-	            "label",
-	            null,
-	            "enter your public address"
-	          ),
-	          React.createElement("input", { type: "text", ref: "address", value: this.state.public_key, onChange: function onChange(e) {
-	              return _this2.addressChange(e.target.value);
-	            }, required: true }),
-	          React.createElement(
-	            "label",
-	            null,
-	            "enter your age"
-	          ),
-	          React.createElement("input", { type: "number", ref: "age" }),
-	          React.createElement("input", { type: "submit", value: "register!" })
-	        ),
-	        React.createElement(
-	          "div",
-	          null,
-	          React.createElement(
-	            "textarea",
-	            { rows: "4", cols: "50", id: "contributor_Info" },
-	            "Enter your information here..."
-	          )
-	        ),
-	        React.createElement(
-	          "button",
-	          { onClick: this.uportSignup.bind(this) },
-	          "uport"
-	        ),
-	        React.createElement(
-	          "button",
-	          { onClick: this.metamaskSignup.bind(this) },
-	          "metamask"
-	        ),
-	        React.createElement(
-	          "button",
-	          { onClick: this.goBack.bind(this) },
-	          " go back "
-	        )
-	      );
+	  }, {
+	    key: "componentDidMount",
+	    value: function componentDidMount() {}
+	    // add owner
 	
-	      var CandidateForm = React.createElement(
-	        "div",
-	        null,
-	        React.createElement(
-	          "h2",
-	          null,
-	          "Candidate registration"
-	        ),
-	        React.createElement(
-	          "form",
-	          { id: "register-candidate", onSubmit: this.handleCandidateRegistration.bind(this) },
-	          React.createElement(
-	            "label",
-	            null,
-	            "Enter your name"
-	          ),
-	          React.createElement("input", { type: "text", ref: "name", value: this.state.name, onChange: function onChange(e) {
-	              return _this2.nameChange(e.target.value);
-	            } }),
-	          React.createElement(
-	            "label",
-	            null,
-	            "enter your public address"
-	          ),
-	          React.createElement("input", { type: "text", ref: "address", value: this.state.public_key, onChange: function onChange(e) {
-	              return _this2.addressChange(e.target.value);
-	            }, required: true }),
-	          React.createElement(
-	            "label",
-	            null,
-	            "enter your age"
-	          ),
-	          React.createElement("input", { type: "number", ref: "age" }),
-	          React.createElement("input", { type: "submit", value: "register!" })
-	        ),
-	        React.createElement(
-	          "div",
-	          null,
-	          React.createElement(
-	            "textarea",
-	            { rows: "4", cols: "50", id: "candidate_Info" },
-	            "Enter your information here..."
-	          )
-	        ),
-	        React.createElement(
-	          "button",
-	          { onClick: this.uportSignup.bind(this) },
-	          "uport"
-	        ),
-	        React.createElement(
-	          "button",
-	          { onClick: this.metamaskSignup.bind(this) },
-	          "metamask"
-	        ),
-	        React.createElement(
-	          "button",
-	          { onClick: this.goBack.bind(this) },
-	          " go back "
-	        )
-	      );
+	  }, {
+	    key: "addOwner",
+	    value: function addOwner() {}
+	    //remove owner
 	
-	      var PayeeForm = React.createElement(
-	        "div",
-	        null,
-	        React.createElement(
-	          "h2",
-	          null,
-	          "payee registration"
-	        ),
-	        React.createElement(
-	          "form",
-	          { id: "register-payee", onSubmit: this.handlePayeeRegistration.bind(this) },
-	          React.createElement(
-	            "label",
-	            null,
-	            "Enter your name"
-	          ),
-	          React.createElement("input", { type: "text", ref: "name", value: this.state.name, onChange: function onChange(e) {
-	              return _this2.nameChange(e.target.value);
-	            } }),
-	          React.createElement(
-	            "label",
-	            null,
-	            "enter your public address"
-	          ),
-	          React.createElement("input", { type: "text", ref: "address", value: this.state.public_key, onChange: function onChange(e) {
-	              return _this2.addressChange(e.target.value);
-	            }, required: true }),
-	          React.createElement(
-	            "label",
-	            null,
-	            "enter your age"
-	          ),
-	          React.createElement("input", { type: "number", ref: "age" }),
-	          React.createElement("input", { type: "submit", value: "register!" })
-	        ),
-	        React.createElement(
-	          "div",
-	          null,
-	          React.createElement(
-	            "textarea",
-	            { rows: "4", cols: "50", id: "payee_Info" },
-	            "Enter your information here..."
-	          )
-	        ),
-	        React.createElement(
-	          "button",
-	          { onClick: this.uportSignup.bind(this) },
-	          "uport"
-	        ),
-	        React.createElement(
-	          "button",
-	          { onClick: this.metamaskSignup.bind(this) },
-	          "metamask"
-	        ),
-	        React.createElement(
-	          "button",
-	          { onClick: this.goBack.bind(this) },
-	          " go back "
-	        )
-	      );
+	  }, {
+	    key: "removeOwner",
+	    value: function removeOwner() {}
 	
-	      var CampaignForm = React.createElement(
-	        "div",
-	        null,
-	        React.createElement(
-	          "h2",
-	          null,
-	          "payee registration"
-	        ),
-	        React.createElement(
-	          "form",
-	          { id: "register-campaign", onSubmit: this.handleCampaignRegistration.bind(this) },
-	          React.createElement(
-	            "label",
-	            null,
-	            "Enter your name"
-	          ),
-	          React.createElement("input", { type: "text", ref: "name", value: this.state.name, onChange: function onChange(e) {
-	              return _this2.nameChange(e.target.value);
-	            } }),
-	          React.createElement(
-	            "label",
-	            null,
-	            "enter the IPFS hash of campaign info"
-	          ),
-	          React.createElement("input", { type: "text", ref: "info", required: true }),
-	          React.createElement(
-	            "label",
-	            null,
-	            "enter the IPFS hash of campaign logo"
-	          ),
-	          React.createElement("input", { type: "text", ref: "logo" }),
-	          React.createElement("input", { type: "submit", value: "register!" })
-	        ),
-	        React.createElement(
-	          "h3",
-	          null,
-	          "tx hash deployment is ",
-	          this.state.deployTxHash
-	        ),
-	        React.createElement(
-	          "h3",
-	          null,
-	          "your campaign fund address is : ",
-	          this.state.campaignAddress
-	        ),
-	        React.createElement(
-	          "button",
-	          { onClick: this.uportConnect.bind(this) },
-	          "connect to uport"
-	        ),
-	        React.createElement(
-	          "button",
-	          { onClick: this.metamaskConnect.bind(this) },
-	          "connect to MetaMask"
-	        ),
-	        React.createElement(
-	          "button",
-	          { onClick: this.goBack.bind(this) },
-	          " go back "
-	        ),
-	        React.createElement(
-	          "h3",
-	          null,
-	          "the account you are using to deploy is ",
-	          this.state.coinBaseAccount
-	        )
-	      );
+	    //sign payments
 	
-	      if (this.state.showCandidateForm) {
-	        return CandidateForm;
-	      } else if (this.state.showContributorForm) {
-	        return ContributorForm;
-	      } else if (this.state.showPayeeForm) {
-	        return PayeeForm;
-	      } else if (this.state.showCampaignForm) {
-	        return CampaignForm;
-	      } else if (this.state.showMainPage) {
-	        return buttonPage;
-	      }
-	    }
 	  }, {
-	    key: "displayCampaignCreation",
-	    value: function displayCampaignCreation() {
-	      this.setState({ showCampaignForm: true });
-	    }
-	  }, {
-	    key: "goBack",
-	    value: function goBack() {
-	      this.setState({ showMainPage: true, showContributorForm: false, showPayeeForm: false, showCandidateForm: false, showCampaignForm: false });
-	    }
-	  }, {
-	    key: "displayCandidateSignup",
-	    value: function displayCandidateSignup() {
-	      this.setState({ showCandidateForm: true });
-	    }
-	  }, {
-	    key: "displayContributerSignup",
-	    value: function displayContributerSignup() {
-	      this.setState({ showContributorForm: true });
-	    }
-	  }, {
-	    key: "displayPayeeSignup",
-	    value: function displayPayeeSignup() {
-	      this.setState({ showPayeeForm: true });
-	    }
-	  }, {
-	    key: "nameChange",
-	    value: function nameChange(value) {
-	      this.setState({
-	        name: value
-	      });
-	    }
-	  }, {
-	    key: "addressChange",
-	    value: function addressChange(value) {
-	      this.setState({
-	        public_key: value
-	      });
-	    }
-	  }, {
-	    key: "handleContributorRegistration",
-	    value: function handleContributorRegistration(e) {
-	      e.preventDefault();
-	      var name = this.refs.name.value;
-	      var publicAddress = this.refs.address.value;
-	      var age = this.refs.age.value;
-	      var info = document.getElementById('contributor_Info').value;
-	      RegisterForCandidate(name, publicAddress, info, age).then(function (response) {
-	        console.log(response);
-	      }, function (error) {
-	        console.log(error);
-	      });
-	    }
-	  }, {
-	    key: "handleCandidateRegistration",
-	    value: function handleCandidateRegistration(e) {
-	      e.preventDefault();
-	      var name = this.refs.name.value;
-	      var publicAddress = this.refs.address.value;
-	      var age = this.refs.age.value;
-	      var info = document.getElementById('candidate_Info').value;
-	      RegisterForContributor(name, publicAddress, info, age).then(function (response) {
-	        console.log(response);
-	      }, function (error) {
-	        console.log(error);
-	      });
-	    }
-	  }, {
-	    key: "handlePayeeRegistration",
-	    value: function handlePayeeRegistration(e) {
-	      e.preventDefault();
-	      var name = this.refs.name.value;
-	      var publicAddress = this.refs.address.value;
-	      var age = this.refs.age.value;
-	      var info = document.getElementById('payee_Info').value;
-	      RegisterForPayee(name, publicAddress, info, age).then(function (response) {
-	        console.log(response);
-	      }, function (error) {
-	        console.log(error);
-	      });
-	    }
-	  }, {
-	    key: "uportSignup",
-	    value: function uportSignup() {
-	      var _this3 = this;
+	    key: "confirmPayment",
+	    value: function confirmPayment() {}
 	
-	      var Connect = window.uportconnect.Connect;
-	      var SimpleSigner = window.uportconnect.SimpleSigner;
-	      var credentials = new Connect("HuangJyunYu\'s new app", {
-	        clientId: "2orZ8SPR2jApEMaX6H5BzYFXx5kyBi6TQXA",
-	        signer: SimpleSigner("73fb2900f051fcf38d5369514ad9a904da77d5bb5a3a05e5ffaff2ea7f6c4a31"),
-	        network: 'rinkeby'
-	      });
-	      credentials.requestCredentials({
-	        requested: ['name', 'phone', 'avatar', 'country'],
-	        notifications: true // We want this if we want to recieve credentials
-	      }).then(function (credential) {
-	        _this3.setState({ name: credential.name });
-	      }).then(function (credential) {
-	        return promisify(function (cb) {
-	          return _this3.setState({ uportweb3: credentials.getWeb3() }, cb);
-	        });
-	      }).then(function () {
-	        return promisify(function (cb) {
-	          return _this3.state.uportweb3.eth.getCoinbase(cb);
-	        });
-	      }).then(function (myAddress) {
-	        return promisify(function (cb) {
-	          return _this3.setState({ public_key: myAddress }, cb);
-	        });
-	      });
-	    }
-	  }, {
-	    key: "metamaskSignup",
-	    value: function metamaskSignup() {
-	      this.setState({ public_key: metaMaskWeb3.eth.accounts[0] });
-	    }
-	  }, {
-	    key: "uportConnect",
-	    value: function uportConnect() {
-	      var _this4 = this;
+	    // initiates payments
 	
-	      var Connect = window.uportconnect.Connect;
-	      var SimpleSigner = window.uportconnect.SimpleSigner;
-	      var credentials = new Connect("HuangJyunYu\'s new app", {
-	        clientId: "2orZ8SPR2jApEMaX6H5BzYFXx5kyBi6TQXA",
-	        signer: SimpleSigner("73fb2900f051fcf38d5369514ad9a904da77d5bb5a3a05e5ffaff2ea7f6c4a31"),
-	        network: 'rinkeby'
-	      });
-	      credentials.requestCredentials({
-	        requested: ['name', 'phone', 'avatar', 'country'],
-	        notifications: true // We want this if we want to recieve credentials
-	      }).then(function (credential) {
-	        _this4.setState({ name: credential.name });
-	      }).then(function (credential) {
-	        return promisify(function (cb) {
-	          return _this4.setState({ uportweb3: credentials.getWeb3() }, cb);
-	        });
-	      }).then(function () {
-	        return promisify(function (cb) {
-	          return _this4.state.uportweb3.eth.getCoinbase(cb);
-	        });
-	      }).then(function (myAddress) {
-	        return promisify(function (cb) {
-	          return _this4.setState({ coinBaseAccount: myAddress }, cb);
-	        });
-	      });
-	    }
 	  }, {
-	    key: "metamaskConnect",
-	    value: function metamaskConnect() {
-	      this.setState({ coinBaseAccount: metaMaskWeb3.eth.accounts[0] });
-	    }
-	  }, {
-	    key: "handleCampaignRegistration",
-	    value: function handleCampaignRegistration(e) {
-	      e.preventDefault();
-	      var name = String(this.refs.name.value);
-	      var info = String(this.refs.info.value);
-	      var logo = String(this.refs.logo.value);
-	      if (info.length == 46) {
-	        info = getBytes32FromIpfsHash(info);
-	      }
-	      if (logo.length == 46) {
+	    key: "pay",
+	    value: function pay() {}
 	
-	        logo = getBytes32FromIpfsHash(logo);
-	      }
-	      if (Object.keys(this.state.uportweb3).length == 0) {
-	        //metamask to deploy
-	        var FundContract = metaMaskWeb3.eth.contract(CampaignFundABI);
-	        FundContract.new(MAX_DONATION, name, info, logo, {
-	          from: this.state.coinBaseAccount,
-	          data: campaignFundByteCode,
-	          gas: gasEstimate }, function (err, myContract) {
-	          //Note this gets fire twice, once for tx hash, once for mined.
-	          if (!err) {
-	            if (!myContract.address) {
-	              console.log(myContract.transactionHash); // The hash of the transaction, which deploys the contract
-	              this.setState({ deployTxHash: myContract.transactionHash });
-	            } else {
-	              console.log(myContract.address); // the contract address
-	              this.setState({ campaignAddress: myContract.address });
-	            }
-	          }
-	        }.bind(this));
-	      } else {
-	        //use uport to deploy
-	        var _FundContract = uportweb3.eth.contract(CampaignFundABI);
-	        _FundContract.new(MAX_DONATION, name, info, logo, {
-	          from: this.state.coinBaseAccount,
-	          data: campaignFundByteCode,
-	          gas: gasEstimate }, function (err, myContract) {
-	          if (!err) {
-	            if (!myContract.address) {
-	              this.setState({ deployTxHash: myContract.transactionHash });
-	              console.log(myContract.transactionHash); // The hash of the transaction, which deploys the contract
-	            } else {
-	              console.log(myContract.address); // the contract address
-	              this.setState({ campaignAddress: myContract.address });
-	            }
-	          }
-	        }.bind(this));
-	      }
-	    }
+	    // list all pending payments
+	
+	  }, {
+	    key: "showPendingPayments",
+	    value: function showPendingPayments() {}
+	
+	    //list all past payments
+	
+	  }, {
+	    key: "showPastPayments",
+	    value: function showPastPayments() {}
 	  }]);
 	
 	  return MainComponent;
 	}(React.Component);
 	
-	ReactDom.render(React.createElement(App, null), document.getElementById("registration"));
+	ReactDom.render(React.createElement(MainComponent, null), document.getElementById("login"));
 
 /***/ }),
 /* 328 */
@@ -67428,7 +66944,7 @@
   \*********************************/
 /***/ (function(module, exports) {
 
-	module.exports = {"_from":"elliptic@^6.2.3","_id":"elliptic@6.4.0","_inBundle":false,"_integrity":"sha1-ysmvh2LIWDYYcAPI3+GT5eLq5d8=","_location":"/elliptic","_phantomChildren":{},"_requested":{"type":"range","registry":true,"raw":"elliptic@^6.2.3","name":"elliptic","escapedName":"elliptic","rawSpec":"^6.2.3","saveSpec":null,"fetchSpec":"^6.2.3"},"_requiredBy":["/secp256k1"],"_resolved":"https://registry.npmjs.org/elliptic/-/elliptic-6.4.0.tgz","_shasum":"cac9af8762c85836187003c8dfe193e5e2eae5df","_spec":"elliptic@^6.2.3","_where":"/Users/terry/Documents/campaignLogin/node_modules/secp256k1","author":{"name":"Fedor Indutny","email":"fedor@indutny.com"},"bugs":{"url":"https://github.com/indutny/elliptic/issues"},"bundleDependencies":false,"dependencies":{"bn.js":"^4.4.0","brorand":"^1.0.1","hash.js":"^1.0.0","hmac-drbg":"^1.0.0","inherits":"^2.0.1","minimalistic-assert":"^1.0.0","minimalistic-crypto-utils":"^1.0.0"},"deprecated":false,"description":"EC cryptography","devDependencies":{"brfs":"^1.4.3","coveralls":"^2.11.3","grunt":"^0.4.5","grunt-browserify":"^5.0.0","grunt-cli":"^1.2.0","grunt-contrib-connect":"^1.0.0","grunt-contrib-copy":"^1.0.0","grunt-contrib-uglify":"^1.0.1","grunt-mocha-istanbul":"^3.0.1","grunt-saucelabs":"^8.6.2","istanbul":"^0.4.2","jscs":"^2.9.0","jshint":"^2.6.0","mocha":"^2.1.0"},"files":["lib"],"homepage":"https://github.com/indutny/elliptic","keywords":["EC","Elliptic","curve","Cryptography"],"license":"MIT","main":"lib/elliptic.js","name":"elliptic","repository":{"type":"git","url":"git+ssh://git@github.com/indutny/elliptic.git"},"scripts":{"jscs":"jscs benchmarks/*.js lib/*.js lib/**/*.js lib/**/**/*.js test/index.js","jshint":"jscs benchmarks/*.js lib/*.js lib/**/*.js lib/**/**/*.js test/index.js","lint":"npm run jscs && npm run jshint","test":"npm run lint && npm run unit","unit":"istanbul test _mocha --reporter=spec test/index.js","version":"grunt dist && git add dist/"},"version":"6.4.0"}
+	module.exports = {"_from":"elliptic@^6.2.3","_id":"elliptic@6.4.0","_inBundle":false,"_integrity":"sha1-ysmvh2LIWDYYcAPI3+GT5eLq5d8=","_location":"/elliptic","_phantomChildren":{},"_requested":{"type":"range","registry":true,"raw":"elliptic@^6.2.3","name":"elliptic","escapedName":"elliptic","rawSpec":"^6.2.3","saveSpec":null,"fetchSpec":"^6.2.3"},"_requiredBy":["/secp256k1"],"_resolved":"https://registry.npmjs.org/elliptic/-/elliptic-6.4.0.tgz","_shasum":"cac9af8762c85836187003c8dfe193e5e2eae5df","_spec":"elliptic@^6.2.3","_where":"/Users/terry/Documents/campaignFinance/CampaignManagement/node_modules/secp256k1","author":{"name":"Fedor Indutny","email":"fedor@indutny.com"},"bugs":{"url":"https://github.com/indutny/elliptic/issues"},"bundleDependencies":false,"dependencies":{"bn.js":"^4.4.0","brorand":"^1.0.1","hash.js":"^1.0.0","hmac-drbg":"^1.0.0","inherits":"^2.0.1","minimalistic-assert":"^1.0.0","minimalistic-crypto-utils":"^1.0.0"},"deprecated":false,"description":"EC cryptography","devDependencies":{"brfs":"^1.4.3","coveralls":"^2.11.3","grunt":"^0.4.5","grunt-browserify":"^5.0.0","grunt-cli":"^1.2.0","grunt-contrib-connect":"^1.0.0","grunt-contrib-copy":"^1.0.0","grunt-contrib-uglify":"^1.0.1","grunt-mocha-istanbul":"^3.0.1","grunt-saucelabs":"^8.6.2","istanbul":"^0.4.2","jscs":"^2.9.0","jshint":"^2.6.0","mocha":"^2.1.0"},"files":["lib"],"homepage":"https://github.com/indutny/elliptic","keywords":["EC","Elliptic","curve","Cryptography"],"license":"MIT","main":"lib/elliptic.js","name":"elliptic","repository":{"type":"git","url":"git+ssh://git@github.com/indutny/elliptic.git"},"scripts":{"jscs":"jscs benchmarks/*.js lib/*.js lib/**/*.js lib/**/**/*.js test/index.js","jshint":"jscs benchmarks/*.js lib/*.js lib/**/*.js lib/**/**/*.js test/index.js","lint":"npm run jscs && npm run jshint","test":"npm run lint && npm run unit","unit":"istanbul test _mocha --reporter=spec test/index.js","version":"grunt dist && git add dist/"},"version":"6.4.0"}
 
 /***/ }),
 /* 711 */
@@ -75387,9 +74903,8 @@
 	'use strict';
 	var LIBRARY = __webpack_require__(/*! ./_library */ 759);
 	var $export = __webpack_require__(/*! ./_export */ 760);
-	var redefine = __webpack_require__(/*! ./_redefine */ 775);
+	var redefine = __webpack_require__(/*! ./_redefine */ 776);
 	var hide = __webpack_require__(/*! ./_hide */ 765);
-	var has = __webpack_require__(/*! ./_has */ 776);
 	var Iterators = __webpack_require__(/*! ./_iterators */ 777);
 	var $iterCreate = __webpack_require__(/*! ./_iter-create */ 778);
 	var setToStringTag = __webpack_require__(/*! ./_set-to-string-tag */ 794);
@@ -75416,7 +74931,7 @@
 	  var VALUES_BUG = false;
 	  var proto = Base.prototype;
 	  var $native = proto[ITERATOR] || proto[FF_ITERATOR] || DEFAULT && proto[DEFAULT];
-	  var $default = (!BUGGY && $native) || getMethod(DEFAULT);
+	  var $default = $native || getMethod(DEFAULT);
 	  var $entries = DEFAULT ? !DEF_VALUES ? $default : getMethod('entries') : undefined;
 	  var $anyNative = NAME == 'Array' ? proto.entries || $native : $native;
 	  var methods, key, IteratorPrototype;
@@ -75427,7 +74942,7 @@
 	      // Set @@toStringTag to native iterators
 	      setToStringTag(IteratorPrototype, TAG, true);
 	      // fix for some old engines
-	      if (!LIBRARY && !has(IteratorPrototype, ITERATOR)) hide(IteratorPrototype, ITERATOR, returnThis);
+	      if (!LIBRARY && typeof IteratorPrototype[ITERATOR] != 'function') hide(IteratorPrototype, ITERATOR, returnThis);
 	    }
 	  }
 	  // fix Array#{values, @@iterator}.name in V8 / FF
@@ -75477,6 +74992,7 @@
 	var core = __webpack_require__(/*! ./_core */ 762);
 	var ctx = __webpack_require__(/*! ./_ctx */ 763);
 	var hide = __webpack_require__(/*! ./_hide */ 765);
+	var has = __webpack_require__(/*! ./_has */ 775);
 	var PROTOTYPE = 'prototype';
 	
 	var $export = function (type, name, source) {
@@ -75494,7 +75010,7 @@
 	  for (key in source) {
 	    // contains in native
 	    own = !IS_FORCED && target && target[key] !== undefined;
-	    if (own && key in exports) continue;
+	    if (own && has(exports, key)) continue;
 	    // export native or passed
 	    out = own ? target[key] : source[key];
 	    // prevent global pollution for namespaces
@@ -75558,7 +75074,7 @@
   \********************************************/
 /***/ (function(module, exports) {
 
-	var core = module.exports = { version: '2.5.3' };
+	var core = module.exports = { version: '2.5.4' };
 	if (typeof __e == 'number') __e = core; // eslint-disable-line no-undef
 
 
@@ -75769,16 +75285,6 @@
 
 /***/ }),
 /* 775 */
-/*!************************************************!*\
-  !*** ./~/core-js/library/modules/_redefine.js ***!
-  \************************************************/
-/***/ (function(module, exports, __webpack_require__) {
-
-	module.exports = __webpack_require__(/*! ./_hide */ 765);
-
-
-/***/ }),
-/* 776 */
 /*!*******************************************!*\
   !*** ./~/core-js/library/modules/_has.js ***!
   \*******************************************/
@@ -75788,6 +75294,16 @@
 	module.exports = function (it, key) {
 	  return hasOwnProperty.call(it, key);
 	};
+
+
+/***/ }),
+/* 776 */
+/*!************************************************!*\
+  !*** ./~/core-js/library/modules/_redefine.js ***!
+  \************************************************/
+/***/ (function(module, exports, __webpack_require__) {
+
+	module.exports = __webpack_require__(/*! ./_hide */ 765);
 
 
 /***/ }),
@@ -75917,7 +75433,7 @@
   \************************************************************/
 /***/ (function(module, exports, __webpack_require__) {
 
-	var has = __webpack_require__(/*! ./_has */ 776);
+	var has = __webpack_require__(/*! ./_has */ 775);
 	var toIObject = __webpack_require__(/*! ./_to-iobject */ 783);
 	var arrayIndexOf = __webpack_require__(/*! ./_array-includes */ 786)(false);
 	var IE_PROTO = __webpack_require__(/*! ./_shared-key */ 789)('IE_PROTO');
@@ -76118,7 +75634,7 @@
 /***/ (function(module, exports, __webpack_require__) {
 
 	var def = __webpack_require__(/*! ./_object-dp */ 766).f;
-	var has = __webpack_require__(/*! ./_has */ 776);
+	var has = __webpack_require__(/*! ./_has */ 775);
 	var TAG = __webpack_require__(/*! ./_wks */ 795)('toStringTag');
 	
 	module.exports = function (it, tag, stat) {
@@ -76154,7 +75670,7 @@
 /***/ (function(module, exports, __webpack_require__) {
 
 	// 19.1.2.9 / 15.2.3.2 Object.getPrototypeOf(O)
-	var has = __webpack_require__(/*! ./_has */ 776);
+	var has = __webpack_require__(/*! ./_has */ 775);
 	var toObject = __webpack_require__(/*! ./_to-object */ 797);
 	var IE_PROTO = __webpack_require__(/*! ./_shared-key */ 789)('IE_PROTO');
 	var ObjectProto = Object.prototype;
@@ -76337,7 +75853,7 @@
 	      var resolve = reaction.resolve;
 	      var reject = reaction.reject;
 	      var domain = reaction.domain;
-	      var result, then;
+	      var result, then, exited;
 	      try {
 	        if (handler) {
 	          if (!ok) {
@@ -76347,8 +75863,11 @@
 	          if (handler === true) result = value;
 	          else {
 	            if (domain) domain.enter();
-	            result = handler(value);
-	            if (domain) domain.exit();
+	            result = handler(value); // may throw
+	            if (domain) {
+	              domain.exit();
+	              exited = true;
+	            }
 	          }
 	          if (result === reaction.promise) {
 	            reject(TypeError('Promise-chain cycle'));
@@ -76357,6 +75876,7 @@
 	          } else resolve(result);
 	        } else reject(value);
 	      } catch (e) {
+	        if (domain && !exited) domain.exit();
 	        reject(e);
 	      }
 	    };
@@ -77397,10 +76917,10 @@
 	'use strict';
 	// ECMAScript 6 symbols shim
 	var global = __webpack_require__(/*! ./_global */ 761);
-	var has = __webpack_require__(/*! ./_has */ 776);
+	var has = __webpack_require__(/*! ./_has */ 775);
 	var DESCRIPTORS = __webpack_require__(/*! ./_descriptors */ 770);
 	var $export = __webpack_require__(/*! ./_export */ 760);
-	var redefine = __webpack_require__(/*! ./_redefine */ 775);
+	var redefine = __webpack_require__(/*! ./_redefine */ 776);
 	var META = __webpack_require__(/*! ./_meta */ 839).KEY;
 	var $fails = __webpack_require__(/*! ./_fails */ 771);
 	var shared = __webpack_require__(/*! ./_shared */ 790);
@@ -77639,7 +77159,7 @@
 
 	var META = __webpack_require__(/*! ./_uid */ 791)('meta');
 	var isObject = __webpack_require__(/*! ./_is-object */ 768);
-	var has = __webpack_require__(/*! ./_has */ 776);
+	var has = __webpack_require__(/*! ./_has */ 775);
 	var setDesc = __webpack_require__(/*! ./_object-dp */ 766).f;
 	var id = 0;
 	var isExtensible = Object.isExtensible || function () {
@@ -77823,7 +77343,7 @@
 	var createDesc = __webpack_require__(/*! ./_property-desc */ 774);
 	var toIObject = __webpack_require__(/*! ./_to-iobject */ 783);
 	var toPrimitive = __webpack_require__(/*! ./_to-primitive */ 773);
-	var has = __webpack_require__(/*! ./_has */ 776);
+	var has = __webpack_require__(/*! ./_has */ 775);
 	var IE8_DOM_DEFINE = __webpack_require__(/*! ./_ie8-dom-define */ 769);
 	var gOPD = Object.getOwnPropertyDescriptor;
 	
@@ -81318,7 +80838,7 @@
   \*********************************************/
 /***/ (function(module, exports) {
 
-	module.exports = {"_from":"web3-provider-engine@^13.6.6","_id":"web3-provider-engine@13.6.6","_inBundle":false,"_integrity":"sha512-M9eztIxwCR2U7+d42RXdu3fBjvG/kcv7Ra8z2PHs912aHhAkMtNfvzhC8dboC7yKmj230eVHwouSXKizmSqC7Q==","_location":"/web3-provider-engine","_phantomChildren":{},"_requested":{"type":"range","registry":true,"raw":"web3-provider-engine@^13.6.6","name":"web3-provider-engine","escapedName":"web3-provider-engine","rawSpec":"^13.6.6","saveSpec":null,"fetchSpec":"^13.6.6"},"_requiredBy":["/"],"_resolved":"https://registry.npmjs.org/web3-provider-engine/-/web3-provider-engine-13.6.6.tgz","_shasum":"7d8972ffcd31e103bd2ce8a521b1b7da08cb173f","_spec":"web3-provider-engine@^13.6.6","_where":"/Users/terry/Documents/campaignLogin","author":"","browser":{"request":false},"bugs":{"url":"https://github.com/MetaMask/provider-engine/issues"},"bundleDependencies":false,"dependencies":{"async":"^2.5.0","clone":"^2.0.0","eth-block-tracker":"^2.2.2","eth-sig-util":"^1.4.2","ethereumjs-block":"^1.2.2","ethereumjs-tx":"^1.2.0","ethereumjs-util":"^5.1.1","ethereumjs-vm":"^2.0.2","fetch-ponyfill":"^4.0.0","json-rpc-error":"^2.0.0","json-stable-stringify":"^1.0.1","promise-to-callback":"^1.0.0","readable-stream":"^2.2.9","request":"^2.67.0","semaphore":"^1.0.3","solc":"^0.4.2","tape":"^4.4.0","xhr":"^2.2.0","xtend":"^4.0.1"},"deprecated":false,"description":"[![Greenkeeper badge](https://badges.greenkeeper.io/MetaMask/provider-engine.svg)](https://greenkeeper.io/)","devDependencies":{"babel-preset-es2015":"^6.24.1","babel-preset-stage-0":"^6.24.1","browserify":"^14.0.0"},"homepage":"https://github.com/MetaMask/provider-engine#readme","license":"ISC","main":"index.js","name":"web3-provider-engine","repository":{"type":"git","url":"git+https://github.com/MetaMask/provider-engine.git"},"scripts":{"bundle":"mkdir -p ./dist && npm run bundle-engine && npm run bundle-zero","bundle-engine":"browserify -s ProviderEngine -e index.js > dist/ProviderEngine.js","bundle-zero":"browserify -s ZeroClientProvider -e zero.js > dist/ZeroClientProvider.js","test":"node test/index.js"},"version":"13.6.6"}
+	module.exports = {"_from":"web3-provider-engine@^13.6.6","_id":"web3-provider-engine@13.8.0","_inBundle":false,"_integrity":"sha512-fZXhX5VWwWpoFfrfocslyg6P7cN3YWPG/ASaevNfeO80R+nzgoPUBXcWQekSGSsNDkeRTis4aMmpmofYf1TNtQ==","_location":"/web3-provider-engine","_phantomChildren":{},"_requested":{"type":"range","registry":true,"raw":"web3-provider-engine@^13.6.6","name":"web3-provider-engine","escapedName":"web3-provider-engine","rawSpec":"^13.6.6","saveSpec":null,"fetchSpec":"^13.6.6"},"_requiredBy":["/"],"_resolved":"https://registry.npmjs.org/web3-provider-engine/-/web3-provider-engine-13.8.0.tgz","_shasum":"4c7c1ad2af5f1fe10343b8a65495879a2f9c00df","_spec":"web3-provider-engine@^13.6.6","_where":"/Users/terry/Documents/campaignFinance/CampaignManagement","author":"","browser":{"request":false},"bugs":{"url":"https://github.com/MetaMask/provider-engine/issues"},"bundleDependencies":false,"dependencies":{"async":"^2.5.0","clone":"^2.0.0","eth-block-tracker":"^2.2.2","eth-sig-util":"^1.4.2","ethereumjs-block":"^1.2.2","ethereumjs-tx":"^1.2.0","ethereumjs-util":"^5.1.1","ethereumjs-vm":"^2.0.2","fetch-ponyfill":"^4.0.0","json-rpc-error":"^2.0.0","json-stable-stringify":"^1.0.1","promise-to-callback":"^1.0.0","readable-stream":"^2.2.9","request":"^2.67.0","semaphore":"^1.0.3","solc":"^0.4.2","tape":"^4.4.0","xhr":"^2.2.0","xtend":"^4.0.1"},"deprecated":false,"description":"[![Greenkeeper badge](https://badges.greenkeeper.io/MetaMask/provider-engine.svg)](https://greenkeeper.io/)","devDependencies":{"babel-preset-es2015":"^6.24.1","babel-preset-stage-0":"^6.24.1","browserify":"^14.0.0"},"homepage":"https://github.com/MetaMask/provider-engine#readme","license":"ISC","main":"index.js","name":"web3-provider-engine","repository":{"type":"git","url":"git+https://github.com/MetaMask/provider-engine.git"},"scripts":{"bundle":"mkdir -p ./dist && npm run bundle-engine && npm run bundle-zero","bundle-engine":"browserify -s ProviderEngine -e index.js > dist/ProviderEngine.js","bundle-zero":"browserify -s ZeroClientProvider -e zero.js > dist/ZeroClientProvider.js","test":"node test/index.js"},"version":"13.8.0"}
 
 /***/ }),
 /* 926 */
@@ -88585,6 +88105,7 @@
 	  switch(payload.method) {
 	
 	    case 'eth_coinbase':
+	      // process normally
 	      self.getAccounts(function(err, accounts){
 	        if (err) return end(err)
 	        var result = accounts[0] || null
@@ -88593,6 +88114,7 @@
 	      return
 	
 	    case 'eth_accounts':
+	      // process normally
 	      self.getAccounts(function(err, accounts){
 	        if (err) return end(err)
 	        end(null, accounts)
@@ -88600,6 +88122,7 @@
 	      return
 	
 	    case 'eth_sendTransaction':
+	      // process normally
 	      var txParams = payload.params[0]
 	      waterfall([
 	        (cb) => self.validateTransaction(txParams, cb),
@@ -88608,6 +88131,7 @@
 	      return
 	
 	    case 'eth_signTransaction':
+	      // process normally
 	      var txParams = payload.params[0]
 	      waterfall([
 	        (cb) => self.validateTransaction(txParams, cb),
@@ -88616,6 +88140,7 @@
 	      return
 	
 	    case 'eth_sign':
+	      // process normally
 	      var address = payload.params[0]
 	      var message = payload.params[1]
 	      // non-standard "extraParams" to be appended to our "msgParams" obj
@@ -88632,6 +88157,7 @@
 	      return
 	
 	    case 'personal_sign':
+	      // process normally
 	      const first = payload.params[0]
 	      const second = payload.params[1]
 	
@@ -88672,6 +88198,7 @@
 	      return
 	
 	    case 'personal_ecRecover':
+	      // process normally
 	      var message = payload.params[0]
 	      var signature = payload.params[1]
 	      // non-standard "extraParams" to be appended to our "msgParams" obj
@@ -88685,6 +88212,7 @@
 	      return
 	
 	    case 'eth_signTypedData':
+	      // process normally
 	      message = payload.params[0]
 	      address = payload.params[1]
 	      var extraParams = payload.params[2] || {}
@@ -91725,1675 +91253,6 @@
 		};
 	
 	/* WEBPACK VAR INJECTION */}.call(exports, __webpack_require__(/*! ./../timers-browserify/main.js */ 673).setImmediate))
-
-/***/ }),
-/* 961 */
-/*!************************!*\
-  !*** ./src/app/api.js ***!
-  \************************/
-/***/ (function(module, exports, __webpack_require__) {
-
-	'use strict';
-	
-	var axios = __webpack_require__(/*! axios */ 962);
-	
-	function RegisterForCandidate(_name, _publicAddress, _info, _age) {
-	  return axios.post('http://localhost:9001/candidate', {
-	    name: _name,
-	    publicAddress: _publicAddress,
-	    info: _info,
-	    age: _age
-	  });
-	}
-	
-	function RegisterForContributor(_name, _publicAddress, _info, _age) {
-	  return axios.post('http://localhost:9001/contributor', {
-	    name: _name,
-	    publicAddress: _publicAddress,
-	    info: _info,
-	    age: _age
-	  });
-	}
-	
-	function RegisterForPayee(_name, _publicAddress, _info, _age) {
-	  return axios.post('http://localhost:9001/payee', {
-	    name: _name,
-	    publicAddress: _publicAddress,
-	    info: _info,
-	    age: _age
-	  });
-	}
-	
-	module.exports = {
-	  RegisterForCandidate: RegisterForCandidate,
-	  RegisterForContributor: RegisterForContributor,
-	  RegisterForPayee: RegisterForPayee
-	};
-
-/***/ }),
-/* 962 */
-/*!**************************!*\
-  !*** ./~/axios/index.js ***!
-  \**************************/
-/***/ (function(module, exports, __webpack_require__) {
-
-	module.exports = __webpack_require__(/*! ./lib/axios */ 963);
-
-/***/ }),
-/* 963 */
-/*!******************************!*\
-  !*** ./~/axios/lib/axios.js ***!
-  \******************************/
-/***/ (function(module, exports, __webpack_require__) {
-
-	'use strict';
-	
-	var utils = __webpack_require__(/*! ./utils */ 964);
-	var bind = __webpack_require__(/*! ./helpers/bind */ 965);
-	var Axios = __webpack_require__(/*! ./core/Axios */ 967);
-	var defaults = __webpack_require__(/*! ./defaults */ 968);
-	
-	/**
-	 * Create an instance of Axios
-	 *
-	 * @param {Object} defaultConfig The default config for the instance
-	 * @return {Axios} A new instance of Axios
-	 */
-	function createInstance(defaultConfig) {
-	  var context = new Axios(defaultConfig);
-	  var instance = bind(Axios.prototype.request, context);
-	
-	  // Copy axios.prototype to instance
-	  utils.extend(instance, Axios.prototype, context);
-	
-	  // Copy context to instance
-	  utils.extend(instance, context);
-	
-	  return instance;
-	}
-	
-	// Create the default instance to be exported
-	var axios = createInstance(defaults);
-	
-	// Expose Axios class to allow class inheritance
-	axios.Axios = Axios;
-	
-	// Factory for creating new instances
-	axios.create = function create(instanceConfig) {
-	  return createInstance(utils.merge(defaults, instanceConfig));
-	};
-	
-	// Expose Cancel & CancelToken
-	axios.Cancel = __webpack_require__(/*! ./cancel/Cancel */ 985);
-	axios.CancelToken = __webpack_require__(/*! ./cancel/CancelToken */ 986);
-	axios.isCancel = __webpack_require__(/*! ./cancel/isCancel */ 982);
-	
-	// Expose all/spread
-	axios.all = function all(promises) {
-	  return Promise.all(promises);
-	};
-	axios.spread = __webpack_require__(/*! ./helpers/spread */ 987);
-	
-	module.exports = axios;
-	
-	// Allow use of default import syntax in TypeScript
-	module.exports.default = axios;
-
-
-/***/ }),
-/* 964 */
-/*!******************************!*\
-  !*** ./~/axios/lib/utils.js ***!
-  \******************************/
-/***/ (function(module, exports, __webpack_require__) {
-
-	'use strict';
-	
-	var bind = __webpack_require__(/*! ./helpers/bind */ 965);
-	var isBuffer = __webpack_require__(/*! is-buffer */ 966);
-	
-	/*global toString:true*/
-	
-	// utils is a library of generic helper functions non-specific to axios
-	
-	var toString = Object.prototype.toString;
-	
-	/**
-	 * Determine if a value is an Array
-	 *
-	 * @param {Object} val The value to test
-	 * @returns {boolean} True if value is an Array, otherwise false
-	 */
-	function isArray(val) {
-	  return toString.call(val) === '[object Array]';
-	}
-	
-	/**
-	 * Determine if a value is an ArrayBuffer
-	 *
-	 * @param {Object} val The value to test
-	 * @returns {boolean} True if value is an ArrayBuffer, otherwise false
-	 */
-	function isArrayBuffer(val) {
-	  return toString.call(val) === '[object ArrayBuffer]';
-	}
-	
-	/**
-	 * Determine if a value is a FormData
-	 *
-	 * @param {Object} val The value to test
-	 * @returns {boolean} True if value is an FormData, otherwise false
-	 */
-	function isFormData(val) {
-	  return (typeof FormData !== 'undefined') && (val instanceof FormData);
-	}
-	
-	/**
-	 * Determine if a value is a view on an ArrayBuffer
-	 *
-	 * @param {Object} val The value to test
-	 * @returns {boolean} True if value is a view on an ArrayBuffer, otherwise false
-	 */
-	function isArrayBufferView(val) {
-	  var result;
-	  if ((typeof ArrayBuffer !== 'undefined') && (ArrayBuffer.isView)) {
-	    result = ArrayBuffer.isView(val);
-	  } else {
-	    result = (val) && (val.buffer) && (val.buffer instanceof ArrayBuffer);
-	  }
-	  return result;
-	}
-	
-	/**
-	 * Determine if a value is a String
-	 *
-	 * @param {Object} val The value to test
-	 * @returns {boolean} True if value is a String, otherwise false
-	 */
-	function isString(val) {
-	  return typeof val === 'string';
-	}
-	
-	/**
-	 * Determine if a value is a Number
-	 *
-	 * @param {Object} val The value to test
-	 * @returns {boolean} True if value is a Number, otherwise false
-	 */
-	function isNumber(val) {
-	  return typeof val === 'number';
-	}
-	
-	/**
-	 * Determine if a value is undefined
-	 *
-	 * @param {Object} val The value to test
-	 * @returns {boolean} True if the value is undefined, otherwise false
-	 */
-	function isUndefined(val) {
-	  return typeof val === 'undefined';
-	}
-	
-	/**
-	 * Determine if a value is an Object
-	 *
-	 * @param {Object} val The value to test
-	 * @returns {boolean} True if value is an Object, otherwise false
-	 */
-	function isObject(val) {
-	  return val !== null && typeof val === 'object';
-	}
-	
-	/**
-	 * Determine if a value is a Date
-	 *
-	 * @param {Object} val The value to test
-	 * @returns {boolean} True if value is a Date, otherwise false
-	 */
-	function isDate(val) {
-	  return toString.call(val) === '[object Date]';
-	}
-	
-	/**
-	 * Determine if a value is a File
-	 *
-	 * @param {Object} val The value to test
-	 * @returns {boolean} True if value is a File, otherwise false
-	 */
-	function isFile(val) {
-	  return toString.call(val) === '[object File]';
-	}
-	
-	/**
-	 * Determine if a value is a Blob
-	 *
-	 * @param {Object} val The value to test
-	 * @returns {boolean} True if value is a Blob, otherwise false
-	 */
-	function isBlob(val) {
-	  return toString.call(val) === '[object Blob]';
-	}
-	
-	/**
-	 * Determine if a value is a Function
-	 *
-	 * @param {Object} val The value to test
-	 * @returns {boolean} True if value is a Function, otherwise false
-	 */
-	function isFunction(val) {
-	  return toString.call(val) === '[object Function]';
-	}
-	
-	/**
-	 * Determine if a value is a Stream
-	 *
-	 * @param {Object} val The value to test
-	 * @returns {boolean} True if value is a Stream, otherwise false
-	 */
-	function isStream(val) {
-	  return isObject(val) && isFunction(val.pipe);
-	}
-	
-	/**
-	 * Determine if a value is a URLSearchParams object
-	 *
-	 * @param {Object} val The value to test
-	 * @returns {boolean} True if value is a URLSearchParams object, otherwise false
-	 */
-	function isURLSearchParams(val) {
-	  return typeof URLSearchParams !== 'undefined' && val instanceof URLSearchParams;
-	}
-	
-	/**
-	 * Trim excess whitespace off the beginning and end of a string
-	 *
-	 * @param {String} str The String to trim
-	 * @returns {String} The String freed of excess whitespace
-	 */
-	function trim(str) {
-	  return str.replace(/^\s*/, '').replace(/\s*$/, '');
-	}
-	
-	/**
-	 * Determine if we're running in a standard browser environment
-	 *
-	 * This allows axios to run in a web worker, and react-native.
-	 * Both environments support XMLHttpRequest, but not fully standard globals.
-	 *
-	 * web workers:
-	 *  typeof window -> undefined
-	 *  typeof document -> undefined
-	 *
-	 * react-native:
-	 *  navigator.product -> 'ReactNative'
-	 */
-	function isStandardBrowserEnv() {
-	  if (typeof navigator !== 'undefined' && navigator.product === 'ReactNative') {
-	    return false;
-	  }
-	  return (
-	    typeof window !== 'undefined' &&
-	    typeof document !== 'undefined'
-	  );
-	}
-	
-	/**
-	 * Iterate over an Array or an Object invoking a function for each item.
-	 *
-	 * If `obj` is an Array callback will be called passing
-	 * the value, index, and complete array for each item.
-	 *
-	 * If 'obj' is an Object callback will be called passing
-	 * the value, key, and complete object for each property.
-	 *
-	 * @param {Object|Array} obj The object to iterate
-	 * @param {Function} fn The callback to invoke for each item
-	 */
-	function forEach(obj, fn) {
-	  // Don't bother if no value provided
-	  if (obj === null || typeof obj === 'undefined') {
-	    return;
-	  }
-	
-	  // Force an array if not already something iterable
-	  if (typeof obj !== 'object') {
-	    /*eslint no-param-reassign:0*/
-	    obj = [obj];
-	  }
-	
-	  if (isArray(obj)) {
-	    // Iterate over array values
-	    for (var i = 0, l = obj.length; i < l; i++) {
-	      fn.call(null, obj[i], i, obj);
-	    }
-	  } else {
-	    // Iterate over object keys
-	    for (var key in obj) {
-	      if (Object.prototype.hasOwnProperty.call(obj, key)) {
-	        fn.call(null, obj[key], key, obj);
-	      }
-	    }
-	  }
-	}
-	
-	/**
-	 * Accepts varargs expecting each argument to be an object, then
-	 * immutably merges the properties of each object and returns result.
-	 *
-	 * When multiple objects contain the same key the later object in
-	 * the arguments list will take precedence.
-	 *
-	 * Example:
-	 *
-	 * ```js
-	 * var result = merge({foo: 123}, {foo: 456});
-	 * console.log(result.foo); // outputs 456
-	 * ```
-	 *
-	 * @param {Object} obj1 Object to merge
-	 * @returns {Object} Result of all merge properties
-	 */
-	function merge(/* obj1, obj2, obj3, ... */) {
-	  var result = {};
-	  function assignValue(val, key) {
-	    if (typeof result[key] === 'object' && typeof val === 'object') {
-	      result[key] = merge(result[key], val);
-	    } else {
-	      result[key] = val;
-	    }
-	  }
-	
-	  for (var i = 0, l = arguments.length; i < l; i++) {
-	    forEach(arguments[i], assignValue);
-	  }
-	  return result;
-	}
-	
-	/**
-	 * Extends object a by mutably adding to it the properties of object b.
-	 *
-	 * @param {Object} a The object to be extended
-	 * @param {Object} b The object to copy properties from
-	 * @param {Object} thisArg The object to bind function to
-	 * @return {Object} The resulting value of object a
-	 */
-	function extend(a, b, thisArg) {
-	  forEach(b, function assignValue(val, key) {
-	    if (thisArg && typeof val === 'function') {
-	      a[key] = bind(val, thisArg);
-	    } else {
-	      a[key] = val;
-	    }
-	  });
-	  return a;
-	}
-	
-	module.exports = {
-	  isArray: isArray,
-	  isArrayBuffer: isArrayBuffer,
-	  isBuffer: isBuffer,
-	  isFormData: isFormData,
-	  isArrayBufferView: isArrayBufferView,
-	  isString: isString,
-	  isNumber: isNumber,
-	  isObject: isObject,
-	  isUndefined: isUndefined,
-	  isDate: isDate,
-	  isFile: isFile,
-	  isBlob: isBlob,
-	  isFunction: isFunction,
-	  isStream: isStream,
-	  isURLSearchParams: isURLSearchParams,
-	  isStandardBrowserEnv: isStandardBrowserEnv,
-	  forEach: forEach,
-	  merge: merge,
-	  extend: extend,
-	  trim: trim
-	};
-
-
-/***/ }),
-/* 965 */
-/*!*************************************!*\
-  !*** ./~/axios/lib/helpers/bind.js ***!
-  \*************************************/
-/***/ (function(module, exports) {
-
-	'use strict';
-	
-	module.exports = function bind(fn, thisArg) {
-	  return function wrap() {
-	    var args = new Array(arguments.length);
-	    for (var i = 0; i < args.length; i++) {
-	      args[i] = arguments[i];
-	    }
-	    return fn.apply(thisArg, args);
-	  };
-	};
-
-
-/***/ }),
-/* 966 */
-/*!******************************!*\
-  !*** ./~/is-buffer/index.js ***!
-  \******************************/
-/***/ (function(module, exports) {
-
-	/*!
-	 * Determine if an object is a Buffer
-	 *
-	 * @author   Feross Aboukhadijeh <https://feross.org>
-	 * @license  MIT
-	 */
-	
-	// The _isBuffer check is for Safari 5-7 support, because it's missing
-	// Object.prototype.constructor. Remove this eventually
-	module.exports = function (obj) {
-	  return obj != null && (isBuffer(obj) || isSlowBuffer(obj) || !!obj._isBuffer)
-	}
-	
-	function isBuffer (obj) {
-	  return !!obj.constructor && typeof obj.constructor.isBuffer === 'function' && obj.constructor.isBuffer(obj)
-	}
-	
-	// For Node v0.10 support. Remove this eventually.
-	function isSlowBuffer (obj) {
-	  return typeof obj.readFloatLE === 'function' && typeof obj.slice === 'function' && isBuffer(obj.slice(0, 0))
-	}
-
-
-/***/ }),
-/* 967 */
-/*!***********************************!*\
-  !*** ./~/axios/lib/core/Axios.js ***!
-  \***********************************/
-/***/ (function(module, exports, __webpack_require__) {
-
-	'use strict';
-	
-	var defaults = __webpack_require__(/*! ./../defaults */ 968);
-	var utils = __webpack_require__(/*! ./../utils */ 964);
-	var InterceptorManager = __webpack_require__(/*! ./InterceptorManager */ 979);
-	var dispatchRequest = __webpack_require__(/*! ./dispatchRequest */ 980);
-	
-	/**
-	 * Create a new instance of Axios
-	 *
-	 * @param {Object} instanceConfig The default config for the instance
-	 */
-	function Axios(instanceConfig) {
-	  this.defaults = instanceConfig;
-	  this.interceptors = {
-	    request: new InterceptorManager(),
-	    response: new InterceptorManager()
-	  };
-	}
-	
-	/**
-	 * Dispatch a request
-	 *
-	 * @param {Object} config The config specific for this request (merged with this.defaults)
-	 */
-	Axios.prototype.request = function request(config) {
-	  /*eslint no-param-reassign:0*/
-	  // Allow for axios('example/url'[, config]) a la fetch API
-	  if (typeof config === 'string') {
-	    config = utils.merge({
-	      url: arguments[0]
-	    }, arguments[1]);
-	  }
-	
-	  config = utils.merge(defaults, {method: 'get'}, this.defaults, config);
-	  config.method = config.method.toLowerCase();
-	
-	  // Hook up interceptors middleware
-	  var chain = [dispatchRequest, undefined];
-	  var promise = Promise.resolve(config);
-	
-	  this.interceptors.request.forEach(function unshiftRequestInterceptors(interceptor) {
-	    chain.unshift(interceptor.fulfilled, interceptor.rejected);
-	  });
-	
-	  this.interceptors.response.forEach(function pushResponseInterceptors(interceptor) {
-	    chain.push(interceptor.fulfilled, interceptor.rejected);
-	  });
-	
-	  while (chain.length) {
-	    promise = promise.then(chain.shift(), chain.shift());
-	  }
-	
-	  return promise;
-	};
-	
-	// Provide aliases for supported request methods
-	utils.forEach(['delete', 'get', 'head', 'options'], function forEachMethodNoData(method) {
-	  /*eslint func-names:0*/
-	  Axios.prototype[method] = function(url, config) {
-	    return this.request(utils.merge(config || {}, {
-	      method: method,
-	      url: url
-	    }));
-	  };
-	});
-	
-	utils.forEach(['post', 'put', 'patch'], function forEachMethodWithData(method) {
-	  /*eslint func-names:0*/
-	  Axios.prototype[method] = function(url, data, config) {
-	    return this.request(utils.merge(config || {}, {
-	      method: method,
-	      url: url,
-	      data: data
-	    }));
-	  };
-	});
-	
-	module.exports = Axios;
-
-
-/***/ }),
-/* 968 */
-/*!*********************************!*\
-  !*** ./~/axios/lib/defaults.js ***!
-  \*********************************/
-/***/ (function(module, exports, __webpack_require__) {
-
-	/* WEBPACK VAR INJECTION */(function(process) {'use strict';
-	
-	var utils = __webpack_require__(/*! ./utils */ 964);
-	var normalizeHeaderName = __webpack_require__(/*! ./helpers/normalizeHeaderName */ 969);
-	
-	var DEFAULT_CONTENT_TYPE = {
-	  'Content-Type': 'application/x-www-form-urlencoded'
-	};
-	
-	function setContentTypeIfUnset(headers, value) {
-	  if (!utils.isUndefined(headers) && utils.isUndefined(headers['Content-Type'])) {
-	    headers['Content-Type'] = value;
-	  }
-	}
-	
-	function getDefaultAdapter() {
-	  var adapter;
-	  if (typeof XMLHttpRequest !== 'undefined') {
-	    // For browsers use XHR adapter
-	    adapter = __webpack_require__(/*! ./adapters/xhr */ 970);
-	  } else if (typeof process !== 'undefined') {
-	    // For node use HTTP adapter
-	    adapter = __webpack_require__(/*! ./adapters/http */ 970);
-	  }
-	  return adapter;
-	}
-	
-	var defaults = {
-	  adapter: getDefaultAdapter(),
-	
-	  transformRequest: [function transformRequest(data, headers) {
-	    normalizeHeaderName(headers, 'Content-Type');
-	    if (utils.isFormData(data) ||
-	      utils.isArrayBuffer(data) ||
-	      utils.isBuffer(data) ||
-	      utils.isStream(data) ||
-	      utils.isFile(data) ||
-	      utils.isBlob(data)
-	    ) {
-	      return data;
-	    }
-	    if (utils.isArrayBufferView(data)) {
-	      return data.buffer;
-	    }
-	    if (utils.isURLSearchParams(data)) {
-	      setContentTypeIfUnset(headers, 'application/x-www-form-urlencoded;charset=utf-8');
-	      return data.toString();
-	    }
-	    if (utils.isObject(data)) {
-	      setContentTypeIfUnset(headers, 'application/json;charset=utf-8');
-	      return JSON.stringify(data);
-	    }
-	    return data;
-	  }],
-	
-	  transformResponse: [function transformResponse(data) {
-	    /*eslint no-param-reassign:0*/
-	    if (typeof data === 'string') {
-	      try {
-	        data = JSON.parse(data);
-	      } catch (e) { /* Ignore */ }
-	    }
-	    return data;
-	  }],
-	
-	  /**
-	   * A timeout in milliseconds to abort a request. If set to 0 (default) a
-	   * timeout is not created.
-	   */
-	  timeout: 0,
-	
-	  xsrfCookieName: 'XSRF-TOKEN',
-	  xsrfHeaderName: 'X-XSRF-TOKEN',
-	
-	  maxContentLength: -1,
-	
-	  validateStatus: function validateStatus(status) {
-	    return status >= 200 && status < 300;
-	  }
-	};
-	
-	defaults.headers = {
-	  common: {
-	    'Accept': 'application/json, text/plain, */*'
-	  }
-	};
-	
-	utils.forEach(['delete', 'get', 'head'], function forEachMethodNoData(method) {
-	  defaults.headers[method] = {};
-	});
-	
-	utils.forEach(['post', 'put', 'patch'], function forEachMethodWithData(method) {
-	  defaults.headers[method] = utils.merge(DEFAULT_CONTENT_TYPE);
-	});
-	
-	module.exports = defaults;
-	
-	/* WEBPACK VAR INJECTION */}.call(exports, __webpack_require__(/*! ./../../node-libs-browser/~/process/browser.js */ 331)))
-
-/***/ }),
-/* 969 */
-/*!****************************************************!*\
-  !*** ./~/axios/lib/helpers/normalizeHeaderName.js ***!
-  \****************************************************/
-/***/ (function(module, exports, __webpack_require__) {
-
-	'use strict';
-	
-	var utils = __webpack_require__(/*! ../utils */ 964);
-	
-	module.exports = function normalizeHeaderName(headers, normalizedName) {
-	  utils.forEach(headers, function processHeader(value, name) {
-	    if (name !== normalizedName && name.toUpperCase() === normalizedName.toUpperCase()) {
-	      headers[normalizedName] = value;
-	      delete headers[name];
-	    }
-	  });
-	};
-
-
-/***/ }),
-/* 970 */
-/*!*************************************!*\
-  !*** ./~/axios/lib/adapters/xhr.js ***!
-  \*************************************/
-/***/ (function(module, exports, __webpack_require__) {
-
-	/* WEBPACK VAR INJECTION */(function(process) {'use strict';
-	
-	var utils = __webpack_require__(/*! ./../utils */ 964);
-	var settle = __webpack_require__(/*! ./../core/settle */ 971);
-	var buildURL = __webpack_require__(/*! ./../helpers/buildURL */ 974);
-	var parseHeaders = __webpack_require__(/*! ./../helpers/parseHeaders */ 975);
-	var isURLSameOrigin = __webpack_require__(/*! ./../helpers/isURLSameOrigin */ 976);
-	var createError = __webpack_require__(/*! ../core/createError */ 972);
-	var btoa = (typeof window !== 'undefined' && window.btoa && window.btoa.bind(window)) || __webpack_require__(/*! ./../helpers/btoa */ 977);
-	
-	module.exports = function xhrAdapter(config) {
-	  return new Promise(function dispatchXhrRequest(resolve, reject) {
-	    var requestData = config.data;
-	    var requestHeaders = config.headers;
-	
-	    if (utils.isFormData(requestData)) {
-	      delete requestHeaders['Content-Type']; // Let the browser set it
-	    }
-	
-	    var request = new XMLHttpRequest();
-	    var loadEvent = 'onreadystatechange';
-	    var xDomain = false;
-	
-	    // For IE 8/9 CORS support
-	    // Only supports POST and GET calls and doesn't returns the response headers.
-	    // DON'T do this for testing b/c XMLHttpRequest is mocked, not XDomainRequest.
-	    if (process.env.NODE_ENV !== 'test' &&
-	        typeof window !== 'undefined' &&
-	        window.XDomainRequest && !('withCredentials' in request) &&
-	        !isURLSameOrigin(config.url)) {
-	      request = new window.XDomainRequest();
-	      loadEvent = 'onload';
-	      xDomain = true;
-	      request.onprogress = function handleProgress() {};
-	      request.ontimeout = function handleTimeout() {};
-	    }
-	
-	    // HTTP basic authentication
-	    if (config.auth) {
-	      var username = config.auth.username || '';
-	      var password = config.auth.password || '';
-	      requestHeaders.Authorization = 'Basic ' + btoa(username + ':' + password);
-	    }
-	
-	    request.open(config.method.toUpperCase(), buildURL(config.url, config.params, config.paramsSerializer), true);
-	
-	    // Set the request timeout in MS
-	    request.timeout = config.timeout;
-	
-	    // Listen for ready state
-	    request[loadEvent] = function handleLoad() {
-	      if (!request || (request.readyState !== 4 && !xDomain)) {
-	        return;
-	      }
-	
-	      // The request errored out and we didn't get a response, this will be
-	      // handled by onerror instead
-	      // With one exception: request that using file: protocol, most browsers
-	      // will return status as 0 even though it's a successful request
-	      if (request.status === 0 && !(request.responseURL && request.responseURL.indexOf('file:') === 0)) {
-	        return;
-	      }
-	
-	      // Prepare the response
-	      var responseHeaders = 'getAllResponseHeaders' in request ? parseHeaders(request.getAllResponseHeaders()) : null;
-	      var responseData = !config.responseType || config.responseType === 'text' ? request.responseText : request.response;
-	      var response = {
-	        data: responseData,
-	        // IE sends 1223 instead of 204 (https://github.com/axios/axios/issues/201)
-	        status: request.status === 1223 ? 204 : request.status,
-	        statusText: request.status === 1223 ? 'No Content' : request.statusText,
-	        headers: responseHeaders,
-	        config: config,
-	        request: request
-	      };
-	
-	      settle(resolve, reject, response);
-	
-	      // Clean up request
-	      request = null;
-	    };
-	
-	    // Handle low level network errors
-	    request.onerror = function handleError() {
-	      // Real errors are hidden from us by the browser
-	      // onerror should only fire if it's a network error
-	      reject(createError('Network Error', config, null, request));
-	
-	      // Clean up request
-	      request = null;
-	    };
-	
-	    // Handle timeout
-	    request.ontimeout = function handleTimeout() {
-	      reject(createError('timeout of ' + config.timeout + 'ms exceeded', config, 'ECONNABORTED',
-	        request));
-	
-	      // Clean up request
-	      request = null;
-	    };
-	
-	    // Add xsrf header
-	    // This is only done if running in a standard browser environment.
-	    // Specifically not if we're in a web worker, or react-native.
-	    if (utils.isStandardBrowserEnv()) {
-	      var cookies = __webpack_require__(/*! ./../helpers/cookies */ 978);
-	
-	      // Add xsrf header
-	      var xsrfValue = (config.withCredentials || isURLSameOrigin(config.url)) && config.xsrfCookieName ?
-	          cookies.read(config.xsrfCookieName) :
-	          undefined;
-	
-	      if (xsrfValue) {
-	        requestHeaders[config.xsrfHeaderName] = xsrfValue;
-	      }
-	    }
-	
-	    // Add headers to the request
-	    if ('setRequestHeader' in request) {
-	      utils.forEach(requestHeaders, function setRequestHeader(val, key) {
-	        if (typeof requestData === 'undefined' && key.toLowerCase() === 'content-type') {
-	          // Remove Content-Type if data is undefined
-	          delete requestHeaders[key];
-	        } else {
-	          // Otherwise add header to the request
-	          request.setRequestHeader(key, val);
-	        }
-	      });
-	    }
-	
-	    // Add withCredentials to request if needed
-	    if (config.withCredentials) {
-	      request.withCredentials = true;
-	    }
-	
-	    // Add responseType to request if needed
-	    if (config.responseType) {
-	      try {
-	        request.responseType = config.responseType;
-	      } catch (e) {
-	        // Expected DOMException thrown by browsers not compatible XMLHttpRequest Level 2.
-	        // But, this can be suppressed for 'json' type as it can be parsed by default 'transformResponse' function.
-	        if (config.responseType !== 'json') {
-	          throw e;
-	        }
-	      }
-	    }
-	
-	    // Handle progress if needed
-	    if (typeof config.onDownloadProgress === 'function') {
-	      request.addEventListener('progress', config.onDownloadProgress);
-	    }
-	
-	    // Not all browsers support upload events
-	    if (typeof config.onUploadProgress === 'function' && request.upload) {
-	      request.upload.addEventListener('progress', config.onUploadProgress);
-	    }
-	
-	    if (config.cancelToken) {
-	      // Handle cancellation
-	      config.cancelToken.promise.then(function onCanceled(cancel) {
-	        if (!request) {
-	          return;
-	        }
-	
-	        request.abort();
-	        reject(cancel);
-	        // Clean up request
-	        request = null;
-	      });
-	    }
-	
-	    if (requestData === undefined) {
-	      requestData = null;
-	    }
-	
-	    // Send the request
-	    request.send(requestData);
-	  });
-	};
-	
-	/* WEBPACK VAR INJECTION */}.call(exports, __webpack_require__(/*! ./../../../node-libs-browser/~/process/browser.js */ 331)))
-
-/***/ }),
-/* 971 */
-/*!************************************!*\
-  !*** ./~/axios/lib/core/settle.js ***!
-  \************************************/
-/***/ (function(module, exports, __webpack_require__) {
-
-	'use strict';
-	
-	var createError = __webpack_require__(/*! ./createError */ 972);
-	
-	/**
-	 * Resolve or reject a Promise based on response status.
-	 *
-	 * @param {Function} resolve A function that resolves the promise.
-	 * @param {Function} reject A function that rejects the promise.
-	 * @param {object} response The response.
-	 */
-	module.exports = function settle(resolve, reject, response) {
-	  var validateStatus = response.config.validateStatus;
-	  // Note: status is not exposed by XDomainRequest
-	  if (!response.status || !validateStatus || validateStatus(response.status)) {
-	    resolve(response);
-	  } else {
-	    reject(createError(
-	      'Request failed with status code ' + response.status,
-	      response.config,
-	      null,
-	      response.request,
-	      response
-	    ));
-	  }
-	};
-
-
-/***/ }),
-/* 972 */
-/*!*****************************************!*\
-  !*** ./~/axios/lib/core/createError.js ***!
-  \*****************************************/
-/***/ (function(module, exports, __webpack_require__) {
-
-	'use strict';
-	
-	var enhanceError = __webpack_require__(/*! ./enhanceError */ 973);
-	
-	/**
-	 * Create an Error with the specified message, config, error code, request and response.
-	 *
-	 * @param {string} message The error message.
-	 * @param {Object} config The config.
-	 * @param {string} [code] The error code (for example, 'ECONNABORTED').
-	 * @param {Object} [request] The request.
-	 * @param {Object} [response] The response.
-	 * @returns {Error} The created error.
-	 */
-	module.exports = function createError(message, config, code, request, response) {
-	  var error = new Error(message);
-	  return enhanceError(error, config, code, request, response);
-	};
-
-
-/***/ }),
-/* 973 */
-/*!******************************************!*\
-  !*** ./~/axios/lib/core/enhanceError.js ***!
-  \******************************************/
-/***/ (function(module, exports) {
-
-	'use strict';
-	
-	/**
-	 * Update an Error with the specified config, error code, and response.
-	 *
-	 * @param {Error} error The error to update.
-	 * @param {Object} config The config.
-	 * @param {string} [code] The error code (for example, 'ECONNABORTED').
-	 * @param {Object} [request] The request.
-	 * @param {Object} [response] The response.
-	 * @returns {Error} The error.
-	 */
-	module.exports = function enhanceError(error, config, code, request, response) {
-	  error.config = config;
-	  if (code) {
-	    error.code = code;
-	  }
-	  error.request = request;
-	  error.response = response;
-	  return error;
-	};
-
-
-/***/ }),
-/* 974 */
-/*!*****************************************!*\
-  !*** ./~/axios/lib/helpers/buildURL.js ***!
-  \*****************************************/
-/***/ (function(module, exports, __webpack_require__) {
-
-	'use strict';
-	
-	var utils = __webpack_require__(/*! ./../utils */ 964);
-	
-	function encode(val) {
-	  return encodeURIComponent(val).
-	    replace(/%40/gi, '@').
-	    replace(/%3A/gi, ':').
-	    replace(/%24/g, '$').
-	    replace(/%2C/gi, ',').
-	    replace(/%20/g, '+').
-	    replace(/%5B/gi, '[').
-	    replace(/%5D/gi, ']');
-	}
-	
-	/**
-	 * Build a URL by appending params to the end
-	 *
-	 * @param {string} url The base of the url (e.g., http://www.google.com)
-	 * @param {object} [params] The params to be appended
-	 * @returns {string} The formatted url
-	 */
-	module.exports = function buildURL(url, params, paramsSerializer) {
-	  /*eslint no-param-reassign:0*/
-	  if (!params) {
-	    return url;
-	  }
-	
-	  var serializedParams;
-	  if (paramsSerializer) {
-	    serializedParams = paramsSerializer(params);
-	  } else if (utils.isURLSearchParams(params)) {
-	    serializedParams = params.toString();
-	  } else {
-	    var parts = [];
-	
-	    utils.forEach(params, function serialize(val, key) {
-	      if (val === null || typeof val === 'undefined') {
-	        return;
-	      }
-	
-	      if (utils.isArray(val)) {
-	        key = key + '[]';
-	      } else {
-	        val = [val];
-	      }
-	
-	      utils.forEach(val, function parseValue(v) {
-	        if (utils.isDate(v)) {
-	          v = v.toISOString();
-	        } else if (utils.isObject(v)) {
-	          v = JSON.stringify(v);
-	        }
-	        parts.push(encode(key) + '=' + encode(v));
-	      });
-	    });
-	
-	    serializedParams = parts.join('&');
-	  }
-	
-	  if (serializedParams) {
-	    url += (url.indexOf('?') === -1 ? '?' : '&') + serializedParams;
-	  }
-	
-	  return url;
-	};
-
-
-/***/ }),
-/* 975 */
-/*!*********************************************!*\
-  !*** ./~/axios/lib/helpers/parseHeaders.js ***!
-  \*********************************************/
-/***/ (function(module, exports, __webpack_require__) {
-
-	'use strict';
-	
-	var utils = __webpack_require__(/*! ./../utils */ 964);
-	
-	// Headers whose duplicates are ignored by node
-	// c.f. https://nodejs.org/api/http.html#http_message_headers
-	var ignoreDuplicateOf = [
-	  'age', 'authorization', 'content-length', 'content-type', 'etag',
-	  'expires', 'from', 'host', 'if-modified-since', 'if-unmodified-since',
-	  'last-modified', 'location', 'max-forwards', 'proxy-authorization',
-	  'referer', 'retry-after', 'user-agent'
-	];
-	
-	/**
-	 * Parse headers into an object
-	 *
-	 * ```
-	 * Date: Wed, 27 Aug 2014 08:58:49 GMT
-	 * Content-Type: application/json
-	 * Connection: keep-alive
-	 * Transfer-Encoding: chunked
-	 * ```
-	 *
-	 * @param {String} headers Headers needing to be parsed
-	 * @returns {Object} Headers parsed into an object
-	 */
-	module.exports = function parseHeaders(headers) {
-	  var parsed = {};
-	  var key;
-	  var val;
-	  var i;
-	
-	  if (!headers) { return parsed; }
-	
-	  utils.forEach(headers.split('\n'), function parser(line) {
-	    i = line.indexOf(':');
-	    key = utils.trim(line.substr(0, i)).toLowerCase();
-	    val = utils.trim(line.substr(i + 1));
-	
-	    if (key) {
-	      if (parsed[key] && ignoreDuplicateOf.indexOf(key) >= 0) {
-	        return;
-	      }
-	      if (key === 'set-cookie') {
-	        parsed[key] = (parsed[key] ? parsed[key] : []).concat([val]);
-	      } else {
-	        parsed[key] = parsed[key] ? parsed[key] + ', ' + val : val;
-	      }
-	    }
-	  });
-	
-	  return parsed;
-	};
-
-
-/***/ }),
-/* 976 */
-/*!************************************************!*\
-  !*** ./~/axios/lib/helpers/isURLSameOrigin.js ***!
-  \************************************************/
-/***/ (function(module, exports, __webpack_require__) {
-
-	'use strict';
-	
-	var utils = __webpack_require__(/*! ./../utils */ 964);
-	
-	module.exports = (
-	  utils.isStandardBrowserEnv() ?
-	
-	  // Standard browser envs have full support of the APIs needed to test
-	  // whether the request URL is of the same origin as current location.
-	  (function standardBrowserEnv() {
-	    var msie = /(msie|trident)/i.test(navigator.userAgent);
-	    var urlParsingNode = document.createElement('a');
-	    var originURL;
-	
-	    /**
-	    * Parse a URL to discover it's components
-	    *
-	    * @param {String} url The URL to be parsed
-	    * @returns {Object}
-	    */
-	    function resolveURL(url) {
-	      var href = url;
-	
-	      if (msie) {
-	        // IE needs attribute set twice to normalize properties
-	        urlParsingNode.setAttribute('href', href);
-	        href = urlParsingNode.href;
-	      }
-	
-	      urlParsingNode.setAttribute('href', href);
-	
-	      // urlParsingNode provides the UrlUtils interface - http://url.spec.whatwg.org/#urlutils
-	      return {
-	        href: urlParsingNode.href,
-	        protocol: urlParsingNode.protocol ? urlParsingNode.protocol.replace(/:$/, '') : '',
-	        host: urlParsingNode.host,
-	        search: urlParsingNode.search ? urlParsingNode.search.replace(/^\?/, '') : '',
-	        hash: urlParsingNode.hash ? urlParsingNode.hash.replace(/^#/, '') : '',
-	        hostname: urlParsingNode.hostname,
-	        port: urlParsingNode.port,
-	        pathname: (urlParsingNode.pathname.charAt(0) === '/') ?
-	                  urlParsingNode.pathname :
-	                  '/' + urlParsingNode.pathname
-	      };
-	    }
-	
-	    originURL = resolveURL(window.location.href);
-	
-	    /**
-	    * Determine if a URL shares the same origin as the current location
-	    *
-	    * @param {String} requestURL The URL to test
-	    * @returns {boolean} True if URL shares the same origin, otherwise false
-	    */
-	    return function isURLSameOrigin(requestURL) {
-	      var parsed = (utils.isString(requestURL)) ? resolveURL(requestURL) : requestURL;
-	      return (parsed.protocol === originURL.protocol &&
-	            parsed.host === originURL.host);
-	    };
-	  })() :
-	
-	  // Non standard browser envs (web workers, react-native) lack needed support.
-	  (function nonStandardBrowserEnv() {
-	    return function isURLSameOrigin() {
-	      return true;
-	    };
-	  })()
-	);
-
-
-/***/ }),
-/* 977 */
-/*!*************************************!*\
-  !*** ./~/axios/lib/helpers/btoa.js ***!
-  \*************************************/
-/***/ (function(module, exports) {
-
-	'use strict';
-	
-	// btoa polyfill for IE<10 courtesy https://github.com/davidchambers/Base64.js
-	
-	var chars = 'ABCDEFGHIJKLMNOPQRSTUVWXYZabcdefghijklmnopqrstuvwxyz0123456789+/=';
-	
-	function E() {
-	  this.message = 'String contains an invalid character';
-	}
-	E.prototype = new Error;
-	E.prototype.code = 5;
-	E.prototype.name = 'InvalidCharacterError';
-	
-	function btoa(input) {
-	  var str = String(input);
-	  var output = '';
-	  for (
-	    // initialize result and counter
-	    var block, charCode, idx = 0, map = chars;
-	    // if the next str index does not exist:
-	    //   change the mapping table to "="
-	    //   check if d has no fractional digits
-	    str.charAt(idx | 0) || (map = '=', idx % 1);
-	    // "8 - idx % 1 * 8" generates the sequence 2, 4, 6, 8
-	    output += map.charAt(63 & block >> 8 - idx % 1 * 8)
-	  ) {
-	    charCode = str.charCodeAt(idx += 3 / 4);
-	    if (charCode > 0xFF) {
-	      throw new E();
-	    }
-	    block = block << 8 | charCode;
-	  }
-	  return output;
-	}
-	
-	module.exports = btoa;
-
-
-/***/ }),
-/* 978 */
-/*!****************************************!*\
-  !*** ./~/axios/lib/helpers/cookies.js ***!
-  \****************************************/
-/***/ (function(module, exports, __webpack_require__) {
-
-	'use strict';
-	
-	var utils = __webpack_require__(/*! ./../utils */ 964);
-	
-	module.exports = (
-	  utils.isStandardBrowserEnv() ?
-	
-	  // Standard browser envs support document.cookie
-	  (function standardBrowserEnv() {
-	    return {
-	      write: function write(name, value, expires, path, domain, secure) {
-	        var cookie = [];
-	        cookie.push(name + '=' + encodeURIComponent(value));
-	
-	        if (utils.isNumber(expires)) {
-	          cookie.push('expires=' + new Date(expires).toGMTString());
-	        }
-	
-	        if (utils.isString(path)) {
-	          cookie.push('path=' + path);
-	        }
-	
-	        if (utils.isString(domain)) {
-	          cookie.push('domain=' + domain);
-	        }
-	
-	        if (secure === true) {
-	          cookie.push('secure');
-	        }
-	
-	        document.cookie = cookie.join('; ');
-	      },
-	
-	      read: function read(name) {
-	        var match = document.cookie.match(new RegExp('(^|;\\s*)(' + name + ')=([^;]*)'));
-	        return (match ? decodeURIComponent(match[3]) : null);
-	      },
-	
-	      remove: function remove(name) {
-	        this.write(name, '', Date.now() - 86400000);
-	      }
-	    };
-	  })() :
-	
-	  // Non standard browser env (web workers, react-native) lack needed support.
-	  (function nonStandardBrowserEnv() {
-	    return {
-	      write: function write() {},
-	      read: function read() { return null; },
-	      remove: function remove() {}
-	    };
-	  })()
-	);
-
-
-/***/ }),
-/* 979 */
-/*!************************************************!*\
-  !*** ./~/axios/lib/core/InterceptorManager.js ***!
-  \************************************************/
-/***/ (function(module, exports, __webpack_require__) {
-
-	'use strict';
-	
-	var utils = __webpack_require__(/*! ./../utils */ 964);
-	
-	function InterceptorManager() {
-	  this.handlers = [];
-	}
-	
-	/**
-	 * Add a new interceptor to the stack
-	 *
-	 * @param {Function} fulfilled The function to handle `then` for a `Promise`
-	 * @param {Function} rejected The function to handle `reject` for a `Promise`
-	 *
-	 * @return {Number} An ID used to remove interceptor later
-	 */
-	InterceptorManager.prototype.use = function use(fulfilled, rejected) {
-	  this.handlers.push({
-	    fulfilled: fulfilled,
-	    rejected: rejected
-	  });
-	  return this.handlers.length - 1;
-	};
-	
-	/**
-	 * Remove an interceptor from the stack
-	 *
-	 * @param {Number} id The ID that was returned by `use`
-	 */
-	InterceptorManager.prototype.eject = function eject(id) {
-	  if (this.handlers[id]) {
-	    this.handlers[id] = null;
-	  }
-	};
-	
-	/**
-	 * Iterate over all the registered interceptors
-	 *
-	 * This method is particularly useful for skipping over any
-	 * interceptors that may have become `null` calling `eject`.
-	 *
-	 * @param {Function} fn The function to call for each interceptor
-	 */
-	InterceptorManager.prototype.forEach = function forEach(fn) {
-	  utils.forEach(this.handlers, function forEachHandler(h) {
-	    if (h !== null) {
-	      fn(h);
-	    }
-	  });
-	};
-	
-	module.exports = InterceptorManager;
-
-
-/***/ }),
-/* 980 */
-/*!*********************************************!*\
-  !*** ./~/axios/lib/core/dispatchRequest.js ***!
-  \*********************************************/
-/***/ (function(module, exports, __webpack_require__) {
-
-	'use strict';
-	
-	var utils = __webpack_require__(/*! ./../utils */ 964);
-	var transformData = __webpack_require__(/*! ./transformData */ 981);
-	var isCancel = __webpack_require__(/*! ../cancel/isCancel */ 982);
-	var defaults = __webpack_require__(/*! ../defaults */ 968);
-	var isAbsoluteURL = __webpack_require__(/*! ./../helpers/isAbsoluteURL */ 983);
-	var combineURLs = __webpack_require__(/*! ./../helpers/combineURLs */ 984);
-	
-	/**
-	 * Throws a `Cancel` if cancellation has been requested.
-	 */
-	function throwIfCancellationRequested(config) {
-	  if (config.cancelToken) {
-	    config.cancelToken.throwIfRequested();
-	  }
-	}
-	
-	/**
-	 * Dispatch a request to the server using the configured adapter.
-	 *
-	 * @param {object} config The config that is to be used for the request
-	 * @returns {Promise} The Promise to be fulfilled
-	 */
-	module.exports = function dispatchRequest(config) {
-	  throwIfCancellationRequested(config);
-	
-	  // Support baseURL config
-	  if (config.baseURL && !isAbsoluteURL(config.url)) {
-	    config.url = combineURLs(config.baseURL, config.url);
-	  }
-	
-	  // Ensure headers exist
-	  config.headers = config.headers || {};
-	
-	  // Transform request data
-	  config.data = transformData(
-	    config.data,
-	    config.headers,
-	    config.transformRequest
-	  );
-	
-	  // Flatten headers
-	  config.headers = utils.merge(
-	    config.headers.common || {},
-	    config.headers[config.method] || {},
-	    config.headers || {}
-	  );
-	
-	  utils.forEach(
-	    ['delete', 'get', 'head', 'post', 'put', 'patch', 'common'],
-	    function cleanHeaderConfig(method) {
-	      delete config.headers[method];
-	    }
-	  );
-	
-	  var adapter = config.adapter || defaults.adapter;
-	
-	  return adapter(config).then(function onAdapterResolution(response) {
-	    throwIfCancellationRequested(config);
-	
-	    // Transform response data
-	    response.data = transformData(
-	      response.data,
-	      response.headers,
-	      config.transformResponse
-	    );
-	
-	    return response;
-	  }, function onAdapterRejection(reason) {
-	    if (!isCancel(reason)) {
-	      throwIfCancellationRequested(config);
-	
-	      // Transform response data
-	      if (reason && reason.response) {
-	        reason.response.data = transformData(
-	          reason.response.data,
-	          reason.response.headers,
-	          config.transformResponse
-	        );
-	      }
-	    }
-	
-	    return Promise.reject(reason);
-	  });
-	};
-
-
-/***/ }),
-/* 981 */
-/*!*******************************************!*\
-  !*** ./~/axios/lib/core/transformData.js ***!
-  \*******************************************/
-/***/ (function(module, exports, __webpack_require__) {
-
-	'use strict';
-	
-	var utils = __webpack_require__(/*! ./../utils */ 964);
-	
-	/**
-	 * Transform the data for a request or a response
-	 *
-	 * @param {Object|String} data The data to be transformed
-	 * @param {Array} headers The headers for the request or response
-	 * @param {Array|Function} fns A single function or Array of functions
-	 * @returns {*} The resulting transformed data
-	 */
-	module.exports = function transformData(data, headers, fns) {
-	  /*eslint no-param-reassign:0*/
-	  utils.forEach(fns, function transform(fn) {
-	    data = fn(data, headers);
-	  });
-	
-	  return data;
-	};
-
-
-/***/ }),
-/* 982 */
-/*!****************************************!*\
-  !*** ./~/axios/lib/cancel/isCancel.js ***!
-  \****************************************/
-/***/ (function(module, exports) {
-
-	'use strict';
-	
-	module.exports = function isCancel(value) {
-	  return !!(value && value.__CANCEL__);
-	};
-
-
-/***/ }),
-/* 983 */
-/*!**********************************************!*\
-  !*** ./~/axios/lib/helpers/isAbsoluteURL.js ***!
-  \**********************************************/
-/***/ (function(module, exports) {
-
-	'use strict';
-	
-	/**
-	 * Determines whether the specified URL is absolute
-	 *
-	 * @param {string} url The URL to test
-	 * @returns {boolean} True if the specified URL is absolute, otherwise false
-	 */
-	module.exports = function isAbsoluteURL(url) {
-	  // A URL is considered absolute if it begins with "<scheme>://" or "//" (protocol-relative URL).
-	  // RFC 3986 defines scheme name as a sequence of characters beginning with a letter and followed
-	  // by any combination of letters, digits, plus, period, or hyphen.
-	  return /^([a-z][a-z\d\+\-\.]*:)?\/\//i.test(url);
-	};
-
-
-/***/ }),
-/* 984 */
-/*!********************************************!*\
-  !*** ./~/axios/lib/helpers/combineURLs.js ***!
-  \********************************************/
-/***/ (function(module, exports) {
-
-	'use strict';
-	
-	/**
-	 * Creates a new URL by combining the specified URLs
-	 *
-	 * @param {string} baseURL The base URL
-	 * @param {string} relativeURL The relative URL
-	 * @returns {string} The combined URL
-	 */
-	module.exports = function combineURLs(baseURL, relativeURL) {
-	  return relativeURL
-	    ? baseURL.replace(/\/+$/, '') + '/' + relativeURL.replace(/^\/+/, '')
-	    : baseURL;
-	};
-
-
-/***/ }),
-/* 985 */
-/*!**************************************!*\
-  !*** ./~/axios/lib/cancel/Cancel.js ***!
-  \**************************************/
-/***/ (function(module, exports) {
-
-	'use strict';
-	
-	/**
-	 * A `Cancel` is an object that is thrown when an operation is canceled.
-	 *
-	 * @class
-	 * @param {string=} message The message.
-	 */
-	function Cancel(message) {
-	  this.message = message;
-	}
-	
-	Cancel.prototype.toString = function toString() {
-	  return 'Cancel' + (this.message ? ': ' + this.message : '');
-	};
-	
-	Cancel.prototype.__CANCEL__ = true;
-	
-	module.exports = Cancel;
-
-
-/***/ }),
-/* 986 */
-/*!*******************************************!*\
-  !*** ./~/axios/lib/cancel/CancelToken.js ***!
-  \*******************************************/
-/***/ (function(module, exports, __webpack_require__) {
-
-	'use strict';
-	
-	var Cancel = __webpack_require__(/*! ./Cancel */ 985);
-	
-	/**
-	 * A `CancelToken` is an object that can be used to request cancellation of an operation.
-	 *
-	 * @class
-	 * @param {Function} executor The executor function.
-	 */
-	function CancelToken(executor) {
-	  if (typeof executor !== 'function') {
-	    throw new TypeError('executor must be a function.');
-	  }
-	
-	  var resolvePromise;
-	  this.promise = new Promise(function promiseExecutor(resolve) {
-	    resolvePromise = resolve;
-	  });
-	
-	  var token = this;
-	  executor(function cancel(message) {
-	    if (token.reason) {
-	      // Cancellation has already been requested
-	      return;
-	    }
-	
-	    token.reason = new Cancel(message);
-	    resolvePromise(token.reason);
-	  });
-	}
-	
-	/**
-	 * Throws a `Cancel` if cancellation has been requested.
-	 */
-	CancelToken.prototype.throwIfRequested = function throwIfRequested() {
-	  if (this.reason) {
-	    throw this.reason;
-	  }
-	};
-	
-	/**
-	 * Returns an object that contains a new `CancelToken` and a function that, when called,
-	 * cancels the `CancelToken`.
-	 */
-	CancelToken.source = function source() {
-	  var cancel;
-	  var token = new CancelToken(function executor(c) {
-	    cancel = c;
-	  });
-	  return {
-	    token: token,
-	    cancel: cancel
-	  };
-	};
-	
-	module.exports = CancelToken;
-
-
-/***/ }),
-/* 987 */
-/*!***************************************!*\
-  !*** ./~/axios/lib/helpers/spread.js ***!
-  \***************************************/
-/***/ (function(module, exports) {
-
-	'use strict';
-	
-	/**
-	 * Syntactic sugar for invoking a function and expanding an array for arguments.
-	 *
-	 * Common use case would be to use `Function.prototype.apply`.
-	 *
-	 *  ```js
-	 *  function f(x, y, z) {}
-	 *  var args = [1, 2, 3];
-	 *  f.apply(null, args);
-	 *  ```
-	 *
-	 * With `spread` this example can be re-written.
-	 *
-	 *  ```js
-	 *  spread(function(x, y, z) {})([1, 2, 3]);
-	 *  ```
-	 *
-	 * @param {Function} callback
-	 * @returns {Function}
-	 */
-	module.exports = function spread(callback) {
-	  return function wrap(arr) {
-	    return callback.apply(null, arr);
-	  };
-	};
-
 
 /***/ })
 /******/ ]);

@@ -51,8 +51,8 @@ if (typeof window.web3 === 'undefined') {
 }
 var infuraWeb3=new Web3(new Web3.providers.HttpProvider("https://rinkeby.infura.io/Pd3j9YfH7kWLXAS7Sayq"));
 
-var metaMaskRegistryInst =metaMaskWeb3.eth.contract(RegistryABI).at(RegistryAddress)
-
+var metaMaskRegistryInst = metaMaskWeb3.eth.contract(RegistryABI).at(RegistryAddress);
+var infuraRegistryInst = infuraWeb3.eth.contract(RegistryABI).at(RegistryAddress);
 
 const ZeroClientProvider = require('web3-provider-engine/zero.js')
 const ZeroWeb3 = new Web3(
@@ -100,7 +100,7 @@ module.exports={
   infuraWeb3,
   metaMaskRegistryInst,
   ZeroWeb3,
-  eventHandler,
+  infuraRegistryInst,
   CampaignFundABI,
   campaignFundByteCode
 }
