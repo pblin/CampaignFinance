@@ -1,11 +1,36 @@
 {
-  "name": "campaignmanagement",
+  "name": "campaignManagement",
   "version": "1.0.0",
-  "description": "",
+  "description": "webApp to manage your Campaign...",
   "main": "index.js",
   "scripts": {
-    "test": "echo \"Error: no test specified\" && exit 1"
+    "test": "echo \"Error: no test specified\" && exit 1",
+    "start": "npm run build",
+    "build": "webpack -d && webpack-dev-server --content-base src/ --inline --hot --port 3456"
   },
-  "author": "",
-  "license": "ISC"
+
+  "author": "Terry",
+  "license": "MIT",
+  "dependencies": {
+    "babel-plugin-transform-async-to-generator": "^6.24.1",
+    "babel-polyfill": "^6.26.0",
+    "babel-preset-stage-0": "^6.24.1",
+    "ipfs-api": "^18.1.2",
+    "json-loader": "^0.5.7",
+    "react": "^15.3.2",
+    "react-dom": "^15.3.2",
+    "react-router": "^4.2.0",
+    "react-router-dom": "^4.2.2",
+    "web3": "^0.20.0",
+    "web3-provider-engine": "^13.6.6"
+  },
+  "devDependencies": {
+    "babel-core": "^6.16.0",
+    "babel-loader": "^6.2.5",
+    "babel-preset-es2015": "^6.16.0",
+    "babel-preset-react": "^6.16.0",
+    "solc-loader": "^1.1.1",
+    "webpack": "^1.13.2",
+    "webpack-dev-server": "^1.16.1"
+  }
 }
