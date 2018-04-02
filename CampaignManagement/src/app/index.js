@@ -19,11 +19,18 @@ class MainComponent extends React.Component {
 
    }
    render(){
+     const MainPage =(
+       <div>
+       </div>
+     )
+     return(
+       <h1>hi</h1>
+     )
 
    }
    //display balances
    componentDidMount(){
-     
+
    }
    // add owner
    addOwner(){

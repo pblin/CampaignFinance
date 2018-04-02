@@ -8,7 +8,6 @@
     "start": "npm run build",
     "build": "webpack -d && webpack-dev-server --content-base src/ --inline --hot --port 3456"
   },
-
   "author": "Terry",
   "license": "MIT",
   "dependencies": {

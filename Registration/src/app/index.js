@@ -315,9 +315,18 @@ class MainComponent extends React.Component {
 
   handleCampaignRegistration(e){
     e.preventDefault();
-    var name = this.refs.name.value;
-    var info = this.refs.info.value;
-    var logo = this.refs.logo.value;
+    var name = String(this.refs.name.value);
+    var info = String(this.refs.info.value);
+    var logo = String(this.refs.logo.value);
+    if (info.length==46){
+      info = getBytes32FromIpfsHash(info);
+
+    }
+    if (logo.length==46){
+
+      logo = getBytes32FromIpfsHash(logo);
+
+    }
     if (Object.keys(this.state.uportweb3).length == 0){
       //metamask to deploy
       let FundContract = metaMaskWeb3.eth.contract(CampaignFundABI);
@@ -342,7 +351,7 @@ class MainComponent extends React.Component {
     }
     else{
       //use uport to deploy
-      let FundContract = uportweb3.eth.contract(JSON.parse(CampaignFundABI));
+      let FundContract = uportweb3.eth.contract(CampaignFundABI);
       FundContract.new(MAX_DONATION ,name, info, logo,{
          from:this.state.coinBaseAccount,
          data:campaignFundByteCode,
