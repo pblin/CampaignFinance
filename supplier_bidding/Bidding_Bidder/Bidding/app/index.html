@@ -1,0 +1,29 @@
+<!DOCTYPE html>
+<html>
+<head>
+<title>Bidding Page</title>
+<link href='https://fonts.googleapis.com/css?family=Open+Sans:400,700' rel='stylesheet' type='text/css'>
+<link href='https://maxcdn.bootstrapcdn.com/bootstrap/3.3.7/css/bootstrap.min.css' rel='stylesheet' type='text/css'>
+<style>.margin-top-3 {	margin-top: 3em;	
+}
+</style>
+</head>
+<body class="container-fluid">
+<div class="container-fluid">
+  <h1>Bid Using Bidding ID and BID HASH</h1>
+    <div class="container-fluid">
+      <h2>Bidding</h2>
+      <div id="msg"></div>
+      <input type="text" id="BiddingID" placeholder="Enter the BiddingID"/>
+      <input type="text" id="BidHash" placeholder="Enter the BidHash"/>
+      <input type="text" id="BidAmount" placeholder="Enter the Bid Amount"/>
+      <br>
+      <br>
+      <a href="#" onclick="Bid(BiddingID,BidHash,BidAmount)" class="btn btn-primary">Bid</a>
+    </div>
+  </div>
+
+<script src="https://code.jquery.com/jquery-3.1.1.slim.min.js"></script>
+<script src="app.js"></script>
+</body>
+</html>
