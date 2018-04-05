@@ -1,0 +1,4533 @@
+{
+  "contractName": "Voting",
+  "abi": [
+    {
+      "constant": true,
+      "inputs": [
+        {
+          "name": "",
+          "type": "uint256"
+        }
+      ],
+      "name": "BidMap",
+      "outputs": [
+        {
+          "name": "deadLine",
+          "type": "uint256"
+        },
+        {
+          "name": "bidHash",
+          "type": "bytes32"
+        },
+        {
+          "name": "lowestBidder",
+          "type": "address"
+        },
+        {
+          "name": "lowestBid",
+          "type": "uint256"
+        },
+        {
+          "name": "Sender",
+          "type": "address"
+        }
+      ],
+      "payable": false,
+      "stateMutability": "view",
+      "type": "function"
+    },
+    {
+      "constant": true,
+      "inputs": [],
+      "name": "myGlobalCounter",
+      "outputs": [
+        {
+          "name": "",
+          "type": "uint256"
+        }
+      ],
+      "payable": false,
+      "stateMutability": "view",
+      "type": "function"
+    },
+    {
+      "constant": true,
+      "inputs": [],
+      "name": "token",
+      "outputs": [
+        {
+          "name": "",
+          "type": "address"
+        }
+      ],
+      "payable": false,
+      "stateMutability": "view",
+      "type": "function"
+    },
+    {
+      "constant": false,
+      "inputs": [
+        {
+          "name": "timeLimit",
+          "type": "uint256"
+        }
+      ],
+      "name": "startBidding",
+      "outputs": [
+        {
+          "name": "BiddingID",
+          "type": "uint256"
+        }
+      ],
+      "payable": false,
+      "stateMutability": "nonpayable",
+      "type": "function"
+    },
+    {
+      "constant": false,
+      "inputs": [
+        {
+          "name": "BiddingID",
+          "type": "uint256"
+        },
+        {
+          "name": "BidderHash",
+          "type": "bytes32"
+        },
+        {
+          "name": "BidAmount",
+          "type": "uint256"
+        }
+      ],
+      "name": "Bid",
+      "outputs": [
+        {
+          "name": "lowestBidder",
+          "type": "address"
+        }
+      ],
+      "payable": false,
+      "stateMutability": "nonpayable",
+      "type": "function"
+    },
+    {
+      "constant": false,
+      "inputs": [
+        {
+          "name": "BiddingID",
+          "type": "uint256"
+        },
+        {
+          "name": "key",
+          "type": "bytes32"
+        }
+      ],
+      "name": "BidEnd",
+      "outputs": [
+        {
+          "name": "lowestBidder",
+          "type": "address"
+        }
+      ],
+      "payable": false,
+      "stateMutability": "nonpayable",
+      "type": "function"
+    },
+    {
+      "constant": false,
+      "inputs": [
+        {
+          "name": "BiddingID",
+          "type": "uint256"
+        }
+      ],
+      "name": "clean",
+      "outputs": [],
+      "payable": false,
+      "stateMutability": "nonpayable",
+      "type": "function"
+    }
+  ],
+  "bytecode": "0x6060604052341561000f57600080fd5b6106688061001e6000396000f300606060405260043610610083576000357c0100000000000000000000000000000000000000000000000000000000900463ffffffff168063674ef0fa1461008857806371dc19c7146100ab578063840ba10c1461015e578063a09e9c1d146101ce578063bf47103914610205578063e542eb061461022e578063fc0c546a146102a7575b600080fd5b341561009357600080fd5b6100a960048080359060200190919050506102fc565b005b34156100b657600080fd5b6100cc60048080359060200190919050506103c4565b6040518086815260200185600019166000191681526020018473ffffffffffffffffffffffffffffffffffffffff1673ffffffffffffffffffffffffffffffffffffffff1681526020018381526020018273ffffffffffffffffffffffffffffffffffffffff1673ffffffffffffffffffffffffffffffffffffffff1681526020019550505050505060405180910390f35b341561016957600080fd5b61018c60048080359060200190919080356000191690602001909190505061043a565b604051808273ffffffffffffffffffffffffffffffffffffffff1673ffffffffffffffffffffffffffffffffffffffff16815260200191505060405180910390f35b34156101d957600080fd5b6101ef6004808035906020019091905050610480565b6040518082815260200191505060405180910390f35b341561021057600080fd5b61021861052a565b6040518082815260200191505060405180910390f35b341561023957600080fd5b610265600480803590602001909190803560001916906020019091908035906020019091905050610530565b604051808273ffffffffffffffffffffffffffffffffffffffff1673ffffffffffffffffffffffffffffffffffffffff16815260200191505060405180910390f35b34156102b257600080fd5b6102ba610617565b604051808273ffffffffffffffffffffffffffffffffffffffff1673ffffffffffffffffffffffffffffffffffffffff16815260200191505060405180910390f35b600060016000838152602001908152602001600020905060008160000181905550600060010281600101816000191690555060008160020160006101000a81548173ffffffffffffffffffffffffffffffffffffffff021916908373ffffffffffffffffffffffffffffffffffffffff1602179055506000816003018190555060008160040160006101000a81548173ffffffffffffffffffffffffffffffffffffffff021916908373ffffffffffffffffffffffffffffffffffffffff1602179055505050565b60016020528060005260406000206000915090508060000154908060010154908060020160009054906101000a900473ffffffffffffffffffffffffffffffffffffffff16908060030154908060040160009054906101000a900473ffffffffffffffffffffffffffffffffffffffff16905085565b6000806001600085815260200190815260200160002090508060020160009054906101000a900473ffffffffffffffffffffffffffffffffffffffff1691505092915050565b6000600260008154809291906001019190505590508143016001600083815260200190815260200160002060000181905550336001600083815260200190815260200160002060040160006101000a81548173ffffffffffffffffffffffffffffffffffffffff021916908373ffffffffffffffffffffffffffffffffffffffff160217905550620186a06001600083815260200190815260200160002060030181905550919050565b60025481565b600080600160008681526020019081526020016000209050828160030154108061055d5750438160000154105b1561058e578060020160009054906101000a900473ffffffffffffffffffffffffffffffffffffffff16915061060f565b338160020160006101000a81548173ffffffffffffffffffffffffffffffffffffffff021916908373ffffffffffffffffffffffffffffffffffffffff160217905550828160030181905550838160010181600019169055508060020160009054906101000a900473ffffffffffffffffffffffffffffffffffffffff1691505b509392505050565b6000809054906101000a900473ffffffffffffffffffffffffffffffffffffffff16815600a165627a7a723058201387328011d92efa41c624b2cacd9124cca76f51514cf096cb21e21f3325b2740029",
+  "deployedBytecode": "0x606060405260043610610083576000357c0100000000000000000000000000000000000000000000000000000000900463ffffffff168063674ef0fa1461008857806371dc19c7146100ab578063840ba10c1461015e578063a09e9c1d146101ce578063bf47103914610205578063e542eb061461022e578063fc0c546a146102a7575b600080fd5b341561009357600080fd5b6100a960048080359060200190919050506102fc565b005b34156100b657600080fd5b6100cc60048080359060200190919050506103c4565b6040518086815260200185600019166000191681526020018473ffffffffffffffffffffffffffffffffffffffff1673ffffffffffffffffffffffffffffffffffffffff1681526020018381526020018273ffffffffffffffffffffffffffffffffffffffff1673ffffffffffffffffffffffffffffffffffffffff1681526020019550505050505060405180910390f35b341561016957600080fd5b61018c60048080359060200190919080356000191690602001909190505061043a565b604051808273ffffffffffffffffffffffffffffffffffffffff1673ffffffffffffffffffffffffffffffffffffffff16815260200191505060405180910390f35b34156101d957600080fd5b6101ef6004808035906020019091905050610480565b6040518082815260200191505060405180910390f35b341561021057600080fd5b61021861052a565b6040518082815260200191505060405180910390f35b341561023957600080fd5b610265600480803590602001909190803560001916906020019091908035906020019091905050610530565b604051808273ffffffffffffffffffffffffffffffffffffffff1673ffffffffffffffffffffffffffffffffffffffff16815260200191505060405180910390f35b34156102b257600080fd5b6102ba610617565b604051808273ffffffffffffffffffffffffffffffffffffffff1673ffffffffffffffffffffffffffffffffffffffff16815260200191505060405180910390f35b600060016000838152602001908152602001600020905060008160000181905550600060010281600101816000191690555060008160020160006101000a81548173ffffffffffffffffffffffffffffffffffffffff021916908373ffffffffffffffffffffffffffffffffffffffff1602179055506000816003018190555060008160040160006101000a81548173ffffffffffffffffffffffffffffffffffffffff021916908373ffffffffffffffffffffffffffffffffffffffff1602179055505050565b60016020528060005260406000206000915090508060000154908060010154908060020160009054906101000a900473ffffffffffffffffffffffffffffffffffffffff16908060030154908060040160009054906101000a900473ffffffffffffffffffffffffffffffffffffffff16905085565b6000806001600085815260200190815260200160002090508060020160009054906101000a900473ffffffffffffffffffffffffffffffffffffffff1691505092915050565b6000600260008154809291906001019190505590508143016001600083815260200190815260200160002060000181905550336001600083815260200190815260200160002060040160006101000a81548173ffffffffffffffffffffffffffffffffffffffff021916908373ffffffffffffffffffffffffffffffffffffffff160217905550620186a06001600083815260200190815260200160002060030181905550919050565b60025481565b600080600160008681526020019081526020016000209050828160030154108061055d5750438160000154105b1561058e578060020160009054906101000a900473ffffffffffffffffffffffffffffffffffffffff16915061060f565b338160020160006101000a81548173ffffffffffffffffffffffffffffffffffffffff021916908373ffffffffffffffffffffffffffffffffffffffff160217905550828160030181905550838160010181600019169055508060020160009054906101000a900473ffffffffffffffffffffffffffffffffffffffff1691505b509392505050565b6000809054906101000a900473ffffffffffffffffffffffffffffffffffffffff16815600a165627a7a723058201387328011d92efa41c624b2cacd9124cca76f51514cf096cb21e21f3325b2740029",
+  "sourceMap": "97:1661:5:-;;;;;;;;;;;;;;;;;",
+  "deployedSourceMap": "97:1661:5:-;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;1611:144;;;;;;;;;;;;;;;;;;;;;;;;;;539:37;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;1256:350;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;710:224;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;628:27;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;937:316;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;123:24;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;1611:144;1645:9;1657:6;:17;1664:9;1657:17;;;;;;;;;;;1645:29;;1688:1;1677;:10;;:12;;;;1702:1;1692:11;;:1;:9;;:11;;;;;;;1721:1;1706;:14;;;:16;;;;;;;;;;;;;;;;;;1737:1;1725;:11;;:13;;;;1750:1;1741;:8;;;:10;;;;;;;;;;;;;;;;;;1611:144;;:::o;539:37::-;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;:::o;1256:350::-;1310:20;1334:9;1346:6;:17;1353:9;1346:17;;;;;;;;;;;1334:29;;1373:1;:14;;;;;;;;;;;;1366:21;;1256:350;;;;;:::o;710:224::-;757:14;786:15;;:17;;;;;;;;;;;;775:28;;846:9;833:12;:22;806:6;:17;813:9;806:17;;;;;;;;;;;:26;;:49;;;;883:10;858:6;:17;865:9;858:17;;;;;;;;;;;:24;;;:35;;;;;;;;;;;;;;;;;;924:6;896;:17;903:9;896:17;;;;;;;;;;;:27;;:34;;;;710:224;;;:::o;628:27::-;;;;:::o;937:316::-;1011:20;1035:9;1047:6;:17;1054:9;1047:17;;;;;;;;;;;1035:29;;1083:9;1071:1;:11;;;:21;:48;;;;1107:12;1096:1;:10;;;:23;1071:48;1067:82;;;1131:1;:14;;;;;;;;;;;;1124:21;;;;1067:82;1166:10;1151:1;:14;;;:25;;;;;;;;;;;;;;;;;;1192:9;1179:1;:11;;:22;;;;1215:10;1204:1;:9;;:21;;;;;;;1235:1;:14;;;;;;;;;;;;1228:21;;937:316;;;;;;;:::o;123:24::-;;;;;;;;;;;;;:::o",
+  "source": "pragma solidity ^0.4.19;\n\nimport './ERC223.sol';\nimport './SafeMath.sol';\nimport './Token.sol';\n\ncontract Voting{\n    \n    ERC223Token public token;\n\tstruct Bidding{\n\t// structure of the bidding\n\tuint deadLine; // denotes the end time for the auction.\n\tbytes32 bidHash; // the hash which will be sent by the winner of the Bidding for payment release\n\taddress lowestBidder; // current lowest Bidder\n\tuint lowestBid; // the current amount for the lowest Bid\n\taddress Sender; // the person who will receive money for the lowest bid.\n\t}\n\t\n\t\n\n\tmapping (uint=>Bidding) public BidMap; // A hashmap for BidId to the Bidding Structure.\n\tuint public myGlobalCounter; //keeps count for the number of Bidding Contracts.\n\n\tfunction startBidding(uint timeLimit) returns (uint BiddingID){\n\tBiddingID= myGlobalCounter++;\n\tBidMap[BiddingID].deadLine=block.number+timeLimit;\n\tBidMap[BiddingID].Sender=msg.sender;\n\tBidMap[BiddingID].lowestBid=100000;\n\t}\n\n\tfunction Bid(uint BiddingID, bytes32 BidderHash, uint BidAmount) returns (address lowestBidder){\n\tBidding B = BidMap[BiddingID];\n\tif (B.lowestBid<BidAmount || B.deadLine<block.number) {\n\treturn B.lowestBidder;\n\t}\n\tB.lowestBidder=msg.sender;\n\tB.lowestBid= BidAmount;\n\tB.bidHash= BidderHash;\n\treturn B.lowestBidder;\n\t}\n\n\tfunction BidEnd(uint BiddingID, bytes32 key) returns (address lowestBidder){\n\tBidding B = BidMap[BiddingID];\n\treturn B.lowestBidder;\n\t//if (block.number>=B.deadLine && token.balanceOf(B.Sender)>=B.lowestBid ){\n\t//token.transfer(B.lowestBidder,B.lowestBid);\n\t//CF.pay(B.lowestBidder,B.lowestBid);\n\t//return B.lowestBidder;\n\t//clean(BiddingID);\n\t//}\n\t}\n\t\n\n\tfunction clean(uint BiddingID) {\n\tBidding B = BidMap[BiddingID];\n\tB.deadLine=0;\n\tB.bidHash=0;\n\tB.lowestBidder=0;\n\tB.lowestBid=0;\n\tB.Sender=0;\n\t}\n\n}\n",
+  "sourcePath": "/home/achal/Bidding/contracts/Voting.sol",
+  "ast": {
+    "absolutePath": "/home/achal/Bidding/contracts/Voting.sol",
+    "exportedSymbols": {
+      "Voting": [
+        624
+      ]
+    },
+    "id": 625,
+    "nodeType": "SourceUnit",
+    "nodes": [
+      {
+        "id": 447,
+        "literals": [
+          "solidity",
+          "^",
+          "0.4",
+          ".19"
+        ],
+        "nodeType": "PragmaDirective",
+        "src": "0:24:5"
+      },
+      {
+        "absolutePath": "/home/achal/Bidding/contracts/ERC223.sol",
+        "file": "./ERC223.sol",
+        "id": 448,
+        "nodeType": "ImportDirective",
+        "scope": 625,
+        "sourceUnit": 202,
+        "src": "26:22:5",
+        "symbolAliases": [],
+        "unitAlias": ""
+      },
+      {
+        "absolutePath": "/home/achal/Bidding/contracts/SafeMath.sol",
+        "file": "./SafeMath.sol",
+        "id": 449,
+        "nodeType": "ImportDirective",
+        "scope": 625,
+        "sourceUnit": 350,
+        "src": "49:24:5",
+        "symbolAliases": [],
+        "unitAlias": ""
+      },
+      {
+        "absolutePath": "/home/achal/Bidding/contracts/Token.sol",
+        "file": "./Token.sol",
+        "id": 450,
+        "nodeType": "ImportDirective",
+        "scope": 625,
+        "sourceUnit": 446,
+        "src": "74:21:5",
+        "symbolAliases": [],
+        "unitAlias": ""
+      },
+      {
+        "baseContracts": [],
+        "contractDependencies": [],
+        "contractKind": "contract",
+        "documentation": null,
+        "fullyImplemented": true,
+        "id": 624,
+        "linearizedBaseContracts": [
+          624
+        ],
+        "name": "Voting",
+        "nodeType": "ContractDefinition",
+        "nodes": [
+          {
+            "constant": false,
+            "id": 452,
+            "name": "token",
+            "nodeType": "VariableDeclaration",
+            "scope": 624,
+            "src": "123:24:5",
+            "stateVariable": true,
+            "storageLocation": "default",
+            "typeDescriptions": {
+              "typeIdentifier": "t_contract$_ERC223Token_$201",
+              "typeString": "contract ERC223Token"
+            },
+            "typeName": {
+              "contractScope": null,
+              "id": 451,
+              "name": "ERC223Token",
+              "nodeType": "UserDefinedTypeName",
+              "referencedDeclaration": 201,
+              "src": "123:11:5",
+              "typeDescriptions": {
+                "typeIdentifier": "t_contract$_ERC223Token_$201",
+                "typeString": "contract ERC223Token"
+              }
+            },
+            "value": null,
+            "visibility": "public"
+          },
+          {
+            "canonicalName": "Voting.Bidding",
+            "id": 463,
+            "members": [
+              {
+                "constant": false,
+                "id": 454,
+                "name": "deadLine",
+                "nodeType": "VariableDeclaration",
+                "scope": 463,
+                "src": "196:13:5",
+                "stateVariable": false,
+                "storageLocation": "default",
+                "typeDescriptions": {
+                  "typeIdentifier": "t_uint256",
+                  "typeString": "uint256"
+                },
+                "typeName": {
+                  "id": 453,
+                  "name": "uint",
+                  "nodeType": "ElementaryTypeName",
+                  "src": "196:4:5",
+                  "typeDescriptions": {
+                    "typeIdentifier": "t_uint256",
+                    "typeString": "uint256"
+                  }
+                },
+                "value": null,
+                "visibility": "internal"
+              },
+              {
+                "constant": false,
+                "id": 456,
+                "name": "bidHash",
+                "nodeType": "VariableDeclaration",
+                "scope": 463,
+                "src": "253:15:5",
+                "stateVariable": false,
+                "storageLocation": "default",
+                "typeDescriptions": {
+                  "typeIdentifier": "t_bytes32",
+                  "typeString": "bytes32"
+                },
+                "typeName": {
+                  "id": 455,
+                  "name": "bytes32",
+                  "nodeType": "ElementaryTypeName",
+                  "src": "253:7:5",
+                  "typeDescriptions": {
+                    "typeIdentifier": "t_bytes32",
+                    "typeString": "bytes32"
+                  }
+                },
+                "value": null,
+                "visibility": "internal"
+              },
+              {
+                "constant": false,
+                "id": 458,
+                "name": "lowestBidder",
+                "nodeType": "VariableDeclaration",
+                "scope": 463,
+                "src": "351:20:5",
+                "stateVariable": false,
+                "storageLocation": "default",
+                "typeDescriptions": {
+                  "typeIdentifier": "t_address",
+                  "typeString": "address"
+                },
+                "typeName": {
+                  "id": 457,
+                  "name": "address",
+                  "nodeType": "ElementaryTypeName",
+                  "src": "351:7:5",
+                  "typeDescriptions": {
+                    "typeIdentifier": "t_address",
+                    "typeString": "address"
+                  }
+                },
+                "value": null,
+                "visibility": "internal"
+              },
+              {
+                "constant": false,
+                "id": 460,
+                "name": "lowestBid",
+                "nodeType": "VariableDeclaration",
+                "scope": 463,
+                "src": "399:14:5",
+                "stateVariable": false,
+                "storageLocation": "default",
+                "typeDescriptions": {
+                  "typeIdentifier": "t_uint256",
+                  "typeString": "uint256"
+                },
+                "typeName": {
+                  "id": 459,
+                  "name": "uint",
+                  "nodeType": "ElementaryTypeName",
+                  "src": "399:4:5",
+                  "typeDescriptions": {
+                    "typeIdentifier": "t_uint256",
+                    "typeString": "uint256"
+                  }
+                },
+                "value": null,
+                "visibility": "internal"
+              },
+              {
+                "constant": false,
+                "id": 462,
+                "name": "Sender",
+                "nodeType": "VariableDeclaration",
+                "scope": 463,
+                "src": "457:14:5",
+                "stateVariable": false,
+                "storageLocation": "default",
+                "typeDescriptions": {
+                  "typeIdentifier": "t_address",
+                  "typeString": "address"
+                },
+                "typeName": {
+                  "id": 461,
+                  "name": "address",
+                  "nodeType": "ElementaryTypeName",
+                  "src": "457:7:5",
+                  "typeDescriptions": {
+                    "typeIdentifier": "t_address",
+                    "typeString": "address"
+                  }
+                },
+                "value": null,
+                "visibility": "internal"
+              }
+            ],
+            "name": "Bidding",
+            "nodeType": "StructDefinition",
+            "scope": 624,
+            "src": "150:382:5",
+            "visibility": "public"
+          },
+          {
+            "constant": false,
+            "id": 467,
+            "name": "BidMap",
+            "nodeType": "VariableDeclaration",
+            "scope": 624,
+            "src": "539:37:5",
+            "stateVariable": true,
+            "storageLocation": "default",
+            "typeDescriptions": {
+              "typeIdentifier": "t_mapping$_t_uint256_$_t_struct$_Bidding_$463_storage_$",
+              "typeString": "mapping(uint256 => struct Voting.Bidding storage ref)"
+            },
+            "typeName": {
+              "id": 466,
+              "keyType": {
+                "id": 464,
+                "name": "uint",
+                "nodeType": "ElementaryTypeName",
+                "src": "548:4:5",
+                "typeDescriptions": {
+                  "typeIdentifier": "t_uint256",
+                  "typeString": "uint256"
+                }
+              },
+              "nodeType": "Mapping",
+              "src": "539:23:5",
+              "typeDescriptions": {
+                "typeIdentifier": "t_mapping$_t_uint256_$_t_struct$_Bidding_$463_storage_$",
+                "typeString": "mapping(uint256 => struct Voting.Bidding storage ref)"
+              },
+              "valueType": {
+                "contractScope": null,
+                "id": 465,
+                "name": "Bidding",
+                "nodeType": "UserDefinedTypeName",
+                "referencedDeclaration": 463,
+                "src": "554:7:5",
+                "typeDescriptions": {
+                  "typeIdentifier": "t_struct$_Bidding_$463_storage_ptr",
+                  "typeString": "struct Voting.Bidding storage pointer"
+                }
+              }
+            },
+            "value": null,
+            "visibility": "public"
+          },
+          {
+            "constant": false,
+            "id": 469,
+            "name": "myGlobalCounter",
+            "nodeType": "VariableDeclaration",
+            "scope": 624,
+            "src": "628:27:5",
+            "stateVariable": true,
+            "storageLocation": "default",
+            "typeDescriptions": {
+              "typeIdentifier": "t_uint256",
+              "typeString": "uint256"
+            },
+            "typeName": {
+              "id": 468,
+              "name": "uint",
+              "nodeType": "ElementaryTypeName",
+              "src": "628:4:5",
+              "typeDescriptions": {
+                "typeIdentifier": "t_uint256",
+                "typeString": "uint256"
+              }
+            },
+            "value": null,
+            "visibility": "public"
+          },
+          {
+            "body": {
+              "id": 506,
+              "nodeType": "Block",
+              "src": "772:162:5",
+              "statements": [
+                {
+                  "expression": {
+                    "argumentTypes": null,
+                    "id": 479,
+                    "isConstant": false,
+                    "isLValue": false,
+                    "isPure": false,
+                    "lValueRequested": false,
+                    "leftHandSide": {
+                      "argumentTypes": null,
+                      "id": 476,
+                      "name": "BiddingID",
+                      "nodeType": "Identifier",
+                      "overloadedDeclarations": [],
+                      "referencedDeclaration": 474,
+                      "src": "775:9:5",
+                      "typeDescriptions": {
+                        "typeIdentifier": "t_uint256",
+                        "typeString": "uint256"
+                      }
+                    },
+                    "nodeType": "Assignment",
+                    "operator": "=",
+                    "rightHandSide": {
+                      "argumentTypes": null,
+                      "id": 478,
+                      "isConstant": false,
+                      "isLValue": false,
+                      "isPure": false,
+                      "lValueRequested": false,
+                      "nodeType": "UnaryOperation",
+                      "operator": "++",
+                      "prefix": false,
+                      "src": "786:17:5",
+                      "subExpression": {
+                        "argumentTypes": null,
+                        "id": 477,
+                        "name": "myGlobalCounter",
+                        "nodeType": "Identifier",
+                        "overloadedDeclarations": [],
+                        "referencedDeclaration": 469,
+                        "src": "786:15:5",
+                        "typeDescriptions": {
+                          "typeIdentifier": "t_uint256",
+                          "typeString": "uint256"
+                        }
+                      },
+                      "typeDescriptions": {
+                        "typeIdentifier": "t_uint256",
+                        "typeString": "uint256"
+                      }
+                    },
+                    "src": "775:28:5",
+                    "typeDescriptions": {
+                      "typeIdentifier": "t_uint256",
+                      "typeString": "uint256"
+                    }
+                  },
+                  "id": 480,
+                  "nodeType": "ExpressionStatement",
+                  "src": "775:28:5"
+                },
+                {
+                  "expression": {
+                    "argumentTypes": null,
+                    "id": 489,
+                    "isConstant": false,
+                    "isLValue": false,
+                    "isPure": false,
+                    "lValueRequested": false,
+                    "leftHandSide": {
+                      "argumentTypes": null,
+                      "expression": {
+                        "argumentTypes": null,
+                        "baseExpression": {
+                          "argumentTypes": null,
+                          "id": 481,
+                          "name": "BidMap",
+                          "nodeType": "Identifier",
+                          "overloadedDeclarations": [],
+                          "referencedDeclaration": 467,
+                          "src": "806:6:5",
+                          "typeDescriptions": {
+                            "typeIdentifier": "t_mapping$_t_uint256_$_t_struct$_Bidding_$463_storage_$",
+                            "typeString": "mapping(uint256 => struct Voting.Bidding storage ref)"
+                          }
+                        },
+                        "id": 483,
+                        "indexExpression": {
+                          "argumentTypes": null,
+                          "id": 482,
+                          "name": "BiddingID",
+                          "nodeType": "Identifier",
+                          "overloadedDeclarations": [],
+                          "referencedDeclaration": 474,
+                          "src": "813:9:5",
+                          "typeDescriptions": {
+                            "typeIdentifier": "t_uint256",
+                            "typeString": "uint256"
+                          }
+                        },
+                        "isConstant": false,
+                        "isLValue": true,
+                        "isPure": false,
+                        "lValueRequested": false,
+                        "nodeType": "IndexAccess",
+                        "src": "806:17:5",
+                        "typeDescriptions": {
+                          "typeIdentifier": "t_struct$_Bidding_$463_storage",
+                          "typeString": "struct Voting.Bidding storage ref"
+                        }
+                      },
+                      "id": 484,
+                      "isConstant": false,
+                      "isLValue": true,
+                      "isPure": false,
+                      "lValueRequested": true,
+                      "memberName": "deadLine",
+                      "nodeType": "MemberAccess",
+                      "referencedDeclaration": 454,
+                      "src": "806:26:5",
+                      "typeDescriptions": {
+                        "typeIdentifier": "t_uint256",
+                        "typeString": "uint256"
+                      }
+                    },
+                    "nodeType": "Assignment",
+                    "operator": "=",
+                    "rightHandSide": {
+                      "argumentTypes": null,
+                      "commonType": {
+                        "typeIdentifier": "t_uint256",
+                        "typeString": "uint256"
+                      },
+                      "id": 488,
+                      "isConstant": false,
+                      "isLValue": false,
+                      "isPure": false,
+                      "lValueRequested": false,
+                      "leftExpression": {
+                        "argumentTypes": null,
+                        "expression": {
+                          "argumentTypes": null,
+                          "id": 485,
+                          "name": "block",
+                          "nodeType": "Identifier",
+                          "overloadedDeclarations": [],
+                          "referencedDeclaration": 628,
+                          "src": "833:5:5",
+                          "typeDescriptions": {
+                            "typeIdentifier": "t_magic_block",
+                            "typeString": "block"
+                          }
+                        },
+                        "id": 486,
+                        "isConstant": false,
+                        "isLValue": false,
+                        "isPure": false,
+                        "lValueRequested": false,
+                        "memberName": "number",
+                        "nodeType": "MemberAccess",
+                        "referencedDeclaration": null,
+                        "src": "833:12:5",
+                        "typeDescriptions": {
+                          "typeIdentifier": "t_uint256",
+                          "typeString": "uint256"
+                        }
+                      },
+                      "nodeType": "BinaryOperation",
+                      "operator": "+",
+                      "rightExpression": {
+                        "argumentTypes": null,
+                        "id": 487,
+                        "name": "timeLimit",
+                        "nodeType": "Identifier",
+                        "overloadedDeclarations": [],
+                        "referencedDeclaration": 471,
+                        "src": "846:9:5",
+                        "typeDescriptions": {
+                          "typeIdentifier": "t_uint256",
+                          "typeString": "uint256"
+                        }
+                      },
+                      "src": "833:22:5",
+                      "typeDescriptions": {
+                        "typeIdentifier": "t_uint256",
+                        "typeString": "uint256"
+                      }
+                    },
+                    "src": "806:49:5",
+                    "typeDescriptions": {
+                      "typeIdentifier": "t_uint256",
+                      "typeString": "uint256"
+                    }
+                  },
+                  "id": 490,
+                  "nodeType": "ExpressionStatement",
+                  "src": "806:49:5"
+                },
+                {
+                  "expression": {
+                    "argumentTypes": null,
+                    "id": 497,
+                    "isConstant": false,
+                    "isLValue": false,
+                    "isPure": false,
+                    "lValueRequested": false,
+                    "leftHandSide": {
+                      "argumentTypes": null,
+                      "expression": {
+                        "argumentTypes": null,
+                        "baseExpression": {
+                          "argumentTypes": null,
+                          "id": 491,
+                          "name": "BidMap",
+                          "nodeType": "Identifier",
+                          "overloadedDeclarations": [],
+                          "referencedDeclaration": 467,
+                          "src": "858:6:5",
+                          "typeDescriptions": {
+                            "typeIdentifier": "t_mapping$_t_uint256_$_t_struct$_Bidding_$463_storage_$",
+                            "typeString": "mapping(uint256 => struct Voting.Bidding storage ref)"
+                          }
+                        },
+                        "id": 493,
+                        "indexExpression": {
+                          "argumentTypes": null,
+                          "id": 492,
+                          "name": "BiddingID",
+                          "nodeType": "Identifier",
+                          "overloadedDeclarations": [],
+                          "referencedDeclaration": 474,
+                          "src": "865:9:5",
+                          "typeDescriptions": {
+                            "typeIdentifier": "t_uint256",
+                            "typeString": "uint256"
+                          }
+                        },
+                        "isConstant": false,
+                        "isLValue": true,
+                        "isPure": false,
+                        "lValueRequested": false,
+                        "nodeType": "IndexAccess",
+                        "src": "858:17:5",
+                        "typeDescriptions": {
+                          "typeIdentifier": "t_struct$_Bidding_$463_storage",
+                          "typeString": "struct Voting.Bidding storage ref"
+                        }
+                      },
+                      "id": 494,
+                      "isConstant": false,
+                      "isLValue": true,
+                      "isPure": false,
+                      "lValueRequested": true,
+                      "memberName": "Sender",
+                      "nodeType": "MemberAccess",
+                      "referencedDeclaration": 462,
+                      "src": "858:24:5",
+                      "typeDescriptions": {
+                        "typeIdentifier": "t_address",
+                        "typeString": "address"
+                      }
+                    },
+                    "nodeType": "Assignment",
+                    "operator": "=",
+                    "rightHandSide": {
+                      "argumentTypes": null,
+                      "expression": {
+                        "argumentTypes": null,
+                        "id": 495,
+                        "name": "msg",
+                        "nodeType": "Identifier",
+                        "overloadedDeclarations": [],
+                        "referencedDeclaration": 636,
+                        "src": "883:3:5",
+                        "typeDescriptions": {
+                          "typeIdentifier": "t_magic_message",
+                          "typeString": "msg"
+                        }
+                      },
+                      "id": 496,
+                      "isConstant": false,
+                      "isLValue": false,
+                      "isPure": false,
+                      "lValueRequested": false,
+                      "memberName": "sender",
+                      "nodeType": "MemberAccess",
+                      "referencedDeclaration": null,
+                      "src": "883:10:5",
+                      "typeDescriptions": {
+                        "typeIdentifier": "t_address",
+                        "typeString": "address"
+                      }
+                    },
+                    "src": "858:35:5",
+                    "typeDescriptions": {
+                      "typeIdentifier": "t_address",
+                      "typeString": "address"
+                    }
+                  },
+                  "id": 498,
+                  "nodeType": "ExpressionStatement",
+                  "src": "858:35:5"
+                },
+                {
+                  "expression": {
+                    "argumentTypes": null,
+                    "id": 504,
+                    "isConstant": false,
+                    "isLValue": false,
+                    "isPure": false,
+                    "lValueRequested": false,
+                    "leftHandSide": {
+                      "argumentTypes": null,
+                      "expression": {
+                        "argumentTypes": null,
+                        "baseExpression": {
+                          "argumentTypes": null,
+                          "id": 499,
+                          "name": "BidMap",
+                          "nodeType": "Identifier",
+                          "overloadedDeclarations": [],
+                          "referencedDeclaration": 467,
+                          "src": "896:6:5",
+                          "typeDescriptions": {
+                            "typeIdentifier": "t_mapping$_t_uint256_$_t_struct$_Bidding_$463_storage_$",
+                            "typeString": "mapping(uint256 => struct Voting.Bidding storage ref)"
+                          }
+                        },
+                        "id": 501,
+                        "indexExpression": {
+                          "argumentTypes": null,
+                          "id": 500,
+                          "name": "BiddingID",
+                          "nodeType": "Identifier",
+                          "overloadedDeclarations": [],
+                          "referencedDeclaration": 474,
+                          "src": "903:9:5",
+                          "typeDescriptions": {
+                            "typeIdentifier": "t_uint256",
+                            "typeString": "uint256"
+                          }
+                        },
+                        "isConstant": false,
+                        "isLValue": true,
+                        "isPure": false,
+                        "lValueRequested": false,
+                        "nodeType": "IndexAccess",
+                        "src": "896:17:5",
+                        "typeDescriptions": {
+                          "typeIdentifier": "t_struct$_Bidding_$463_storage",
+                          "typeString": "struct Voting.Bidding storage ref"
+                        }
+                      },
+                      "id": 502,
+                      "isConstant": false,
+                      "isLValue": true,
+                      "isPure": false,
+                      "lValueRequested": true,
+                      "memberName": "lowestBid",
+                      "nodeType": "MemberAccess",
+                      "referencedDeclaration": 460,
+                      "src": "896:27:5",
+                      "typeDescriptions": {
+                        "typeIdentifier": "t_uint256",
+                        "typeString": "uint256"
+                      }
+                    },
+                    "nodeType": "Assignment",
+                    "operator": "=",
+                    "rightHandSide": {
+                      "argumentTypes": null,
+                      "hexValue": "313030303030",
+                      "id": 503,
+                      "isConstant": false,
+                      "isLValue": false,
+                      "isPure": true,
+                      "kind": "number",
+                      "lValueRequested": false,
+                      "nodeType": "Literal",
+                      "src": "924:6:5",
+                      "subdenomination": null,
+                      "typeDescriptions": {
+                        "typeIdentifier": "t_rational_100000_by_1",
+                        "typeString": "int_const 100000"
+                      },
+                      "value": "100000"
+                    },
+                    "src": "896:34:5",
+                    "typeDescriptions": {
+                      "typeIdentifier": "t_uint256",
+                      "typeString": "uint256"
+                    }
+                  },
+                  "id": 505,
+                  "nodeType": "ExpressionStatement",
+                  "src": "896:34:5"
+                }
+              ]
+            },
+            "id": 507,
+            "implemented": true,
+            "isConstructor": false,
+            "isDeclaredConst": false,
+            "modifiers": [],
+            "name": "startBidding",
+            "nodeType": "FunctionDefinition",
+            "parameters": {
+              "id": 472,
+              "nodeType": "ParameterList",
+              "parameters": [
+                {
+                  "constant": false,
+                  "id": 471,
+                  "name": "timeLimit",
+                  "nodeType": "VariableDeclaration",
+                  "scope": 507,
+                  "src": "732:14:5",
+                  "stateVariable": false,
+                  "storageLocation": "default",
+                  "typeDescriptions": {
+                    "typeIdentifier": "t_uint256",
+                    "typeString": "uint256"
+                  },
+                  "typeName": {
+                    "id": 470,
+                    "name": "uint",
+                    "nodeType": "ElementaryTypeName",
+                    "src": "732:4:5",
+                    "typeDescriptions": {
+                      "typeIdentifier": "t_uint256",
+                      "typeString": "uint256"
+                    }
+                  },
+                  "value": null,
+                  "visibility": "internal"
+                }
+              ],
+              "src": "731:16:5"
+            },
+            "payable": false,
+            "returnParameters": {
+              "id": 475,
+              "nodeType": "ParameterList",
+              "parameters": [
+                {
+                  "constant": false,
+                  "id": 474,
+                  "name": "BiddingID",
+                  "nodeType": "VariableDeclaration",
+                  "scope": 507,
+                  "src": "757:14:5",
+                  "stateVariable": false,
+                  "storageLocation": "default",
+                  "typeDescriptions": {
+                    "typeIdentifier": "t_uint256",
+                    "typeString": "uint256"
+                  },
+                  "typeName": {
+                    "id": 473,
+                    "name": "uint",
+                    "nodeType": "ElementaryTypeName",
+                    "src": "757:4:5",
+                    "typeDescriptions": {
+                      "typeIdentifier": "t_uint256",
+                      "typeString": "uint256"
+                    }
+                  },
+                  "value": null,
+                  "visibility": "internal"
+                }
+              ],
+              "src": "756:16:5"
+            },
+            "scope": 624,
+            "src": "710:224:5",
+            "stateMutability": "nonpayable",
+            "superFunction": null,
+            "visibility": "public"
+          },
+          {
+            "body": {
+              "id": 561,
+              "nodeType": "Block",
+              "src": "1032:221:5",
+              "statements": [
+                {
+                  "assignments": [
+                    519
+                  ],
+                  "declarations": [
+                    {
+                      "constant": false,
+                      "id": 519,
+                      "name": "B",
+                      "nodeType": "VariableDeclaration",
+                      "scope": 562,
+                      "src": "1035:9:5",
+                      "stateVariable": false,
+                      "storageLocation": "default",
+                      "typeDescriptions": {
+                        "typeIdentifier": "t_struct$_Bidding_$463_storage_ptr",
+                        "typeString": "struct Voting.Bidding storage pointer"
+                      },
+                      "typeName": {
+                        "contractScope": null,
+                        "id": 518,
+                        "name": "Bidding",
+                        "nodeType": "UserDefinedTypeName",
+                        "referencedDeclaration": 463,
+                        "src": "1035:7:5",
+                        "typeDescriptions": {
+                          "typeIdentifier": "t_struct$_Bidding_$463_storage_ptr",
+                          "typeString": "struct Voting.Bidding storage pointer"
+                        }
+                      },
+                      "value": null,
+                      "visibility": "internal"
+                    }
+                  ],
+                  "id": 523,
+                  "initialValue": {
+                    "argumentTypes": null,
+                    "baseExpression": {
+                      "argumentTypes": null,
+                      "id": 520,
+                      "name": "BidMap",
+                      "nodeType": "Identifier",
+                      "overloadedDeclarations": [],
+                      "referencedDeclaration": 467,
+                      "src": "1047:6:5",
+                      "typeDescriptions": {
+                        "typeIdentifier": "t_mapping$_t_uint256_$_t_struct$_Bidding_$463_storage_$",
+                        "typeString": "mapping(uint256 => struct Voting.Bidding storage ref)"
+                      }
+                    },
+                    "id": 522,
+                    "indexExpression": {
+                      "argumentTypes": null,
+                      "id": 521,
+                      "name": "BiddingID",
+                      "nodeType": "Identifier",
+                      "overloadedDeclarations": [],
+                      "referencedDeclaration": 509,
+                      "src": "1054:9:5",
+                      "typeDescriptions": {
+                        "typeIdentifier": "t_uint256",
+                        "typeString": "uint256"
+                      }
+                    },
+                    "isConstant": false,
+                    "isLValue": true,
+                    "isPure": false,
+                    "lValueRequested": false,
+                    "nodeType": "IndexAccess",
+                    "src": "1047:17:5",
+                    "typeDescriptions": {
+                      "typeIdentifier": "t_struct$_Bidding_$463_storage",
+                      "typeString": "struct Voting.Bidding storage ref"
+                    }
+                  },
+                  "nodeType": "VariableDeclarationStatement",
+                  "src": "1035:29:5"
+                },
+                {
+                  "condition": {
+                    "argumentTypes": null,
+                    "commonType": {
+                      "typeIdentifier": "t_bool",
+                      "typeString": "bool"
+                    },
+                    "id": 533,
+                    "isConstant": false,
+                    "isLValue": false,
+                    "isPure": false,
+                    "lValueRequested": false,
+                    "leftExpression": {
+                      "argumentTypes": null,
+                      "commonType": {
+                        "typeIdentifier": "t_uint256",
+                        "typeString": "uint256"
+                      },
+                      "id": 527,
+                      "isConstant": false,
+                      "isLValue": false,
+                      "isPure": false,
+                      "lValueRequested": false,
+                      "leftExpression": {
+                        "argumentTypes": null,
+                        "expression": {
+                          "argumentTypes": null,
+                          "id": 524,
+                          "name": "B",
+                          "nodeType": "Identifier",
+                          "overloadedDeclarations": [],
+                          "referencedDeclaration": 519,
+                          "src": "1071:1:5",
+                          "typeDescriptions": {
+                            "typeIdentifier": "t_struct$_Bidding_$463_storage_ptr",
+                            "typeString": "struct Voting.Bidding storage pointer"
+                          }
+                        },
+                        "id": 525,
+                        "isConstant": false,
+                        "isLValue": true,
+                        "isPure": false,
+                        "lValueRequested": false,
+                        "memberName": "lowestBid",
+                        "nodeType": "MemberAccess",
+                        "referencedDeclaration": 460,
+                        "src": "1071:11:5",
+                        "typeDescriptions": {
+                          "typeIdentifier": "t_uint256",
+                          "typeString": "uint256"
+                        }
+                      },
+                      "nodeType": "BinaryOperation",
+                      "operator": "<",
+                      "rightExpression": {
+                        "argumentTypes": null,
+                        "id": 526,
+                        "name": "BidAmount",
+                        "nodeType": "Identifier",
+                        "overloadedDeclarations": [],
+                        "referencedDeclaration": 513,
+                        "src": "1083:9:5",
+                        "typeDescriptions": {
+                          "typeIdentifier": "t_uint256",
+                          "typeString": "uint256"
+                        }
+                      },
+                      "src": "1071:21:5",
+                      "typeDescriptions": {
+                        "typeIdentifier": "t_bool",
+                        "typeString": "bool"
+                      }
+                    },
+                    "nodeType": "BinaryOperation",
+                    "operator": "||",
+                    "rightExpression": {
+                      "argumentTypes": null,
+                      "commonType": {
+                        "typeIdentifier": "t_uint256",
+                        "typeString": "uint256"
+                      },
+                      "id": 532,
+                      "isConstant": false,
+                      "isLValue": false,
+                      "isPure": false,
+                      "lValueRequested": false,
+                      "leftExpression": {
+                        "argumentTypes": null,
+                        "expression": {
+                          "argumentTypes": null,
+                          "id": 528,
+                          "name": "B",
+                          "nodeType": "Identifier",
+                          "overloadedDeclarations": [],
+                          "referencedDeclaration": 519,
+                          "src": "1096:1:5",
+                          "typeDescriptions": {
+                            "typeIdentifier": "t_struct$_Bidding_$463_storage_ptr",
+                            "typeString": "struct Voting.Bidding storage pointer"
+                          }
+                        },
+                        "id": 529,
+                        "isConstant": false,
+                        "isLValue": true,
+                        "isPure": false,
+                        "lValueRequested": false,
+                        "memberName": "deadLine",
+                        "nodeType": "MemberAccess",
+                        "referencedDeclaration": 454,
+                        "src": "1096:10:5",
+                        "typeDescriptions": {
+                          "typeIdentifier": "t_uint256",
+                          "typeString": "uint256"
+                        }
+                      },
+                      "nodeType": "BinaryOperation",
+                      "operator": "<",
+                      "rightExpression": {
+                        "argumentTypes": null,
+                        "expression": {
+                          "argumentTypes": null,
+                          "id": 530,
+                          "name": "block",
+                          "nodeType": "Identifier",
+                          "overloadedDeclarations": [],
+                          "referencedDeclaration": 628,
+                          "src": "1107:5:5",
+                          "typeDescriptions": {
+                            "typeIdentifier": "t_magic_block",
+                            "typeString": "block"
+                          }
+                        },
+                        "id": 531,
+                        "isConstant": false,
+                        "isLValue": false,
+                        "isPure": false,
+                        "lValueRequested": false,
+                        "memberName": "number",
+                        "nodeType": "MemberAccess",
+                        "referencedDeclaration": null,
+                        "src": "1107:12:5",
+                        "typeDescriptions": {
+                          "typeIdentifier": "t_uint256",
+                          "typeString": "uint256"
+                        }
+                      },
+                      "src": "1096:23:5",
+                      "typeDescriptions": {
+                        "typeIdentifier": "t_bool",
+                        "typeString": "bool"
+                      }
+                    },
+                    "src": "1071:48:5",
+                    "typeDescriptions": {
+                      "typeIdentifier": "t_bool",
+                      "typeString": "bool"
+                    }
+                  },
+                  "falseBody": null,
+                  "id": 538,
+                  "nodeType": "IfStatement",
+                  "src": "1067:82:5",
+                  "trueBody": {
+                    "id": 537,
+                    "nodeType": "Block",
+                    "src": "1121:28:5",
+                    "statements": [
+                      {
+                        "expression": {
+                          "argumentTypes": null,
+                          "expression": {
+                            "argumentTypes": null,
+                            "id": 534,
+                            "name": "B",
+                            "nodeType": "Identifier",
+                            "overloadedDeclarations": [],
+                            "referencedDeclaration": 519,
+                            "src": "1131:1:5",
+                            "typeDescriptions": {
+                              "typeIdentifier": "t_struct$_Bidding_$463_storage_ptr",
+                              "typeString": "struct Voting.Bidding storage pointer"
+                            }
+                          },
+                          "id": 535,
+                          "isConstant": false,
+                          "isLValue": true,
+                          "isPure": false,
+                          "lValueRequested": false,
+                          "memberName": "lowestBidder",
+                          "nodeType": "MemberAccess",
+                          "referencedDeclaration": 458,
+                          "src": "1131:14:5",
+                          "typeDescriptions": {
+                            "typeIdentifier": "t_address",
+                            "typeString": "address"
+                          }
+                        },
+                        "functionReturnParameters": 517,
+                        "id": 536,
+                        "nodeType": "Return",
+                        "src": "1124:21:5"
+                      }
+                    ]
+                  }
+                },
+                {
+                  "expression": {
+                    "argumentTypes": null,
+                    "id": 544,
+                    "isConstant": false,
+                    "isLValue": false,
+                    "isPure": false,
+                    "lValueRequested": false,
+                    "leftHandSide": {
+                      "argumentTypes": null,
+                      "expression": {
+                        "argumentTypes": null,
+                        "id": 539,
+                        "name": "B",
+                        "nodeType": "Identifier",
+                        "overloadedDeclarations": [],
+                        "referencedDeclaration": 519,
+                        "src": "1151:1:5",
+                        "typeDescriptions": {
+                          "typeIdentifier": "t_struct$_Bidding_$463_storage_ptr",
+                          "typeString": "struct Voting.Bidding storage pointer"
+                        }
+                      },
+                      "id": 541,
+                      "isConstant": false,
+                      "isLValue": true,
+                      "isPure": false,
+                      "lValueRequested": true,
+                      "memberName": "lowestBidder",
+                      "nodeType": "MemberAccess",
+                      "referencedDeclaration": 458,
+                      "src": "1151:14:5",
+                      "typeDescriptions": {
+                        "typeIdentifier": "t_address",
+                        "typeString": "address"
+                      }
+                    },
+                    "nodeType": "Assignment",
+                    "operator": "=",
+                    "rightHandSide": {
+                      "argumentTypes": null,
+                      "expression": {
+                        "argumentTypes": null,
+                        "id": 542,
+                        "name": "msg",
+                        "nodeType": "Identifier",
+                        "overloadedDeclarations": [],
+                        "referencedDeclaration": 636,
+                        "src": "1166:3:5",
+                        "typeDescriptions": {
+                          "typeIdentifier": "t_magic_message",
+                          "typeString": "msg"
+                        }
+                      },
+                      "id": 543,
+                      "isConstant": false,
+                      "isLValue": false,
+                      "isPure": false,
+                      "lValueRequested": false,
+                      "memberName": "sender",
+                      "nodeType": "MemberAccess",
+                      "referencedDeclaration": null,
+                      "src": "1166:10:5",
+                      "typeDescriptions": {
+                        "typeIdentifier": "t_address",
+                        "typeString": "address"
+                      }
+                    },
+                    "src": "1151:25:5",
+                    "typeDescriptions": {
+                      "typeIdentifier": "t_address",
+                      "typeString": "address"
+                    }
+                  },
+                  "id": 545,
+                  "nodeType": "ExpressionStatement",
+                  "src": "1151:25:5"
+                },
+                {
+                  "expression": {
+                    "argumentTypes": null,
+                    "id": 550,
+                    "isConstant": false,
+                    "isLValue": false,
+                    "isPure": false,
+                    "lValueRequested": false,
+                    "leftHandSide": {
+                      "argumentTypes": null,
+                      "expression": {
+                        "argumentTypes": null,
+                        "id": 546,
+                        "name": "B",
+                        "nodeType": "Identifier",
+                        "overloadedDeclarations": [],
+                        "referencedDeclaration": 519,
+                        "src": "1179:1:5",
+                        "typeDescriptions": {
+                          "typeIdentifier": "t_struct$_Bidding_$463_storage_ptr",
+                          "typeString": "struct Voting.Bidding storage pointer"
+                        }
+                      },
+                      "id": 548,
+                      "isConstant": false,
+                      "isLValue": true,
+                      "isPure": false,
+                      "lValueRequested": true,
+                      "memberName": "lowestBid",
+                      "nodeType": "MemberAccess",
+                      "referencedDeclaration": 460,
+                      "src": "1179:11:5",
+                      "typeDescriptions": {
+                        "typeIdentifier": "t_uint256",
+                        "typeString": "uint256"
+                      }
+                    },
+                    "nodeType": "Assignment",
+                    "operator": "=",
+                    "rightHandSide": {
+                      "argumentTypes": null,
+                      "id": 549,
+                      "name": "BidAmount",
+                      "nodeType": "Identifier",
+                      "overloadedDeclarations": [],
+                      "referencedDeclaration": 513,
+                      "src": "1192:9:5",
+                      "typeDescriptions": {
+                        "typeIdentifier": "t_uint256",
+                        "typeString": "uint256"
+                      }
+                    },
+                    "src": "1179:22:5",
+                    "typeDescriptions": {
+                      "typeIdentifier": "t_uint256",
+                      "typeString": "uint256"
+                    }
+                  },
+                  "id": 551,
+                  "nodeType": "ExpressionStatement",
+                  "src": "1179:22:5"
+                },
+                {
+                  "expression": {
+                    "argumentTypes": null,
+                    "id": 556,
+                    "isConstant": false,
+                    "isLValue": false,
+                    "isPure": false,
+                    "lValueRequested": false,
+                    "leftHandSide": {
+                      "argumentTypes": null,
+                      "expression": {
+                        "argumentTypes": null,
+                        "id": 552,
+                        "name": "B",
+                        "nodeType": "Identifier",
+                        "overloadedDeclarations": [],
+                        "referencedDeclaration": 519,
+                        "src": "1204:1:5",
+                        "typeDescriptions": {
+                          "typeIdentifier": "t_struct$_Bidding_$463_storage_ptr",
+                          "typeString": "struct Voting.Bidding storage pointer"
+                        }
+                      },
+                      "id": 554,
+                      "isConstant": false,
+                      "isLValue": true,
+                      "isPure": false,
+                      "lValueRequested": true,
+                      "memberName": "bidHash",
+                      "nodeType": "MemberAccess",
+                      "referencedDeclaration": 456,
+                      "src": "1204:9:5",
+                      "typeDescriptions": {
+                        "typeIdentifier": "t_bytes32",
+                        "typeString": "bytes32"
+                      }
+                    },
+                    "nodeType": "Assignment",
+                    "operator": "=",
+                    "rightHandSide": {
+                      "argumentTypes": null,
+                      "id": 555,
+                      "name": "BidderHash",
+                      "nodeType": "Identifier",
+                      "overloadedDeclarations": [],
+                      "referencedDeclaration": 511,
+                      "src": "1215:10:5",
+                      "typeDescriptions": {
+                        "typeIdentifier": "t_bytes32",
+                        "typeString": "bytes32"
+                      }
+                    },
+                    "src": "1204:21:5",
+                    "typeDescriptions": {
+                      "typeIdentifier": "t_bytes32",
+                      "typeString": "bytes32"
+                    }
+                  },
+                  "id": 557,
+                  "nodeType": "ExpressionStatement",
+                  "src": "1204:21:5"
+                },
+                {
+                  "expression": {
+                    "argumentTypes": null,
+                    "expression": {
+                      "argumentTypes": null,
+                      "id": 558,
+                      "name": "B",
+                      "nodeType": "Identifier",
+                      "overloadedDeclarations": [],
+                      "referencedDeclaration": 519,
+                      "src": "1235:1:5",
+                      "typeDescriptions": {
+                        "typeIdentifier": "t_struct$_Bidding_$463_storage_ptr",
+                        "typeString": "struct Voting.Bidding storage pointer"
+                      }
+                    },
+                    "id": 559,
+                    "isConstant": false,
+                    "isLValue": true,
+                    "isPure": false,
+                    "lValueRequested": false,
+                    "memberName": "lowestBidder",
+                    "nodeType": "MemberAccess",
+                    "referencedDeclaration": 458,
+                    "src": "1235:14:5",
+                    "typeDescriptions": {
+                      "typeIdentifier": "t_address",
+                      "typeString": "address"
+                    }
+                  },
+                  "functionReturnParameters": 517,
+                  "id": 560,
+                  "nodeType": "Return",
+                  "src": "1228:21:5"
+                }
+              ]
+            },
+            "id": 562,
+            "implemented": true,
+            "isConstructor": false,
+            "isDeclaredConst": false,
+            "modifiers": [],
+            "name": "Bid",
+            "nodeType": "FunctionDefinition",
+            "parameters": {
+              "id": 514,
+              "nodeType": "ParameterList",
+              "parameters": [
+                {
+                  "constant": false,
+                  "id": 509,
+                  "name": "BiddingID",
+                  "nodeType": "VariableDeclaration",
+                  "scope": 562,
+                  "src": "950:14:5",
+                  "stateVariable": false,
+                  "storageLocation": "default",
+                  "typeDescriptions": {
+                    "typeIdentifier": "t_uint256",
+                    "typeString": "uint256"
+                  },
+                  "typeName": {
+                    "id": 508,
+                    "name": "uint",
+                    "nodeType": "ElementaryTypeName",
+                    "src": "950:4:5",
+                    "typeDescriptions": {
+                      "typeIdentifier": "t_uint256",
+                      "typeString": "uint256"
+                    }
+                  },
+                  "value": null,
+                  "visibility": "internal"
+                },
+                {
+                  "constant": false,
+                  "id": 511,
+                  "name": "BidderHash",
+                  "nodeType": "VariableDeclaration",
+                  "scope": 562,
+                  "src": "966:18:5",
+                  "stateVariable": false,
+                  "storageLocation": "default",
+                  "typeDescriptions": {
+                    "typeIdentifier": "t_bytes32",
+                    "typeString": "bytes32"
+                  },
+                  "typeName": {
+                    "id": 510,
+                    "name": "bytes32",
+                    "nodeType": "ElementaryTypeName",
+                    "src": "966:7:5",
+                    "typeDescriptions": {
+                      "typeIdentifier": "t_bytes32",
+                      "typeString": "bytes32"
+                    }
+                  },
+                  "value": null,
+                  "visibility": "internal"
+                },
+                {
+                  "constant": false,
+                  "id": 513,
+                  "name": "BidAmount",
+                  "nodeType": "VariableDeclaration",
+                  "scope": 562,
+                  "src": "986:14:5",
+                  "stateVariable": false,
+                  "storageLocation": "default",
+                  "typeDescriptions": {
+                    "typeIdentifier": "t_uint256",
+                    "typeString": "uint256"
+                  },
+                  "typeName": {
+                    "id": 512,
+                    "name": "uint",
+                    "nodeType": "ElementaryTypeName",
+                    "src": "986:4:5",
+                    "typeDescriptions": {
+                      "typeIdentifier": "t_uint256",
+                      "typeString": "uint256"
+                    }
+                  },
+                  "value": null,
+                  "visibility": "internal"
+                }
+              ],
+              "src": "949:52:5"
+            },
+            "payable": false,
+            "returnParameters": {
+              "id": 517,
+              "nodeType": "ParameterList",
+              "parameters": [
+                {
+                  "constant": false,
+                  "id": 516,
+                  "name": "lowestBidder",
+                  "nodeType": "VariableDeclaration",
+                  "scope": 562,
+                  "src": "1011:20:5",
+                  "stateVariable": false,
+                  "storageLocation": "default",
+                  "typeDescriptions": {
+                    "typeIdentifier": "t_address",
+                    "typeString": "address"
+                  },
+                  "typeName": {
+                    "id": 515,
+                    "name": "address",
+                    "nodeType": "ElementaryTypeName",
+                    "src": "1011:7:5",
+                    "typeDescriptions": {
+                      "typeIdentifier": "t_address",
+                      "typeString": "address"
+                    }
+                  },
+                  "value": null,
+                  "visibility": "internal"
+                }
+              ],
+              "src": "1010:22:5"
+            },
+            "scope": 624,
+            "src": "937:316:5",
+            "stateMutability": "nonpayable",
+            "superFunction": null,
+            "visibility": "public"
+          },
+          {
+            "body": {
+              "id": 580,
+              "nodeType": "Block",
+              "src": "1331:275:5",
+              "statements": [
+                {
+                  "assignments": [
+                    572
+                  ],
+                  "declarations": [
+                    {
+                      "constant": false,
+                      "id": 572,
+                      "name": "B",
+                      "nodeType": "VariableDeclaration",
+                      "scope": 581,
+                      "src": "1334:9:5",
+                      "stateVariable": false,
+                      "storageLocation": "default",
+                      "typeDescriptions": {
+                        "typeIdentifier": "t_struct$_Bidding_$463_storage_ptr",
+                        "typeString": "struct Voting.Bidding storage pointer"
+                      },
+                      "typeName": {
+                        "contractScope": null,
+                        "id": 571,
+                        "name": "Bidding",
+                        "nodeType": "UserDefinedTypeName",
+                        "referencedDeclaration": 463,
+                        "src": "1334:7:5",
+                        "typeDescriptions": {
+                          "typeIdentifier": "t_struct$_Bidding_$463_storage_ptr",
+                          "typeString": "struct Voting.Bidding storage pointer"
+                        }
+                      },
+                      "value": null,
+                      "visibility": "internal"
+                    }
+                  ],
+                  "id": 576,
+                  "initialValue": {
+                    "argumentTypes": null,
+                    "baseExpression": {
+                      "argumentTypes": null,
+                      "id": 573,
+                      "name": "BidMap",
+                      "nodeType": "Identifier",
+                      "overloadedDeclarations": [],
+                      "referencedDeclaration": 467,
+                      "src": "1346:6:5",
+                      "typeDescriptions": {
+                        "typeIdentifier": "t_mapping$_t_uint256_$_t_struct$_Bidding_$463_storage_$",
+                        "typeString": "mapping(uint256 => struct Voting.Bidding storage ref)"
+                      }
+                    },
+                    "id": 575,
+                    "indexExpression": {
+                      "argumentTypes": null,
+                      "id": 574,
+                      "name": "BiddingID",
+                      "nodeType": "Identifier",
+                      "overloadedDeclarations": [],
+                      "referencedDeclaration": 564,
+                      "src": "1353:9:5",
+                      "typeDescriptions": {
+                        "typeIdentifier": "t_uint256",
+                        "typeString": "uint256"
+                      }
+                    },
+                    "isConstant": false,
+                    "isLValue": true,
+                    "isPure": false,
+                    "lValueRequested": false,
+                    "nodeType": "IndexAccess",
+                    "src": "1346:17:5",
+                    "typeDescriptions": {
+                      "typeIdentifier": "t_struct$_Bidding_$463_storage",
+                      "typeString": "struct Voting.Bidding storage ref"
+                    }
+                  },
+                  "nodeType": "VariableDeclarationStatement",
+                  "src": "1334:29:5"
+                },
+                {
+                  "expression": {
+                    "argumentTypes": null,
+                    "expression": {
+                      "argumentTypes": null,
+                      "id": 577,
+                      "name": "B",
+                      "nodeType": "Identifier",
+                      "overloadedDeclarations": [],
+                      "referencedDeclaration": 572,
+                      "src": "1373:1:5",
+                      "typeDescriptions": {
+                        "typeIdentifier": "t_struct$_Bidding_$463_storage_ptr",
+                        "typeString": "struct Voting.Bidding storage pointer"
+                      }
+                    },
+                    "id": 578,
+                    "isConstant": false,
+                    "isLValue": true,
+                    "isPure": false,
+                    "lValueRequested": false,
+                    "memberName": "lowestBidder",
+                    "nodeType": "MemberAccess",
+                    "referencedDeclaration": 458,
+                    "src": "1373:14:5",
+                    "typeDescriptions": {
+                      "typeIdentifier": "t_address",
+                      "typeString": "address"
+                    }
+                  },
+                  "functionReturnParameters": 570,
+                  "id": 579,
+                  "nodeType": "Return",
+                  "src": "1366:21:5"
+                }
+              ]
+            },
+            "id": 581,
+            "implemented": true,
+            "isConstructor": false,
+            "isDeclaredConst": false,
+            "modifiers": [],
+            "name": "BidEnd",
+            "nodeType": "FunctionDefinition",
+            "parameters": {
+              "id": 567,
+              "nodeType": "ParameterList",
+              "parameters": [
+                {
+                  "constant": false,
+                  "id": 564,
+                  "name": "BiddingID",
+                  "nodeType": "VariableDeclaration",
+                  "scope": 581,
+                  "src": "1272:14:5",
+                  "stateVariable": false,
+                  "storageLocation": "default",
+                  "typeDescriptions": {
+                    "typeIdentifier": "t_uint256",
+                    "typeString": "uint256"
+                  },
+                  "typeName": {
+                    "id": 563,
+                    "name": "uint",
+                    "nodeType": "ElementaryTypeName",
+                    "src": "1272:4:5",
+                    "typeDescriptions": {
+                      "typeIdentifier": "t_uint256",
+                      "typeString": "uint256"
+                    }
+                  },
+                  "value": null,
+                  "visibility": "internal"
+                },
+                {
+                  "constant": false,
+                  "id": 566,
+                  "name": "key",
+                  "nodeType": "VariableDeclaration",
+                  "scope": 581,
+                  "src": "1288:11:5",
+                  "stateVariable": false,
+                  "storageLocation": "default",
+                  "typeDescriptions": {
+                    "typeIdentifier": "t_bytes32",
+                    "typeString": "bytes32"
+                  },
+                  "typeName": {
+                    "id": 565,
+                    "name": "bytes32",
+                    "nodeType": "ElementaryTypeName",
+                    "src": "1288:7:5",
+                    "typeDescriptions": {
+                      "typeIdentifier": "t_bytes32",
+                      "typeString": "bytes32"
+                    }
+                  },
+                  "value": null,
+                  "visibility": "internal"
+                }
+              ],
+              "src": "1271:29:5"
+            },
+            "payable": false,
+            "returnParameters": {
+              "id": 570,
+              "nodeType": "ParameterList",
+              "parameters": [
+                {
+                  "constant": false,
+                  "id": 569,
+                  "name": "lowestBidder",
+                  "nodeType": "VariableDeclaration",
+                  "scope": 581,
+                  "src": "1310:20:5",
+                  "stateVariable": false,
+                  "storageLocation": "default",
+                  "typeDescriptions": {
+                    "typeIdentifier": "t_address",
+                    "typeString": "address"
+                  },
+                  "typeName": {
+                    "id": 568,
+                    "name": "address",
+                    "nodeType": "ElementaryTypeName",
+                    "src": "1310:7:5",
+                    "typeDescriptions": {
+                      "typeIdentifier": "t_address",
+                      "typeString": "address"
+                    }
+                  },
+                  "value": null,
+                  "visibility": "internal"
+                }
+              ],
+              "src": "1309:22:5"
+            },
+            "scope": 624,
+            "src": "1256:350:5",
+            "stateMutability": "nonpayable",
+            "superFunction": null,
+            "visibility": "public"
+          },
+          {
+            "body": {
+              "id": 622,
+              "nodeType": "Block",
+              "src": "1642:113:5",
+              "statements": [
+                {
+                  "assignments": [
+                    587
+                  ],
+                  "declarations": [
+                    {
+                      "constant": false,
+                      "id": 587,
+                      "name": "B",
+                      "nodeType": "VariableDeclaration",
+                      "scope": 623,
+                      "src": "1645:9:5",
+                      "stateVariable": false,
+                      "storageLocation": "default",
+                      "typeDescriptions": {
+                        "typeIdentifier": "t_struct$_Bidding_$463_storage_ptr",
+                        "typeString": "struct Voting.Bidding storage pointer"
+                      },
+                      "typeName": {
+                        "contractScope": null,
+                        "id": 586,
+                        "name": "Bidding",
+                        "nodeType": "UserDefinedTypeName",
+                        "referencedDeclaration": 463,
+                        "src": "1645:7:5",
+                        "typeDescriptions": {
+                          "typeIdentifier": "t_struct$_Bidding_$463_storage_ptr",
+                          "typeString": "struct Voting.Bidding storage pointer"
+                        }
+                      },
+                      "value": null,
+                      "visibility": "internal"
+                    }
+                  ],
+                  "id": 591,
+                  "initialValue": {
+                    "argumentTypes": null,
+                    "baseExpression": {
+                      "argumentTypes": null,
+                      "id": 588,
+                      "name": "BidMap",
+                      "nodeType": "Identifier",
+                      "overloadedDeclarations": [],
+                      "referencedDeclaration": 467,
+                      "src": "1657:6:5",
+                      "typeDescriptions": {
+                        "typeIdentifier": "t_mapping$_t_uint256_$_t_struct$_Bidding_$463_storage_$",
+                        "typeString": "mapping(uint256 => struct Voting.Bidding storage ref)"
+                      }
+                    },
+                    "id": 590,
+                    "indexExpression": {
+                      "argumentTypes": null,
+                      "id": 589,
+                      "name": "BiddingID",
+                      "nodeType": "Identifier",
+                      "overloadedDeclarations": [],
+                      "referencedDeclaration": 583,
+                      "src": "1664:9:5",
+                      "typeDescriptions": {
+                        "typeIdentifier": "t_uint256",
+                        "typeString": "uint256"
+                      }
+                    },
+                    "isConstant": false,
+                    "isLValue": true,
+                    "isPure": false,
+                    "lValueRequested": false,
+                    "nodeType": "IndexAccess",
+                    "src": "1657:17:5",
+                    "typeDescriptions": {
+                      "typeIdentifier": "t_struct$_Bidding_$463_storage",
+                      "typeString": "struct Voting.Bidding storage ref"
+                    }
+                  },
+                  "nodeType": "VariableDeclarationStatement",
+                  "src": "1645:29:5"
+                },
+                {
+                  "expression": {
+                    "argumentTypes": null,
+                    "id": 596,
+                    "isConstant": false,
+                    "isLValue": false,
+                    "isPure": false,
+                    "lValueRequested": false,
+                    "leftHandSide": {
+                      "argumentTypes": null,
+                      "expression": {
+                        "argumentTypes": null,
+                        "id": 592,
+                        "name": "B",
+                        "nodeType": "Identifier",
+                        "overloadedDeclarations": [],
+                        "referencedDeclaration": 587,
+                        "src": "1677:1:5",
+                        "typeDescriptions": {
+                          "typeIdentifier": "t_struct$_Bidding_$463_storage_ptr",
+                          "typeString": "struct Voting.Bidding storage pointer"
+                        }
+                      },
+                      "id": 594,
+                      "isConstant": false,
+                      "isLValue": true,
+                      "isPure": false,
+                      "lValueRequested": true,
+                      "memberName": "deadLine",
+                      "nodeType": "MemberAccess",
+                      "referencedDeclaration": 454,
+                      "src": "1677:10:5",
+                      "typeDescriptions": {
+                        "typeIdentifier": "t_uint256",
+                        "typeString": "uint256"
+                      }
+                    },
+                    "nodeType": "Assignment",
+                    "operator": "=",
+                    "rightHandSide": {
+                      "argumentTypes": null,
+                      "hexValue": "30",
+                      "id": 595,
+                      "isConstant": false,
+                      "isLValue": false,
+                      "isPure": true,
+                      "kind": "number",
+                      "lValueRequested": false,
+                      "nodeType": "Literal",
+                      "src": "1688:1:5",
+                      "subdenomination": null,
+                      "typeDescriptions": {
+                        "typeIdentifier": "t_rational_0_by_1",
+                        "typeString": "int_const 0"
+                      },
+                      "value": "0"
+                    },
+                    "src": "1677:12:5",
+                    "typeDescriptions": {
+                      "typeIdentifier": "t_uint256",
+                      "typeString": "uint256"
+                    }
+                  },
+                  "id": 597,
+                  "nodeType": "ExpressionStatement",
+                  "src": "1677:12:5"
+                },
+                {
+                  "expression": {
+                    "argumentTypes": null,
+                    "id": 602,
+                    "isConstant": false,
+                    "isLValue": false,
+                    "isPure": false,
+                    "lValueRequested": false,
+                    "leftHandSide": {
+                      "argumentTypes": null,
+                      "expression": {
+                        "argumentTypes": null,
+                        "id": 598,
+                        "name": "B",
+                        "nodeType": "Identifier",
+                        "overloadedDeclarations": [],
+                        "referencedDeclaration": 587,
+                        "src": "1692:1:5",
+                        "typeDescriptions": {
+                          "typeIdentifier": "t_struct$_Bidding_$463_storage_ptr",
+                          "typeString": "struct Voting.Bidding storage pointer"
+                        }
+                      },
+                      "id": 600,
+                      "isConstant": false,
+                      "isLValue": true,
+                      "isPure": false,
+                      "lValueRequested": true,
+                      "memberName": "bidHash",
+                      "nodeType": "MemberAccess",
+                      "referencedDeclaration": 456,
+                      "src": "1692:9:5",
+                      "typeDescriptions": {
+                        "typeIdentifier": "t_bytes32",
+                        "typeString": "bytes32"
+                      }
+                    },
+                    "nodeType": "Assignment",
+                    "operator": "=",
+                    "rightHandSide": {
+                      "argumentTypes": null,
+                      "hexValue": "30",
+                      "id": 601,
+                      "isConstant": false,
+                      "isLValue": false,
+                      "isPure": true,
+                      "kind": "number",
+                      "lValueRequested": false,
+                      "nodeType": "Literal",
+                      "src": "1702:1:5",
+                      "subdenomination": null,
+                      "typeDescriptions": {
+                        "typeIdentifier": "t_rational_0_by_1",
+                        "typeString": "int_const 0"
+                      },
+                      "value": "0"
+                    },
+                    "src": "1692:11:5",
+                    "typeDescriptions": {
+                      "typeIdentifier": "t_bytes32",
+                      "typeString": "bytes32"
+                    }
+                  },
+                  "id": 603,
+                  "nodeType": "ExpressionStatement",
+                  "src": "1692:11:5"
+                },
+                {
+                  "expression": {
+                    "argumentTypes": null,
+                    "id": 608,
+                    "isConstant": false,
+                    "isLValue": false,
+                    "isPure": false,
+                    "lValueRequested": false,
+                    "leftHandSide": {
+                      "argumentTypes": null,
+                      "expression": {
+                        "argumentTypes": null,
+                        "id": 604,
+                        "name": "B",
+                        "nodeType": "Identifier",
+                        "overloadedDeclarations": [],
+                        "referencedDeclaration": 587,
+                        "src": "1706:1:5",
+                        "typeDescriptions": {
+                          "typeIdentifier": "t_struct$_Bidding_$463_storage_ptr",
+                          "typeString": "struct Voting.Bidding storage pointer"
+                        }
+                      },
+                      "id": 606,
+                      "isConstant": false,
+                      "isLValue": true,
+                      "isPure": false,
+                      "lValueRequested": true,
+                      "memberName": "lowestBidder",
+                      "nodeType": "MemberAccess",
+                      "referencedDeclaration": 458,
+                      "src": "1706:14:5",
+                      "typeDescriptions": {
+                        "typeIdentifier": "t_address",
+                        "typeString": "address"
+                      }
+                    },
+                    "nodeType": "Assignment",
+                    "operator": "=",
+                    "rightHandSide": {
+                      "argumentTypes": null,
+                      "hexValue": "30",
+                      "id": 607,
+                      "isConstant": false,
+                      "isLValue": false,
+                      "isPure": true,
+                      "kind": "number",
+                      "lValueRequested": false,
+                      "nodeType": "Literal",
+                      "src": "1721:1:5",
+                      "subdenomination": null,
+                      "typeDescriptions": {
+                        "typeIdentifier": "t_rational_0_by_1",
+                        "typeString": "int_const 0"
+                      },
+                      "value": "0"
+                    },
+                    "src": "1706:16:5",
+                    "typeDescriptions": {
+                      "typeIdentifier": "t_address",
+                      "typeString": "address"
+                    }
+                  },
+                  "id": 609,
+                  "nodeType": "ExpressionStatement",
+                  "src": "1706:16:5"
+                },
+                {
+                  "expression": {
+                    "argumentTypes": null,
+                    "id": 614,
+                    "isConstant": false,
+                    "isLValue": false,
+                    "isPure": false,
+                    "lValueRequested": false,
+                    "leftHandSide": {
+                      "argumentTypes": null,
+                      "expression": {
+                        "argumentTypes": null,
+                        "id": 610,
+                        "name": "B",
+                        "nodeType": "Identifier",
+                        "overloadedDeclarations": [],
+                        "referencedDeclaration": 587,
+                        "src": "1725:1:5",
+                        "typeDescriptions": {
+                          "typeIdentifier": "t_struct$_Bidding_$463_storage_ptr",
+                          "typeString": "struct Voting.Bidding storage pointer"
+                        }
+                      },
+                      "id": 612,
+                      "isConstant": false,
+                      "isLValue": true,
+                      "isPure": false,
+                      "lValueRequested": true,
+                      "memberName": "lowestBid",
+                      "nodeType": "MemberAccess",
+                      "referencedDeclaration": 460,
+                      "src": "1725:11:5",
+                      "typeDescriptions": {
+                        "typeIdentifier": "t_uint256",
+                        "typeString": "uint256"
+                      }
+                    },
+                    "nodeType": "Assignment",
+                    "operator": "=",
+                    "rightHandSide": {
+                      "argumentTypes": null,
+                      "hexValue": "30",
+                      "id": 613,
+                      "isConstant": false,
+                      "isLValue": false,
+                      "isPure": true,
+                      "kind": "number",
+                      "lValueRequested": false,
+                      "nodeType": "Literal",
+                      "src": "1737:1:5",
+                      "subdenomination": null,
+                      "typeDescriptions": {
+                        "typeIdentifier": "t_rational_0_by_1",
+                        "typeString": "int_const 0"
+                      },
+                      "value": "0"
+                    },
+                    "src": "1725:13:5",
+                    "typeDescriptions": {
+                      "typeIdentifier": "t_uint256",
+                      "typeString": "uint256"
+                    }
+                  },
+                  "id": 615,
+                  "nodeType": "ExpressionStatement",
+                  "src": "1725:13:5"
+                },
+                {
+                  "expression": {
+                    "argumentTypes": null,
+                    "id": 620,
+                    "isConstant": false,
+                    "isLValue": false,
+                    "isPure": false,
+                    "lValueRequested": false,
+                    "leftHandSide": {
+                      "argumentTypes": null,
+                      "expression": {
+                        "argumentTypes": null,
+                        "id": 616,
+                        "name": "B",
+                        "nodeType": "Identifier",
+                        "overloadedDeclarations": [],
+                        "referencedDeclaration": 587,
+                        "src": "1741:1:5",
+                        "typeDescriptions": {
+                          "typeIdentifier": "t_struct$_Bidding_$463_storage_ptr",
+                          "typeString": "struct Voting.Bidding storage pointer"
+                        }
+                      },
+                      "id": 618,
+                      "isConstant": false,
+                      "isLValue": true,
+                      "isPure": false,
+                      "lValueRequested": true,
+                      "memberName": "Sender",
+                      "nodeType": "MemberAccess",
+                      "referencedDeclaration": 462,
+                      "src": "1741:8:5",
+                      "typeDescriptions": {
+                        "typeIdentifier": "t_address",
+                        "typeString": "address"
+                      }
+                    },
+                    "nodeType": "Assignment",
+                    "operator": "=",
+                    "rightHandSide": {
+                      "argumentTypes": null,
+                      "hexValue": "30",
+                      "id": 619,
+                      "isConstant": false,
+                      "isLValue": false,
+                      "isPure": true,
+                      "kind": "number",
+                      "lValueRequested": false,
+                      "nodeType": "Literal",
+                      "src": "1750:1:5",
+                      "subdenomination": null,
+                      "typeDescriptions": {
+                        "typeIdentifier": "t_rational_0_by_1",
+                        "typeString": "int_const 0"
+                      },
+                      "value": "0"
+                    },
+                    "src": "1741:10:5",
+                    "typeDescriptions": {
+                      "typeIdentifier": "t_address",
+                      "typeString": "address"
+                    }
+                  },
+                  "id": 621,
+                  "nodeType": "ExpressionStatement",
+                  "src": "1741:10:5"
+                }
+              ]
+            },
+            "id": 623,
+            "implemented": true,
+            "isConstructor": false,
+            "isDeclaredConst": false,
+            "modifiers": [],
+            "name": "clean",
+            "nodeType": "FunctionDefinition",
+            "parameters": {
+              "id": 584,
+              "nodeType": "ParameterList",
+              "parameters": [
+                {
+                  "constant": false,
+                  "id": 583,
+                  "name": "BiddingID",
+                  "nodeType": "VariableDeclaration",
+                  "scope": 623,
+                  "src": "1626:14:5",
+                  "stateVariable": false,
+                  "storageLocation": "default",
+                  "typeDescriptions": {
+                    "typeIdentifier": "t_uint256",
+                    "typeString": "uint256"
+                  },
+                  "typeName": {
+                    "id": 582,
+                    "name": "uint",
+                    "nodeType": "ElementaryTypeName",
+                    "src": "1626:4:5",
+                    "typeDescriptions": {
+                      "typeIdentifier": "t_uint256",
+                      "typeString": "uint256"
+                    }
+                  },
+                  "value": null,
+                  "visibility": "internal"
+                }
+              ],
+              "src": "1625:16:5"
+            },
+            "payable": false,
+            "returnParameters": {
+              "id": 585,
+              "nodeType": "ParameterList",
+              "parameters": [],
+              "src": "1642:0:5"
+            },
+            "scope": 624,
+            "src": "1611:144:5",
+            "stateMutability": "nonpayable",
+            "superFunction": null,
+            "visibility": "public"
+          }
+        ],
+        "scope": 625,
+        "src": "97:1661:5"
+      }
+    ],
+    "src": "0:1759:5"
+  },
+  "legacyAST": {
+    "absolutePath": "/home/achal/Bidding/contracts/Voting.sol",
+    "exportedSymbols": {
+      "Voting": [
+        624
+      ]
+    },
+    "id": 625,
+    "nodeType": "SourceUnit",
+    "nodes": [
+      {
+        "id": 447,
+        "literals": [
+          "solidity",
+          "^",
+          "0.4",
+          ".19"
+        ],
+        "nodeType": "PragmaDirective",
+        "src": "0:24:5"
+      },
+      {
+        "absolutePath": "/home/achal/Bidding/contracts/ERC223.sol",
+        "file": "./ERC223.sol",
+        "id": 448,
+        "nodeType": "ImportDirective",
+        "scope": 625,
+        "sourceUnit": 202,
+        "src": "26:22:5",
+        "symbolAliases": [],
+        "unitAlias": ""
+      },
+      {
+        "absolutePath": "/home/achal/Bidding/contracts/SafeMath.sol",
+        "file": "./SafeMath.sol",
+        "id": 449,
+        "nodeType": "ImportDirective",
+        "scope": 625,
+        "sourceUnit": 350,
+        "src": "49:24:5",
+        "symbolAliases": [],
+        "unitAlias": ""
+      },
+      {
+        "absolutePath": "/home/achal/Bidding/contracts/Token.sol",
+        "file": "./Token.sol",
+        "id": 450,
+        "nodeType": "ImportDirective",
+        "scope": 625,
+        "sourceUnit": 446,
+        "src": "74:21:5",
+        "symbolAliases": [],
+        "unitAlias": ""
+      },
+      {
+        "baseContracts": [],
+        "contractDependencies": [],
+        "contractKind": "contract",
+        "documentation": null,
+        "fullyImplemented": true,
+        "id": 624,
+        "linearizedBaseContracts": [
+          624
+        ],
+        "name": "Voting",
+        "nodeType": "ContractDefinition",
+        "nodes": [
+          {
+            "constant": false,
+            "id": 452,
+            "name": "token",
+            "nodeType": "VariableDeclaration",
+            "scope": 624,
+            "src": "123:24:5",
+            "stateVariable": true,
+            "storageLocation": "default",
+            "typeDescriptions": {
+              "typeIdentifier": "t_contract$_ERC223Token_$201",
+              "typeString": "contract ERC223Token"
+            },
+            "typeName": {
+              "contractScope": null,
+              "id": 451,
+              "name": "ERC223Token",
+              "nodeType": "UserDefinedTypeName",
+              "referencedDeclaration": 201,
+              "src": "123:11:5",
+              "typeDescriptions": {
+                "typeIdentifier": "t_contract$_ERC223Token_$201",
+                "typeString": "contract ERC223Token"
+              }
+            },
+            "value": null,
+            "visibility": "public"
+          },
+          {
+            "canonicalName": "Voting.Bidding",
+            "id": 463,
+            "members": [
+              {
+                "constant": false,
+                "id": 454,
+                "name": "deadLine",
+                "nodeType": "VariableDeclaration",
+                "scope": 463,
+                "src": "196:13:5",
+                "stateVariable": false,
+                "storageLocation": "default",
+                "typeDescriptions": {
+                  "typeIdentifier": "t_uint256",
+                  "typeString": "uint256"
+                },
+                "typeName": {
+                  "id": 453,
+                  "name": "uint",
+                  "nodeType": "ElementaryTypeName",
+                  "src": "196:4:5",
+                  "typeDescriptions": {
+                    "typeIdentifier": "t_uint256",
+                    "typeString": "uint256"
+                  }
+                },
+                "value": null,
+                "visibility": "internal"
+              },
+              {
+                "constant": false,
+                "id": 456,
+                "name": "bidHash",
+                "nodeType": "VariableDeclaration",
+                "scope": 463,
+                "src": "253:15:5",
+                "stateVariable": false,
+                "storageLocation": "default",
+                "typeDescriptions": {
+                  "typeIdentifier": "t_bytes32",
+                  "typeString": "bytes32"
+                },
+                "typeName": {
+                  "id": 455,
+                  "name": "bytes32",
+                  "nodeType": "ElementaryTypeName",
+                  "src": "253:7:5",
+                  "typeDescriptions": {
+                    "typeIdentifier": "t_bytes32",
+                    "typeString": "bytes32"
+                  }
+                },
+                "value": null,
+                "visibility": "internal"
+              },
+              {
+                "constant": false,
+                "id": 458,
+                "name": "lowestBidder",
+                "nodeType": "VariableDeclaration",
+                "scope": 463,
+                "src": "351:20:5",
+                "stateVariable": false,
+                "storageLocation": "default",
+                "typeDescriptions": {
+                  "typeIdentifier": "t_address",
+                  "typeString": "address"
+                },
+                "typeName": {
+                  "id": 457,
+                  "name": "address",
+                  "nodeType": "ElementaryTypeName",
+                  "src": "351:7:5",
+                  "typeDescriptions": {
+                    "typeIdentifier": "t_address",
+                    "typeString": "address"
+                  }
+                },
+                "value": null,
+                "visibility": "internal"
+              },
+              {
+                "constant": false,
+                "id": 460,
+                "name": "lowestBid",
+                "nodeType": "VariableDeclaration",
+                "scope": 463,
+                "src": "399:14:5",
+                "stateVariable": false,
+                "storageLocation": "default",
+                "typeDescriptions": {
+                  "typeIdentifier": "t_uint256",
+                  "typeString": "uint256"
+                },
+                "typeName": {
+                  "id": 459,
+                  "name": "uint",
+                  "nodeType": "ElementaryTypeName",
+                  "src": "399:4:5",
+                  "typeDescriptions": {
+                    "typeIdentifier": "t_uint256",
+                    "typeString": "uint256"
+                  }
+                },
+                "value": null,
+                "visibility": "internal"
+              },
+              {
+                "constant": false,
+                "id": 462,
+                "name": "Sender",
+                "nodeType": "VariableDeclaration",
+                "scope": 463,
+                "src": "457:14:5",
+                "stateVariable": false,
+                "storageLocation": "default",
+                "typeDescriptions": {
+                  "typeIdentifier": "t_address",
+                  "typeString": "address"
+                },
+                "typeName": {
+                  "id": 461,
+                  "name": "address",
+                  "nodeType": "ElementaryTypeName",
+                  "src": "457:7:5",
+                  "typeDescriptions": {
+                    "typeIdentifier": "t_address",
+                    "typeString": "address"
+                  }
+                },
+                "value": null,
+                "visibility": "internal"
+              }
+            ],
+            "name": "Bidding",
+            "nodeType": "StructDefinition",
+            "scope": 624,
+            "src": "150:382:5",
+            "visibility": "public"
+          },
+          {
+            "constant": false,
+            "id": 467,
+            "name": "BidMap",
+            "nodeType": "VariableDeclaration",
+            "scope": 624,
+            "src": "539:37:5",
+            "stateVariable": true,
+            "storageLocation": "default",
+            "typeDescriptions": {
+              "typeIdentifier": "t_mapping$_t_uint256_$_t_struct$_Bidding_$463_storage_$",
+              "typeString": "mapping(uint256 => struct Voting.Bidding storage ref)"
+            },
+            "typeName": {
+              "id": 466,
+              "keyType": {
+                "id": 464,
+                "name": "uint",
+                "nodeType": "ElementaryTypeName",
+                "src": "548:4:5",
+                "typeDescriptions": {
+                  "typeIdentifier": "t_uint256",
+                  "typeString": "uint256"
+                }
+              },
+              "nodeType": "Mapping",
+              "src": "539:23:5",
+              "typeDescriptions": {
+                "typeIdentifier": "t_mapping$_t_uint256_$_t_struct$_Bidding_$463_storage_$",
+                "typeString": "mapping(uint256 => struct Voting.Bidding storage ref)"
+              },
+              "valueType": {
+                "contractScope": null,
+                "id": 465,
+                "name": "Bidding",
+                "nodeType": "UserDefinedTypeName",
+                "referencedDeclaration": 463,
+                "src": "554:7:5",
+                "typeDescriptions": {
+                  "typeIdentifier": "t_struct$_Bidding_$463_storage_ptr",
+                  "typeString": "struct Voting.Bidding storage pointer"
+                }
+              }
+            },
+            "value": null,
+            "visibility": "public"
+          },
+          {
+            "constant": false,
+            "id": 469,
+            "name": "myGlobalCounter",
+            "nodeType": "VariableDeclaration",
+            "scope": 624,
+            "src": "628:27:5",
+            "stateVariable": true,
+            "storageLocation": "default",
+            "typeDescriptions": {
+              "typeIdentifier": "t_uint256",
+              "typeString": "uint256"
+            },
+            "typeName": {
+              "id": 468,
+              "name": "uint",
+              "nodeType": "ElementaryTypeName",
+              "src": "628:4:5",
+              "typeDescriptions": {
+                "typeIdentifier": "t_uint256",
+                "typeString": "uint256"
+              }
+            },
+            "value": null,
+            "visibility": "public"
+          },
+          {
+            "body": {
+              "id": 506,
+              "nodeType": "Block",
+              "src": "772:162:5",
+              "statements": [
+                {
+                  "expression": {
+                    "argumentTypes": null,
+                    "id": 479,
+                    "isConstant": false,
+                    "isLValue": false,
+                    "isPure": false,
+                    "lValueRequested": false,
+                    "leftHandSide": {
+                      "argumentTypes": null,
+                      "id": 476,
+                      "name": "BiddingID",
+                      "nodeType": "Identifier",
+                      "overloadedDeclarations": [],
+                      "referencedDeclaration": 474,
+                      "src": "775:9:5",
+                      "typeDescriptions": {
+                        "typeIdentifier": "t_uint256",
+                        "typeString": "uint256"
+                      }
+                    },
+                    "nodeType": "Assignment",
+                    "operator": "=",
+                    "rightHandSide": {
+                      "argumentTypes": null,
+                      "id": 478,
+                      "isConstant": false,
+                      "isLValue": false,
+                      "isPure": false,
+                      "lValueRequested": false,
+                      "nodeType": "UnaryOperation",
+                      "operator": "++",
+                      "prefix": false,
+                      "src": "786:17:5",
+                      "subExpression": {
+                        "argumentTypes": null,
+                        "id": 477,
+                        "name": "myGlobalCounter",
+                        "nodeType": "Identifier",
+                        "overloadedDeclarations": [],
+                        "referencedDeclaration": 469,
+                        "src": "786:15:5",
+                        "typeDescriptions": {
+                          "typeIdentifier": "t_uint256",
+                          "typeString": "uint256"
+                        }
+                      },
+                      "typeDescriptions": {
+                        "typeIdentifier": "t_uint256",
+                        "typeString": "uint256"
+                      }
+                    },
+                    "src": "775:28:5",
+                    "typeDescriptions": {
+                      "typeIdentifier": "t_uint256",
+                      "typeString": "uint256"
+                    }
+                  },
+                  "id": 480,
+                  "nodeType": "ExpressionStatement",
+                  "src": "775:28:5"
+                },
+                {
+                  "expression": {
+                    "argumentTypes": null,
+                    "id": 489,
+                    "isConstant": false,
+                    "isLValue": false,
+                    "isPure": false,
+                    "lValueRequested": false,
+                    "leftHandSide": {
+                      "argumentTypes": null,
+                      "expression": {
+                        "argumentTypes": null,
+                        "baseExpression": {
+                          "argumentTypes": null,
+                          "id": 481,
+                          "name": "BidMap",
+                          "nodeType": "Identifier",
+                          "overloadedDeclarations": [],
+                          "referencedDeclaration": 467,
+                          "src": "806:6:5",
+                          "typeDescriptions": {
+                            "typeIdentifier": "t_mapping$_t_uint256_$_t_struct$_Bidding_$463_storage_$",
+                            "typeString": "mapping(uint256 => struct Voting.Bidding storage ref)"
+                          }
+                        },
+                        "id": 483,
+                        "indexExpression": {
+                          "argumentTypes": null,
+                          "id": 482,
+                          "name": "BiddingID",
+                          "nodeType": "Identifier",
+                          "overloadedDeclarations": [],
+                          "referencedDeclaration": 474,
+                          "src": "813:9:5",
+                          "typeDescriptions": {
+                            "typeIdentifier": "t_uint256",
+                            "typeString": "uint256"
+                          }
+                        },
+                        "isConstant": false,
+                        "isLValue": true,
+                        "isPure": false,
+                        "lValueRequested": false,
+                        "nodeType": "IndexAccess",
+                        "src": "806:17:5",
+                        "typeDescriptions": {
+                          "typeIdentifier": "t_struct$_Bidding_$463_storage",
+                          "typeString": "struct Voting.Bidding storage ref"
+                        }
+                      },
+                      "id": 484,
+                      "isConstant": false,
+                      "isLValue": true,
+                      "isPure": false,
+                      "lValueRequested": true,
+                      "memberName": "deadLine",
+                      "nodeType": "MemberAccess",
+                      "referencedDeclaration": 454,
+                      "src": "806:26:5",
+                      "typeDescriptions": {
+                        "typeIdentifier": "t_uint256",
+                        "typeString": "uint256"
+                      }
+                    },
+                    "nodeType": "Assignment",
+                    "operator": "=",
+                    "rightHandSide": {
+                      "argumentTypes": null,
+                      "commonType": {
+                        "typeIdentifier": "t_uint256",
+                        "typeString": "uint256"
+                      },
+                      "id": 488,
+                      "isConstant": false,
+                      "isLValue": false,
+                      "isPure": false,
+                      "lValueRequested": false,
+                      "leftExpression": {
+                        "argumentTypes": null,
+                        "expression": {
+                          "argumentTypes": null,
+                          "id": 485,
+                          "name": "block",
+                          "nodeType": "Identifier",
+                          "overloadedDeclarations": [],
+                          "referencedDeclaration": 628,
+                          "src": "833:5:5",
+                          "typeDescriptions": {
+                            "typeIdentifier": "t_magic_block",
+                            "typeString": "block"
+                          }
+                        },
+                        "id": 486,
+                        "isConstant": false,
+                        "isLValue": false,
+                        "isPure": false,
+                        "lValueRequested": false,
+                        "memberName": "number",
+                        "nodeType": "MemberAccess",
+                        "referencedDeclaration": null,
+                        "src": "833:12:5",
+                        "typeDescriptions": {
+                          "typeIdentifier": "t_uint256",
+                          "typeString": "uint256"
+                        }
+                      },
+                      "nodeType": "BinaryOperation",
+                      "operator": "+",
+                      "rightExpression": {
+                        "argumentTypes": null,
+                        "id": 487,
+                        "name": "timeLimit",
+                        "nodeType": "Identifier",
+                        "overloadedDeclarations": [],
+                        "referencedDeclaration": 471,
+                        "src": "846:9:5",
+                        "typeDescriptions": {
+                          "typeIdentifier": "t_uint256",
+                          "typeString": "uint256"
+                        }
+                      },
+                      "src": "833:22:5",
+                      "typeDescriptions": {
+                        "typeIdentifier": "t_uint256",
+                        "typeString": "uint256"
+                      }
+                    },
+                    "src": "806:49:5",
+                    "typeDescriptions": {
+                      "typeIdentifier": "t_uint256",
+                      "typeString": "uint256"
+                    }
+                  },
+                  "id": 490,
+                  "nodeType": "ExpressionStatement",
+                  "src": "806:49:5"
+                },
+                {
+                  "expression": {
+                    "argumentTypes": null,
+                    "id": 497,
+                    "isConstant": false,
+                    "isLValue": false,
+                    "isPure": false,
+                    "lValueRequested": false,
+                    "leftHandSide": {
+                      "argumentTypes": null,
+                      "expression": {
+                        "argumentTypes": null,
+                        "baseExpression": {
+                          "argumentTypes": null,
+                          "id": 491,
+                          "name": "BidMap",
+                          "nodeType": "Identifier",
+                          "overloadedDeclarations": [],
+                          "referencedDeclaration": 467,
+                          "src": "858:6:5",
+                          "typeDescriptions": {
+                            "typeIdentifier": "t_mapping$_t_uint256_$_t_struct$_Bidding_$463_storage_$",
+                            "typeString": "mapping(uint256 => struct Voting.Bidding storage ref)"
+                          }
+                        },
+                        "id": 493,
+                        "indexExpression": {
+                          "argumentTypes": null,
+                          "id": 492,
+                          "name": "BiddingID",
+                          "nodeType": "Identifier",
+                          "overloadedDeclarations": [],
+                          "referencedDeclaration": 474,
+                          "src": "865:9:5",
+                          "typeDescriptions": {
+                            "typeIdentifier": "t_uint256",
+                            "typeString": "uint256"
+                          }
+                        },
+                        "isConstant": false,
+                        "isLValue": true,
+                        "isPure": false,
+                        "lValueRequested": false,
+                        "nodeType": "IndexAccess",
+                        "src": "858:17:5",
+                        "typeDescriptions": {
+                          "typeIdentifier": "t_struct$_Bidding_$463_storage",
+                          "typeString": "struct Voting.Bidding storage ref"
+                        }
+                      },
+                      "id": 494,
+                      "isConstant": false,
+                      "isLValue": true,
+                      "isPure": false,
+                      "lValueRequested": true,
+                      "memberName": "Sender",
+                      "nodeType": "MemberAccess",
+                      "referencedDeclaration": 462,
+                      "src": "858:24:5",
+                      "typeDescriptions": {
+                        "typeIdentifier": "t_address",
+                        "typeString": "address"
+                      }
+                    },
+                    "nodeType": "Assignment",
+                    "operator": "=",
+                    "rightHandSide": {
+                      "argumentTypes": null,
+                      "expression": {
+                        "argumentTypes": null,
+                        "id": 495,
+                        "name": "msg",
+                        "nodeType": "Identifier",
+                        "overloadedDeclarations": [],
+                        "referencedDeclaration": 636,
+                        "src": "883:3:5",
+                        "typeDescriptions": {
+                          "typeIdentifier": "t_magic_message",
+                          "typeString": "msg"
+                        }
+                      },
+                      "id": 496,
+                      "isConstant": false,
+                      "isLValue": false,
+                      "isPure": false,
+                      "lValueRequested": false,
+                      "memberName": "sender",
+                      "nodeType": "MemberAccess",
+                      "referencedDeclaration": null,
+                      "src": "883:10:5",
+                      "typeDescriptions": {
+                        "typeIdentifier": "t_address",
+                        "typeString": "address"
+                      }
+                    },
+                    "src": "858:35:5",
+                    "typeDescriptions": {
+                      "typeIdentifier": "t_address",
+                      "typeString": "address"
+                    }
+                  },
+                  "id": 498,
+                  "nodeType": "ExpressionStatement",
+                  "src": "858:35:5"
+                },
+                {
+                  "expression": {
+                    "argumentTypes": null,
+                    "id": 504,
+                    "isConstant": false,
+                    "isLValue": false,
+                    "isPure": false,
+                    "lValueRequested": false,
+                    "leftHandSide": {
+                      "argumentTypes": null,
+                      "expression": {
+                        "argumentTypes": null,
+                        "baseExpression": {
+                          "argumentTypes": null,
+                          "id": 499,
+                          "name": "BidMap",
+                          "nodeType": "Identifier",
+                          "overloadedDeclarations": [],
+                          "referencedDeclaration": 467,
+                          "src": "896:6:5",
+                          "typeDescriptions": {
+                            "typeIdentifier": "t_mapping$_t_uint256_$_t_struct$_Bidding_$463_storage_$",
+                            "typeString": "mapping(uint256 => struct Voting.Bidding storage ref)"
+                          }
+                        },
+                        "id": 501,
+                        "indexExpression": {
+                          "argumentTypes": null,
+                          "id": 500,
+                          "name": "BiddingID",
+                          "nodeType": "Identifier",
+                          "overloadedDeclarations": [],
+                          "referencedDeclaration": 474,
+                          "src": "903:9:5",
+                          "typeDescriptions": {
+                            "typeIdentifier": "t_uint256",
+                            "typeString": "uint256"
+                          }
+                        },
+                        "isConstant": false,
+                        "isLValue": true,
+                        "isPure": false,
+                        "lValueRequested": false,
+                        "nodeType": "IndexAccess",
+                        "src": "896:17:5",
+                        "typeDescriptions": {
+                          "typeIdentifier": "t_struct$_Bidding_$463_storage",
+                          "typeString": "struct Voting.Bidding storage ref"
+                        }
+                      },
+                      "id": 502,
+                      "isConstant": false,
+                      "isLValue": true,
+                      "isPure": false,
+                      "lValueRequested": true,
+                      "memberName": "lowestBid",
+                      "nodeType": "MemberAccess",
+                      "referencedDeclaration": 460,
+                      "src": "896:27:5",
+                      "typeDescriptions": {
+                        "typeIdentifier": "t_uint256",
+                        "typeString": "uint256"
+                      }
+                    },
+                    "nodeType": "Assignment",
+                    "operator": "=",
+                    "rightHandSide": {
+                      "argumentTypes": null,
+                      "hexValue": "313030303030",
+                      "id": 503,
+                      "isConstant": false,
+                      "isLValue": false,
+                      "isPure": true,
+                      "kind": "number",
+                      "lValueRequested": false,
+                      "nodeType": "Literal",
+                      "src": "924:6:5",
+                      "subdenomination": null,
+                      "typeDescriptions": {
+                        "typeIdentifier": "t_rational_100000_by_1",
+                        "typeString": "int_const 100000"
+                      },
+                      "value": "100000"
+                    },
+                    "src": "896:34:5",
+                    "typeDescriptions": {
+                      "typeIdentifier": "t_uint256",
+                      "typeString": "uint256"
+                    }
+                  },
+                  "id": 505,
+                  "nodeType": "ExpressionStatement",
+                  "src": "896:34:5"
+                }
+              ]
+            },
+            "id": 507,
+            "implemented": true,
+            "isConstructor": false,
+            "isDeclaredConst": false,
+            "modifiers": [],
+            "name": "startBidding",
+            "nodeType": "FunctionDefinition",
+            "parameters": {
+              "id": 472,
+              "nodeType": "ParameterList",
+              "parameters": [
+                {
+                  "constant": false,
+                  "id": 471,
+                  "name": "timeLimit",
+                  "nodeType": "VariableDeclaration",
+                  "scope": 507,
+                  "src": "732:14:5",
+                  "stateVariable": false,
+                  "storageLocation": "default",
+                  "typeDescriptions": {
+                    "typeIdentifier": "t_uint256",
+                    "typeString": "uint256"
+                  },
+                  "typeName": {
+                    "id": 470,
+                    "name": "uint",
+                    "nodeType": "ElementaryTypeName",
+                    "src": "732:4:5",
+                    "typeDescriptions": {
+                      "typeIdentifier": "t_uint256",
+                      "typeString": "uint256"
+                    }
+                  },
+                  "value": null,
+                  "visibility": "internal"
+                }
+              ],
+              "src": "731:16:5"
+            },
+            "payable": false,
+            "returnParameters": {
+              "id": 475,
+              "nodeType": "ParameterList",
+              "parameters": [
+                {
+                  "constant": false,
+                  "id": 474,
+                  "name": "BiddingID",
+                  "nodeType": "VariableDeclaration",
+                  "scope": 507,
+                  "src": "757:14:5",
+                  "stateVariable": false,
+                  "storageLocation": "default",
+                  "typeDescriptions": {
+                    "typeIdentifier": "t_uint256",
+                    "typeString": "uint256"
+                  },
+                  "typeName": {
+                    "id": 473,
+                    "name": "uint",
+                    "nodeType": "ElementaryTypeName",
+                    "src": "757:4:5",
+                    "typeDescriptions": {
+                      "typeIdentifier": "t_uint256",
+                      "typeString": "uint256"
+                    }
+                  },
+                  "value": null,
+                  "visibility": "internal"
+                }
+              ],
+              "src": "756:16:5"
+            },
+            "scope": 624,
+            "src": "710:224:5",
+            "stateMutability": "nonpayable",
+            "superFunction": null,
+            "visibility": "public"
+          },
+          {
+            "body": {
+              "id": 561,
+              "nodeType": "Block",
+              "src": "1032:221:5",
+              "statements": [
+                {
+                  "assignments": [
+                    519
+                  ],
+                  "declarations": [
+                    {
+                      "constant": false,
+                      "id": 519,
+                      "name": "B",
+                      "nodeType": "VariableDeclaration",
+                      "scope": 562,
+                      "src": "1035:9:5",
+                      "stateVariable": false,
+                      "storageLocation": "default",
+                      "typeDescriptions": {
+                        "typeIdentifier": "t_struct$_Bidding_$463_storage_ptr",
+                        "typeString": "struct Voting.Bidding storage pointer"
+                      },
+                      "typeName": {
+                        "contractScope": null,
+                        "id": 518,
+                        "name": "Bidding",
+                        "nodeType": "UserDefinedTypeName",
+                        "referencedDeclaration": 463,
+                        "src": "1035:7:5",
+                        "typeDescriptions": {
+                          "typeIdentifier": "t_struct$_Bidding_$463_storage_ptr",
+                          "typeString": "struct Voting.Bidding storage pointer"
+                        }
+                      },
+                      "value": null,
+                      "visibility": "internal"
+                    }
+                  ],
+                  "id": 523,
+                  "initialValue": {
+                    "argumentTypes": null,
+                    "baseExpression": {
+                      "argumentTypes": null,
+                      "id": 520,
+                      "name": "BidMap",
+                      "nodeType": "Identifier",
+                      "overloadedDeclarations": [],
+                      "referencedDeclaration": 467,
+                      "src": "1047:6:5",
+                      "typeDescriptions": {
+                        "typeIdentifier": "t_mapping$_t_uint256_$_t_struct$_Bidding_$463_storage_$",
+                        "typeString": "mapping(uint256 => struct Voting.Bidding storage ref)"
+                      }
+                    },
+                    "id": 522,
+                    "indexExpression": {
+                      "argumentTypes": null,
+                      "id": 521,
+                      "name": "BiddingID",
+                      "nodeType": "Identifier",
+                      "overloadedDeclarations": [],
+                      "referencedDeclaration": 509,
+                      "src": "1054:9:5",
+                      "typeDescriptions": {
+                        "typeIdentifier": "t_uint256",
+                        "typeString": "uint256"
+                      }
+                    },
+                    "isConstant": false,
+                    "isLValue": true,
+                    "isPure": false,
+                    "lValueRequested": false,
+                    "nodeType": "IndexAccess",
+                    "src": "1047:17:5",
+                    "typeDescriptions": {
+                      "typeIdentifier": "t_struct$_Bidding_$463_storage",
+                      "typeString": "struct Voting.Bidding storage ref"
+                    }
+                  },
+                  "nodeType": "VariableDeclarationStatement",
+                  "src": "1035:29:5"
+                },
+                {
+                  "condition": {
+                    "argumentTypes": null,
+                    "commonType": {
+                      "typeIdentifier": "t_bool",
+                      "typeString": "bool"
+                    },
+                    "id": 533,
+                    "isConstant": false,
+                    "isLValue": false,
+                    "isPure": false,
+                    "lValueRequested": false,
+                    "leftExpression": {
+                      "argumentTypes": null,
+                      "commonType": {
+                        "typeIdentifier": "t_uint256",
+                        "typeString": "uint256"
+                      },
+                      "id": 527,
+                      "isConstant": false,
+                      "isLValue": false,
+                      "isPure": false,
+                      "lValueRequested": false,
+                      "leftExpression": {
+                        "argumentTypes": null,
+                        "expression": {
+                          "argumentTypes": null,
+                          "id": 524,
+                          "name": "B",
+                          "nodeType": "Identifier",
+                          "overloadedDeclarations": [],
+                          "referencedDeclaration": 519,
+                          "src": "1071:1:5",
+                          "typeDescriptions": {
+                            "typeIdentifier": "t_struct$_Bidding_$463_storage_ptr",
+                            "typeString": "struct Voting.Bidding storage pointer"
+                          }
+                        },
+                        "id": 525,
+                        "isConstant": false,
+                        "isLValue": true,
+                        "isPure": false,
+                        "lValueRequested": false,
+                        "memberName": "lowestBid",
+                        "nodeType": "MemberAccess",
+                        "referencedDeclaration": 460,
+                        "src": "1071:11:5",
+                        "typeDescriptions": {
+                          "typeIdentifier": "t_uint256",
+                          "typeString": "uint256"
+                        }
+                      },
+                      "nodeType": "BinaryOperation",
+                      "operator": "<",
+                      "rightExpression": {
+                        "argumentTypes": null,
+                        "id": 526,
+                        "name": "BidAmount",
+                        "nodeType": "Identifier",
+                        "overloadedDeclarations": [],
+                        "referencedDeclaration": 513,
+                        "src": "1083:9:5",
+                        "typeDescriptions": {
+                          "typeIdentifier": "t_uint256",
+                          "typeString": "uint256"
+                        }
+                      },
+                      "src": "1071:21:5",
+                      "typeDescriptions": {
+                        "typeIdentifier": "t_bool",
+                        "typeString": "bool"
+                      }
+                    },
+                    "nodeType": "BinaryOperation",
+                    "operator": "||",
+                    "rightExpression": {
+                      "argumentTypes": null,
+                      "commonType": {
+                        "typeIdentifier": "t_uint256",
+                        "typeString": "uint256"
+                      },
+                      "id": 532,
+                      "isConstant": false,
+                      "isLValue": false,
+                      "isPure": false,
+                      "lValueRequested": false,
+                      "leftExpression": {
+                        "argumentTypes": null,
+                        "expression": {
+                          "argumentTypes": null,
+                          "id": 528,
+                          "name": "B",
+                          "nodeType": "Identifier",
+                          "overloadedDeclarations": [],
+                          "referencedDeclaration": 519,
+                          "src": "1096:1:5",
+                          "typeDescriptions": {
+                            "typeIdentifier": "t_struct$_Bidding_$463_storage_ptr",
+                            "typeString": "struct Voting.Bidding storage pointer"
+                          }
+                        },
+                        "id": 529,
+                        "isConstant": false,
+                        "isLValue": true,
+                        "isPure": false,
+                        "lValueRequested": false,
+                        "memberName": "deadLine",
+                        "nodeType": "MemberAccess",
+                        "referencedDeclaration": 454,
+                        "src": "1096:10:5",
+                        "typeDescriptions": {
+                          "typeIdentifier": "t_uint256",
+                          "typeString": "uint256"
+                        }
+                      },
+                      "nodeType": "BinaryOperation",
+                      "operator": "<",
+                      "rightExpression": {
+                        "argumentTypes": null,
+                        "expression": {
+                          "argumentTypes": null,
+                          "id": 530,
+                          "name": "block",
+                          "nodeType": "Identifier",
+                          "overloadedDeclarations": [],
+                          "referencedDeclaration": 628,
+                          "src": "1107:5:5",
+                          "typeDescriptions": {
+                            "typeIdentifier": "t_magic_block",
+                            "typeString": "block"
+                          }
+                        },
+                        "id": 531,
+                        "isConstant": false,
+                        "isLValue": false,
+                        "isPure": false,
+                        "lValueRequested": false,
+                        "memberName": "number",
+                        "nodeType": "MemberAccess",
+                        "referencedDeclaration": null,
+                        "src": "1107:12:5",
+                        "typeDescriptions": {
+                          "typeIdentifier": "t_uint256",
+                          "typeString": "uint256"
+                        }
+                      },
+                      "src": "1096:23:5",
+                      "typeDescriptions": {
+                        "typeIdentifier": "t_bool",
+                        "typeString": "bool"
+                      }
+                    },
+                    "src": "1071:48:5",
+                    "typeDescriptions": {
+                      "typeIdentifier": "t_bool",
+                      "typeString": "bool"
+                    }
+                  },
+                  "falseBody": null,
+                  "id": 538,
+                  "nodeType": "IfStatement",
+                  "src": "1067:82:5",
+                  "trueBody": {
+                    "id": 537,
+                    "nodeType": "Block",
+                    "src": "1121:28:5",
+                    "statements": [
+                      {
+                        "expression": {
+                          "argumentTypes": null,
+                          "expression": {
+                            "argumentTypes": null,
+                            "id": 534,
+                            "name": "B",
+                            "nodeType": "Identifier",
+                            "overloadedDeclarations": [],
+                            "referencedDeclaration": 519,
+                            "src": "1131:1:5",
+                            "typeDescriptions": {
+                              "typeIdentifier": "t_struct$_Bidding_$463_storage_ptr",
+                              "typeString": "struct Voting.Bidding storage pointer"
+                            }
+                          },
+                          "id": 535,
+                          "isConstant": false,
+                          "isLValue": true,
+                          "isPure": false,
+                          "lValueRequested": false,
+                          "memberName": "lowestBidder",
+                          "nodeType": "MemberAccess",
+                          "referencedDeclaration": 458,
+                          "src": "1131:14:5",
+                          "typeDescriptions": {
+                            "typeIdentifier": "t_address",
+                            "typeString": "address"
+                          }
+                        },
+                        "functionReturnParameters": 517,
+                        "id": 536,
+                        "nodeType": "Return",
+                        "src": "1124:21:5"
+                      }
+                    ]
+                  }
+                },
+                {
+                  "expression": {
+                    "argumentTypes": null,
+                    "id": 544,
+                    "isConstant": false,
+                    "isLValue": false,
+                    "isPure": false,
+                    "lValueRequested": false,
+                    "leftHandSide": {
+                      "argumentTypes": null,
+                      "expression": {
+                        "argumentTypes": null,
+                        "id": 539,
+                        "name": "B",
+                        "nodeType": "Identifier",
+                        "overloadedDeclarations": [],
+                        "referencedDeclaration": 519,
+                        "src": "1151:1:5",
+                        "typeDescriptions": {
+                          "typeIdentifier": "t_struct$_Bidding_$463_storage_ptr",
+                          "typeString": "struct Voting.Bidding storage pointer"
+                        }
+                      },
+                      "id": 541,
+                      "isConstant": false,
+                      "isLValue": true,
+                      "isPure": false,
+                      "lValueRequested": true,
+                      "memberName": "lowestBidder",
+                      "nodeType": "MemberAccess",
+                      "referencedDeclaration": 458,
+                      "src": "1151:14:5",
+                      "typeDescriptions": {
+                        "typeIdentifier": "t_address",
+                        "typeString": "address"
+                      }
+                    },
+                    "nodeType": "Assignment",
+                    "operator": "=",
+                    "rightHandSide": {
+                      "argumentTypes": null,
+                      "expression": {
+                        "argumentTypes": null,
+                        "id": 542,
+                        "name": "msg",
+                        "nodeType": "Identifier",
+                        "overloadedDeclarations": [],
+                        "referencedDeclaration": 636,
+                        "src": "1166:3:5",
+                        "typeDescriptions": {
+                          "typeIdentifier": "t_magic_message",
+                          "typeString": "msg"
+                        }
+                      },
+                      "id": 543,
+                      "isConstant": false,
+                      "isLValue": false,
+                      "isPure": false,
+                      "lValueRequested": false,
+                      "memberName": "sender",
+                      "nodeType": "MemberAccess",
+                      "referencedDeclaration": null,
+                      "src": "1166:10:5",
+                      "typeDescriptions": {
+                        "typeIdentifier": "t_address",
+                        "typeString": "address"
+                      }
+                    },
+                    "src": "1151:25:5",
+                    "typeDescriptions": {
+                      "typeIdentifier": "t_address",
+                      "typeString": "address"
+                    }
+                  },
+                  "id": 545,
+                  "nodeType": "ExpressionStatement",
+                  "src": "1151:25:5"
+                },
+                {
+                  "expression": {
+                    "argumentTypes": null,
+                    "id": 550,
+                    "isConstant": false,
+                    "isLValue": false,
+                    "isPure": false,
+                    "lValueRequested": false,
+                    "leftHandSide": {
+                      "argumentTypes": null,
+                      "expression": {
+                        "argumentTypes": null,
+                        "id": 546,
+                        "name": "B",
+                        "nodeType": "Identifier",
+                        "overloadedDeclarations": [],
+                        "referencedDeclaration": 519,
+                        "src": "1179:1:5",
+                        "typeDescriptions": {
+                          "typeIdentifier": "t_struct$_Bidding_$463_storage_ptr",
+                          "typeString": "struct Voting.Bidding storage pointer"
+                        }
+                      },
+                      "id": 548,
+                      "isConstant": false,
+                      "isLValue": true,
+                      "isPure": false,
+                      "lValueRequested": true,
+                      "memberName": "lowestBid",
+                      "nodeType": "MemberAccess",
+                      "referencedDeclaration": 460,
+                      "src": "1179:11:5",
+                      "typeDescriptions": {
+                        "typeIdentifier": "t_uint256",
+                        "typeString": "uint256"
+                      }
+                    },
+                    "nodeType": "Assignment",
+                    "operator": "=",
+                    "rightHandSide": {
+                      "argumentTypes": null,
+                      "id": 549,
+                      "name": "BidAmount",
+                      "nodeType": "Identifier",
+                      "overloadedDeclarations": [],
+                      "referencedDeclaration": 513,
+                      "src": "1192:9:5",
+                      "typeDescriptions": {
+                        "typeIdentifier": "t_uint256",
+                        "typeString": "uint256"
+                      }
+                    },
+                    "src": "1179:22:5",
+                    "typeDescriptions": {
+                      "typeIdentifier": "t_uint256",
+                      "typeString": "uint256"
+                    }
+                  },
+                  "id": 551,
+                  "nodeType": "ExpressionStatement",
+                  "src": "1179:22:5"
+                },
+                {
+                  "expression": {
+                    "argumentTypes": null,
+                    "id": 556,
+                    "isConstant": false,
+                    "isLValue": false,
+                    "isPure": false,
+                    "lValueRequested": false,
+                    "leftHandSide": {
+                      "argumentTypes": null,
+                      "expression": {
+                        "argumentTypes": null,
+                        "id": 552,
+                        "name": "B",
+                        "nodeType": "Identifier",
+                        "overloadedDeclarations": [],
+                        "referencedDeclaration": 519,
+                        "src": "1204:1:5",
+                        "typeDescriptions": {
+                          "typeIdentifier": "t_struct$_Bidding_$463_storage_ptr",
+                          "typeString": "struct Voting.Bidding storage pointer"
+                        }
+                      },
+                      "id": 554,
+                      "isConstant": false,
+                      "isLValue": true,
+                      "isPure": false,
+                      "lValueRequested": true,
+                      "memberName": "bidHash",
+                      "nodeType": "MemberAccess",
+                      "referencedDeclaration": 456,
+                      "src": "1204:9:5",
+                      "typeDescriptions": {
+                        "typeIdentifier": "t_bytes32",
+                        "typeString": "bytes32"
+                      }
+                    },
+                    "nodeType": "Assignment",
+                    "operator": "=",
+                    "rightHandSide": {
+                      "argumentTypes": null,
+                      "id": 555,
+                      "name": "BidderHash",
+                      "nodeType": "Identifier",
+                      "overloadedDeclarations": [],
+                      "referencedDeclaration": 511,
+                      "src": "1215:10:5",
+                      "typeDescriptions": {
+                        "typeIdentifier": "t_bytes32",
+                        "typeString": "bytes32"
+                      }
+                    },
+                    "src": "1204:21:5",
+                    "typeDescriptions": {
+                      "typeIdentifier": "t_bytes32",
+                      "typeString": "bytes32"
+                    }
+                  },
+                  "id": 557,
+                  "nodeType": "ExpressionStatement",
+                  "src": "1204:21:5"
+                },
+                {
+                  "expression": {
+                    "argumentTypes": null,
+                    "expression": {
+                      "argumentTypes": null,
+                      "id": 558,
+                      "name": "B",
+                      "nodeType": "Identifier",
+                      "overloadedDeclarations": [],
+                      "referencedDeclaration": 519,
+                      "src": "1235:1:5",
+                      "typeDescriptions": {
+                        "typeIdentifier": "t_struct$_Bidding_$463_storage_ptr",
+                        "typeString": "struct Voting.Bidding storage pointer"
+                      }
+                    },
+                    "id": 559,
+                    "isConstant": false,
+                    "isLValue": true,
+                    "isPure": false,
+                    "lValueRequested": false,
+                    "memberName": "lowestBidder",
+                    "nodeType": "MemberAccess",
+                    "referencedDeclaration": 458,
+                    "src": "1235:14:5",
+                    "typeDescriptions": {
+                      "typeIdentifier": "t_address",
+                      "typeString": "address"
+                    }
+                  },
+                  "functionReturnParameters": 517,
+                  "id": 560,
+                  "nodeType": "Return",
+                  "src": "1228:21:5"
+                }
+              ]
+            },
+            "id": 562,
+            "implemented": true,
+            "isConstructor": false,
+            "isDeclaredConst": false,
+            "modifiers": [],
+            "name": "Bid",
+            "nodeType": "FunctionDefinition",
+            "parameters": {
+              "id": 514,
+              "nodeType": "ParameterList",
+              "parameters": [
+                {
+                  "constant": false,
+                  "id": 509,
+                  "name": "BiddingID",
+                  "nodeType": "VariableDeclaration",
+                  "scope": 562,
+                  "src": "950:14:5",
+                  "stateVariable": false,
+                  "storageLocation": "default",
+                  "typeDescriptions": {
+                    "typeIdentifier": "t_uint256",
+                    "typeString": "uint256"
+                  },
+                  "typeName": {
+                    "id": 508,
+                    "name": "uint",
+                    "nodeType": "ElementaryTypeName",
+                    "src": "950:4:5",
+                    "typeDescriptions": {
+                      "typeIdentifier": "t_uint256",
+                      "typeString": "uint256"
+                    }
+                  },
+                  "value": null,
+                  "visibility": "internal"
+                },
+                {
+                  "constant": false,
+                  "id": 511,
+                  "name": "BidderHash",
+                  "nodeType": "VariableDeclaration",
+                  "scope": 562,
+                  "src": "966:18:5",
+                  "stateVariable": false,
+                  "storageLocation": "default",
+                  "typeDescriptions": {
+                    "typeIdentifier": "t_bytes32",
+                    "typeString": "bytes32"
+                  },
+                  "typeName": {
+                    "id": 510,
+                    "name": "bytes32",
+                    "nodeType": "ElementaryTypeName",
+                    "src": "966:7:5",
+                    "typeDescriptions": {
+                      "typeIdentifier": "t_bytes32",
+                      "typeString": "bytes32"
+                    }
+                  },
+                  "value": null,
+                  "visibility": "internal"
+                },
+                {
+                  "constant": false,
+                  "id": 513,
+                  "name": "BidAmount",
+                  "nodeType": "VariableDeclaration",
+                  "scope": 562,
+                  "src": "986:14:5",
+                  "stateVariable": false,
+                  "storageLocation": "default",
+                  "typeDescriptions": {
+                    "typeIdentifier": "t_uint256",
+                    "typeString": "uint256"
+                  },
+                  "typeName": {
+                    "id": 512,
+                    "name": "uint",
+                    "nodeType": "ElementaryTypeName",
+                    "src": "986:4:5",
+                    "typeDescriptions": {
+                      "typeIdentifier": "t_uint256",
+                      "typeString": "uint256"
+                    }
+                  },
+                  "value": null,
+                  "visibility": "internal"
+                }
+              ],
+              "src": "949:52:5"
+            },
+            "payable": false,
+            "returnParameters": {
+              "id": 517,
+              "nodeType": "ParameterList",
+              "parameters": [
+                {
+                  "constant": false,
+                  "id": 516,
+                  "name": "lowestBidder",
+                  "nodeType": "VariableDeclaration",
+                  "scope": 562,
+                  "src": "1011:20:5",
+                  "stateVariable": false,
+                  "storageLocation": "default",
+                  "typeDescriptions": {
+                    "typeIdentifier": "t_address",
+                    "typeString": "address"
+                  },
+                  "typeName": {
+                    "id": 515,
+                    "name": "address",
+                    "nodeType": "ElementaryTypeName",
+                    "src": "1011:7:5",
+                    "typeDescriptions": {
+                      "typeIdentifier": "t_address",
+                      "typeString": "address"
+                    }
+                  },
+                  "value": null,
+                  "visibility": "internal"
+                }
+              ],
+              "src": "1010:22:5"
+            },
+            "scope": 624,
+            "src": "937:316:5",
+            "stateMutability": "nonpayable",
+            "superFunction": null,
+            "visibility": "public"
+          },
+          {
+            "body": {
+              "id": 580,
+              "nodeType": "Block",
+              "src": "1331:275:5",
+              "statements": [
+                {
+                  "assignments": [
+                    572
+                  ],
+                  "declarations": [
+                    {
+                      "constant": false,
+                      "id": 572,
+                      "name": "B",
+                      "nodeType": "VariableDeclaration",
+                      "scope": 581,
+                      "src": "1334:9:5",
+                      "stateVariable": false,
+                      "storageLocation": "default",
+                      "typeDescriptions": {
+                        "typeIdentifier": "t_struct$_Bidding_$463_storage_ptr",
+                        "typeString": "struct Voting.Bidding storage pointer"
+                      },
+                      "typeName": {
+                        "contractScope": null,
+                        "id": 571,
+                        "name": "Bidding",
+                        "nodeType": "UserDefinedTypeName",
+                        "referencedDeclaration": 463,
+                        "src": "1334:7:5",
+                        "typeDescriptions": {
+                          "typeIdentifier": "t_struct$_Bidding_$463_storage_ptr",
+                          "typeString": "struct Voting.Bidding storage pointer"
+                        }
+                      },
+                      "value": null,
+                      "visibility": "internal"
+                    }
+                  ],
+                  "id": 576,
+                  "initialValue": {
+                    "argumentTypes": null,
+                    "baseExpression": {
+                      "argumentTypes": null,
+                      "id": 573,
+                      "name": "BidMap",
+                      "nodeType": "Identifier",
+                      "overloadedDeclarations": [],
+                      "referencedDeclaration": 467,
+                      "src": "1346:6:5",
+                      "typeDescriptions": {
+                        "typeIdentifier": "t_mapping$_t_uint256_$_t_struct$_Bidding_$463_storage_$",
+                        "typeString": "mapping(uint256 => struct Voting.Bidding storage ref)"
+                      }
+                    },
+                    "id": 575,
+                    "indexExpression": {
+                      "argumentTypes": null,
+                      "id": 574,
+                      "name": "BiddingID",
+                      "nodeType": "Identifier",
+                      "overloadedDeclarations": [],
+                      "referencedDeclaration": 564,
+                      "src": "1353:9:5",
+                      "typeDescriptions": {
+                        "typeIdentifier": "t_uint256",
+                        "typeString": "uint256"
+                      }
+                    },
+                    "isConstant": false,
+                    "isLValue": true,
+                    "isPure": false,
+                    "lValueRequested": false,
+                    "nodeType": "IndexAccess",
+                    "src": "1346:17:5",
+                    "typeDescriptions": {
+                      "typeIdentifier": "t_struct$_Bidding_$463_storage",
+                      "typeString": "struct Voting.Bidding storage ref"
+                    }
+                  },
+                  "nodeType": "VariableDeclarationStatement",
+                  "src": "1334:29:5"
+                },
+                {
+                  "expression": {
+                    "argumentTypes": null,
+                    "expression": {
+                      "argumentTypes": null,
+                      "id": 577,
+                      "name": "B",
+                      "nodeType": "Identifier",
+                      "overloadedDeclarations": [],
+                      "referencedDeclaration": 572,
+                      "src": "1373:1:5",
+                      "typeDescriptions": {
+                        "typeIdentifier": "t_struct$_Bidding_$463_storage_ptr",
+                        "typeString": "struct Voting.Bidding storage pointer"
+                      }
+                    },
+                    "id": 578,
+                    "isConstant": false,
+                    "isLValue": true,
+                    "isPure": false,
+                    "lValueRequested": false,
+                    "memberName": "lowestBidder",
+                    "nodeType": "MemberAccess",
+                    "referencedDeclaration": 458,
+                    "src": "1373:14:5",
+                    "typeDescriptions": {
+                      "typeIdentifier": "t_address",
+                      "typeString": "address"
+                    }
+                  },
+                  "functionReturnParameters": 570,
+                  "id": 579,
+                  "nodeType": "Return",
+                  "src": "1366:21:5"
+                }
+              ]
+            },
+            "id": 581,
+            "implemented": true,
+            "isConstructor": false,
+            "isDeclaredConst": false,
+            "modifiers": [],
+            "name": "BidEnd",
+            "nodeType": "FunctionDefinition",
+            "parameters": {
+              "id": 567,
+              "nodeType": "ParameterList",
+              "parameters": [
+                {
+                  "constant": false,
+                  "id": 564,
+                  "name": "BiddingID",
+                  "nodeType": "VariableDeclaration",
+                  "scope": 581,
+                  "src": "1272:14:5",
+                  "stateVariable": false,
+                  "storageLocation": "default",
+                  "typeDescriptions": {
+                    "typeIdentifier": "t_uint256",
+                    "typeString": "uint256"
+                  },
+                  "typeName": {
+                    "id": 563,
+                    "name": "uint",
+                    "nodeType": "ElementaryTypeName",
+                    "src": "1272:4:5",
+                    "typeDescriptions": {
+                      "typeIdentifier": "t_uint256",
+                      "typeString": "uint256"
+                    }
+                  },
+                  "value": null,
+                  "visibility": "internal"
+                },
+                {
+                  "constant": false,
+                  "id": 566,
+                  "name": "key",
+                  "nodeType": "VariableDeclaration",
+                  "scope": 581,
+                  "src": "1288:11:5",
+                  "stateVariable": false,
+                  "storageLocation": "default",
+                  "typeDescriptions": {
+                    "typeIdentifier": "t_bytes32",
+                    "typeString": "bytes32"
+                  },
+                  "typeName": {
+                    "id": 565,
+                    "name": "bytes32",
+                    "nodeType": "ElementaryTypeName",
+                    "src": "1288:7:5",
+                    "typeDescriptions": {
+                      "typeIdentifier": "t_bytes32",
+                      "typeString": "bytes32"
+                    }
+                  },
+                  "value": null,
+                  "visibility": "internal"
+                }
+              ],
+              "src": "1271:29:5"
+            },
+            "payable": false,
+            "returnParameters": {
+              "id": 570,
+              "nodeType": "ParameterList",
+              "parameters": [
+                {
+                  "constant": false,
+                  "id": 569,
+                  "name": "lowestBidder",
+                  "nodeType": "VariableDeclaration",
+                  "scope": 581,
+                  "src": "1310:20:5",
+                  "stateVariable": false,
+                  "storageLocation": "default",
+                  "typeDescriptions": {
+                    "typeIdentifier": "t_address",
+                    "typeString": "address"
+                  },
+                  "typeName": {
+                    "id": 568,
+                    "name": "address",
+                    "nodeType": "ElementaryTypeName",
+                    "src": "1310:7:5",
+                    "typeDescriptions": {
+                      "typeIdentifier": "t_address",
+                      "typeString": "address"
+                    }
+                  },
+                  "value": null,
+                  "visibility": "internal"
+                }
+              ],
+              "src": "1309:22:5"
+            },
+            "scope": 624,
+            "src": "1256:350:5",
+            "stateMutability": "nonpayable",
+            "superFunction": null,
+            "visibility": "public"
+          },
+          {
+            "body": {
+              "id": 622,
+              "nodeType": "Block",
+              "src": "1642:113:5",
+              "statements": [
+                {
+                  "assignments": [
+                    587
+                  ],
+                  "declarations": [
+                    {
+                      "constant": false,
+                      "id": 587,
+                      "name": "B",
+                      "nodeType": "VariableDeclaration",
+                      "scope": 623,
+                      "src": "1645:9:5",
+                      "stateVariable": false,
+                      "storageLocation": "default",
+                      "typeDescriptions": {
+                        "typeIdentifier": "t_struct$_Bidding_$463_storage_ptr",
+                        "typeString": "struct Voting.Bidding storage pointer"
+                      },
+                      "typeName": {
+                        "contractScope": null,
+                        "id": 586,
+                        "name": "Bidding",
+                        "nodeType": "UserDefinedTypeName",
+                        "referencedDeclaration": 463,
+                        "src": "1645:7:5",
+                        "typeDescriptions": {
+                          "typeIdentifier": "t_struct$_Bidding_$463_storage_ptr",
+                          "typeString": "struct Voting.Bidding storage pointer"
+                        }
+                      },
+                      "value": null,
+                      "visibility": "internal"
+                    }
+                  ],
+                  "id": 591,
+                  "initialValue": {
+                    "argumentTypes": null,
+                    "baseExpression": {
+                      "argumentTypes": null,
+                      "id": 588,
+                      "name": "BidMap",
+                      "nodeType": "Identifier",
+                      "overloadedDeclarations": [],
+                      "referencedDeclaration": 467,
+                      "src": "1657:6:5",
+                      "typeDescriptions": {
+                        "typeIdentifier": "t_mapping$_t_uint256_$_t_struct$_Bidding_$463_storage_$",
+                        "typeString": "mapping(uint256 => struct Voting.Bidding storage ref)"
+                      }
+                    },
+                    "id": 590,
+                    "indexExpression": {
+                      "argumentTypes": null,
+                      "id": 589,
+                      "name": "BiddingID",
+                      "nodeType": "Identifier",
+                      "overloadedDeclarations": [],
+                      "referencedDeclaration": 583,
+                      "src": "1664:9:5",
+                      "typeDescriptions": {
+                        "typeIdentifier": "t_uint256",
+                        "typeString": "uint256"
+                      }
+                    },
+                    "isConstant": false,
+                    "isLValue": true,
+                    "isPure": false,
+                    "lValueRequested": false,
+                    "nodeType": "IndexAccess",
+                    "src": "1657:17:5",
+                    "typeDescriptions": {
+                      "typeIdentifier": "t_struct$_Bidding_$463_storage",
+                      "typeString": "struct Voting.Bidding storage ref"
+                    }
+                  },
+                  "nodeType": "VariableDeclarationStatement",
+                  "src": "1645:29:5"
+                },
+                {
+                  "expression": {
+                    "argumentTypes": null,
+                    "id": 596,
+                    "isConstant": false,
+                    "isLValue": false,
+                    "isPure": false,
+                    "lValueRequested": false,
+                    "leftHandSide": {
+                      "argumentTypes": null,
+                      "expression": {
+                        "argumentTypes": null,
+                        "id": 592,
+                        "name": "B",
+                        "nodeType": "Identifier",
+                        "overloadedDeclarations": [],
+                        "referencedDeclaration": 587,
+                        "src": "1677:1:5",
+                        "typeDescriptions": {
+                          "typeIdentifier": "t_struct$_Bidding_$463_storage_ptr",
+                          "typeString": "struct Voting.Bidding storage pointer"
+                        }
+                      },
+                      "id": 594,
+                      "isConstant": false,
+                      "isLValue": true,
+                      "isPure": false,
+                      "lValueRequested": true,
+                      "memberName": "deadLine",
+                      "nodeType": "MemberAccess",
+                      "referencedDeclaration": 454,
+                      "src": "1677:10:5",
+                      "typeDescriptions": {
+                        "typeIdentifier": "t_uint256",
+                        "typeString": "uint256"
+                      }
+                    },
+                    "nodeType": "Assignment",
+                    "operator": "=",
+                    "rightHandSide": {
+                      "argumentTypes": null,
+                      "hexValue": "30",
+                      "id": 595,
+                      "isConstant": false,
+                      "isLValue": false,
+                      "isPure": true,
+                      "kind": "number",
+                      "lValueRequested": false,
+                      "nodeType": "Literal",
+                      "src": "1688:1:5",
+                      "subdenomination": null,
+                      "typeDescriptions": {
+                        "typeIdentifier": "t_rational_0_by_1",
+                        "typeString": "int_const 0"
+                      },
+                      "value": "0"
+                    },
+                    "src": "1677:12:5",
+                    "typeDescriptions": {
+                      "typeIdentifier": "t_uint256",
+                      "typeString": "uint256"
+                    }
+                  },
+                  "id": 597,
+                  "nodeType": "ExpressionStatement",
+                  "src": "1677:12:5"
+                },
+                {
+                  "expression": {
+                    "argumentTypes": null,
+                    "id": 602,
+                    "isConstant": false,
+                    "isLValue": false,
+                    "isPure": false,
+                    "lValueRequested": false,
+                    "leftHandSide": {
+                      "argumentTypes": null,
+                      "expression": {
+                        "argumentTypes": null,
+                        "id": 598,
+                        "name": "B",
+                        "nodeType": "Identifier",
+                        "overloadedDeclarations": [],
+                        "referencedDeclaration": 587,
+                        "src": "1692:1:5",
+                        "typeDescriptions": {
+                          "typeIdentifier": "t_struct$_Bidding_$463_storage_ptr",
+                          "typeString": "struct Voting.Bidding storage pointer"
+                        }
+                      },
+                      "id": 600,
+                      "isConstant": false,
+                      "isLValue": true,
+                      "isPure": false,
+                      "lValueRequested": true,
+                      "memberName": "bidHash",
+                      "nodeType": "MemberAccess",
+                      "referencedDeclaration": 456,
+                      "src": "1692:9:5",
+                      "typeDescriptions": {
+                        "typeIdentifier": "t_bytes32",
+                        "typeString": "bytes32"
+                      }
+                    },
+                    "nodeType": "Assignment",
+                    "operator": "=",
+                    "rightHandSide": {
+                      "argumentTypes": null,
+                      "hexValue": "30",
+                      "id": 601,
+                      "isConstant": false,
+                      "isLValue": false,
+                      "isPure": true,
+                      "kind": "number",
+                      "lValueRequested": false,
+                      "nodeType": "Literal",
+                      "src": "1702:1:5",
+                      "subdenomination": null,
+                      "typeDescriptions": {
+                        "typeIdentifier": "t_rational_0_by_1",
+                        "typeString": "int_const 0"
+                      },
+                      "value": "0"
+                    },
+                    "src": "1692:11:5",
+                    "typeDescriptions": {
+                      "typeIdentifier": "t_bytes32",
+                      "typeString": "bytes32"
+                    }
+                  },
+                  "id": 603,
+                  "nodeType": "ExpressionStatement",
+                  "src": "1692:11:5"
+                },
+                {
+                  "expression": {
+                    "argumentTypes": null,
+                    "id": 608,
+                    "isConstant": false,
+                    "isLValue": false,
+                    "isPure": false,
+                    "lValueRequested": false,
+                    "leftHandSide": {
+                      "argumentTypes": null,
+                      "expression": {
+                        "argumentTypes": null,
+                        "id": 604,
+                        "name": "B",
+                        "nodeType": "Identifier",
+                        "overloadedDeclarations": [],
+                        "referencedDeclaration": 587,
+                        "src": "1706:1:5",
+                        "typeDescriptions": {
+                          "typeIdentifier": "t_struct$_Bidding_$463_storage_ptr",
+                          "typeString": "struct Voting.Bidding storage pointer"
+                        }
+                      },
+                      "id": 606,
+                      "isConstant": false,
+                      "isLValue": true,
+                      "isPure": false,
+                      "lValueRequested": true,
+                      "memberName": "lowestBidder",
+                      "nodeType": "MemberAccess",
+                      "referencedDeclaration": 458,
+                      "src": "1706:14:5",
+                      "typeDescriptions": {
+                        "typeIdentifier": "t_address",
+                        "typeString": "address"
+                      }
+                    },
+                    "nodeType": "Assignment",
+                    "operator": "=",
+                    "rightHandSide": {
+                      "argumentTypes": null,
+                      "hexValue": "30",
+                      "id": 607,
+                      "isConstant": false,
+                      "isLValue": false,
+                      "isPure": true,
+                      "kind": "number",
+                      "lValueRequested": false,
+                      "nodeType": "Literal",
+                      "src": "1721:1:5",
+                      "subdenomination": null,
+                      "typeDescriptions": {
+                        "typeIdentifier": "t_rational_0_by_1",
+                        "typeString": "int_const 0"
+                      },
+                      "value": "0"
+                    },
+                    "src": "1706:16:5",
+                    "typeDescriptions": {
+                      "typeIdentifier": "t_address",
+                      "typeString": "address"
+                    }
+                  },
+                  "id": 609,
+                  "nodeType": "ExpressionStatement",
+                  "src": "1706:16:5"
+                },
+                {
+                  "expression": {
+                    "argumentTypes": null,
+                    "id": 614,
+                    "isConstant": false,
+                    "isLValue": false,
+                    "isPure": false,
+                    "lValueRequested": false,
+                    "leftHandSide": {
+                      "argumentTypes": null,
+                      "expression": {
+                        "argumentTypes": null,
+                        "id": 610,
+                        "name": "B",
+                        "nodeType": "Identifier",
+                        "overloadedDeclarations": [],
+                        "referencedDeclaration": 587,
+                        "src": "1725:1:5",
+                        "typeDescriptions": {
+                          "typeIdentifier": "t_struct$_Bidding_$463_storage_ptr",
+                          "typeString": "struct Voting.Bidding storage pointer"
+                        }
+                      },
+                      "id": 612,
+                      "isConstant": false,
+                      "isLValue": true,
+                      "isPure": false,
+                      "lValueRequested": true,
+                      "memberName": "lowestBid",
+                      "nodeType": "MemberAccess",
+                      "referencedDeclaration": 460,
+                      "src": "1725:11:5",
+                      "typeDescriptions": {
+                        "typeIdentifier": "t_uint256",
+                        "typeString": "uint256"
+                      }
+                    },
+                    "nodeType": "Assignment",
+                    "operator": "=",
+                    "rightHandSide": {
+                      "argumentTypes": null,
+                      "hexValue": "30",
+                      "id": 613,
+                      "isConstant": false,
+                      "isLValue": false,
+                      "isPure": true,
+                      "kind": "number",
+                      "lValueRequested": false,
+                      "nodeType": "Literal",
+                      "src": "1737:1:5",
+                      "subdenomination": null,
+                      "typeDescriptions": {
+                        "typeIdentifier": "t_rational_0_by_1",
+                        "typeString": "int_const 0"
+                      },
+                      "value": "0"
+                    },
+                    "src": "1725:13:5",
+                    "typeDescriptions": {
+                      "typeIdentifier": "t_uint256",
+                      "typeString": "uint256"
+                    }
+                  },
+                  "id": 615,
+                  "nodeType": "ExpressionStatement",
+                  "src": "1725:13:5"
+                },
+                {
+                  "expression": {
+                    "argumentTypes": null,
+                    "id": 620,
+                    "isConstant": false,
+                    "isLValue": false,
+                    "isPure": false,
+                    "lValueRequested": false,
+                    "leftHandSide": {
+                      "argumentTypes": null,
+                      "expression": {
+                        "argumentTypes": null,
+                        "id": 616,
+                        "name": "B",
+                        "nodeType": "Identifier",
+                        "overloadedDeclarations": [],
+                        "referencedDeclaration": 587,
+                        "src": "1741:1:5",
+                        "typeDescriptions": {
+                          "typeIdentifier": "t_struct$_Bidding_$463_storage_ptr",
+                          "typeString": "struct Voting.Bidding storage pointer"
+                        }
+                      },
+                      "id": 618,
+                      "isConstant": false,
+                      "isLValue": true,
+                      "isPure": false,
+                      "lValueRequested": true,
+                      "memberName": "Sender",
+                      "nodeType": "MemberAccess",
+                      "referencedDeclaration": 462,
+                      "src": "1741:8:5",
+                      "typeDescriptions": {
+                        "typeIdentifier": "t_address",
+                        "typeString": "address"
+                      }
+                    },
+                    "nodeType": "Assignment",
+                    "operator": "=",
+                    "rightHandSide": {
+                      "argumentTypes": null,
+                      "hexValue": "30",
+                      "id": 619,
+                      "isConstant": false,
+                      "isLValue": false,
+                      "isPure": true,
+                      "kind": "number",
+                      "lValueRequested": false,
+                      "nodeType": "Literal",
+                      "src": "1750:1:5",
+                      "subdenomination": null,
+                      "typeDescriptions": {
+                        "typeIdentifier": "t_rational_0_by_1",
+                        "typeString": "int_const 0"
+                      },
+                      "value": "0"
+                    },
+                    "src": "1741:10:5",
+                    "typeDescriptions": {
+                      "typeIdentifier": "t_address",
+                      "typeString": "address"
+                    }
+                  },
+                  "id": 621,
+                  "nodeType": "ExpressionStatement",
+                  "src": "1741:10:5"
+                }
+              ]
+            },
+            "id": 623,
+            "implemented": true,
+            "isConstructor": false,
+            "isDeclaredConst": false,
+            "modifiers": [],
+            "name": "clean",
+            "nodeType": "FunctionDefinition",
+            "parameters": {
+              "id": 584,
+              "nodeType": "ParameterList",
+              "parameters": [
+                {
+                  "constant": false,
+                  "id": 583,
+                  "name": "BiddingID",
+                  "nodeType": "VariableDeclaration",
+                  "scope": 623,
+                  "src": "1626:14:5",
+                  "stateVariable": false,
+                  "storageLocation": "default",
+                  "typeDescriptions": {
+                    "typeIdentifier": "t_uint256",
+                    "typeString": "uint256"
+                  },
+                  "typeName": {
+                    "id": 582,
+                    "name": "uint",
+                    "nodeType": "ElementaryTypeName",
+                    "src": "1626:4:5",
+                    "typeDescriptions": {
+                      "typeIdentifier": "t_uint256",
+                      "typeString": "uint256"
+                    }
+                  },
+                  "value": null,
+                  "visibility": "internal"
+                }
+              ],
+              "src": "1625:16:5"
+            },
+            "payable": false,
+            "returnParameters": {
+              "id": 585,
+              "nodeType": "ParameterList",
+              "parameters": [],
+              "src": "1642:0:5"
+            },
+            "scope": 624,
+            "src": "1611:144:5",
+            "stateMutability": "nonpayable",
+            "superFunction": null,
+            "visibility": "public"
+          }
+        ],
+        "scope": 625,
+        "src": "97:1661:5"
+      }
+    ],
+    "src": "0:1759:5"
+  },
+  "compiler": {
+    "name": "solc",
+    "version": "0.4.19+commit.c4cbbb05.Emscripten.clang"
+  },
+  "networks": {
+    "4": {
+      "events": {},
+      "links": {},
+      "address": "0xe63b3e38c9d4a7ab4eb78b7174eda86b287e5a9d",
+      "transactionHash": "0x04d31adfdc92616c772a93c222af565decb162d45464bb507d6d688578dfefc2"
+    },
+    "1522442100519": {
+      "events": {},
+      "links": {},
+      "address": "0x98fc1a21292cf472d95892e8ba7f501ea1652c42",
+      "transactionHash": "0xdd4b7e5808b136a65f59b99a9642403cfb3debb224ff9bb8b097ef667d463ae3"
+    },
+    "1522624552856": {
+      "events": {},
+      "links": {},
+      "address": "0x1cbd5bd5424064ab77f9fd8e1ae9a7b857c7d8d0",
+      "transactionHash": "0x571153bfec8371fecac0efecccc6b3d79445fc20ad53ad0bc0d0355c3d7d1827"
+    },
+    "1522625250252": {
+      "events": {},
+      "links": {},
+      "address": "0x7d814f8ed7a6d9643663e12fec29945c1c172d26",
+      "transactionHash": "0x571153bfec8371fecac0efecccc6b3d79445fc20ad53ad0bc0d0355c3d7d1827"
+    },
+    "1522625527438": {
+      "events": {},
+      "links": {},
+      "address": "0x09b98ffe26ba315fbd108822e581205eb7bf3f5b",
+      "transactionHash": "0x571153bfec8371fecac0efecccc6b3d79445fc20ad53ad0bc0d0355c3d7d1827"
+    },
+    "1522626813995": {
+      "events": {},
+      "links": {},
+      "address": "0x8bfdd753a6616eab47b0b75e0e3b9161dbeaf584",
+      "transactionHash": "0x571153bfec8371fecac0efecccc6b3d79445fc20ad53ad0bc0d0355c3d7d1827"
+    },
+    "1522626959185": {
+      "events": {},
+      "links": {},
+      "address": "0xc824ac1e93ebc5db5163f52f3be94c09d33211ee",
+      "transactionHash": "0x571153bfec8371fecac0efecccc6b3d79445fc20ad53ad0bc0d0355c3d7d1827"
+    }
+  },
+  "schemaVersion": "2.0.0",
+  "updatedAt": "2018-04-03T15:25:04.088Z"
+}
