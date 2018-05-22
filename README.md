@@ -1,25 +1,25 @@
-##CampaignLogin
+## CampaignLogin
 webapp for registering
 
 
-##CampaignBackend
+## CampaignBackend
 Back end server used by government entity to approve and decline registraions
 
-##CampaignDonation
+## CampaignDonation
 webapp for registered contributors to donate to campaign
 
 
-##Contracts
+## Contracts
 contains solidity contracts
 
 flat contracts are used for deployment.
 
-##IPFS
+## IPFS
 used for adding objects to ipfs for testing
 
 
 
-##Instructions for running locally
+## Instructions for running locally
 to start each service on your local machine, go into the each directory and npm install.
 then npm start to start up the services
 
@@ -28,5 +28,5 @@ CampaignDonation: localhost:1234
 CampaignBackend: localhost:
 
 
-#Example user flow
+# Example user flow
 First Register as
